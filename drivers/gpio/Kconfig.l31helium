@@ -1,0 +1,11 @@
+# Codacip L31 Helium GPIO configuration options
+
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+config GPIO_L31HELIUM
+	bool "L31 Helium GPIO driver"
+	default y
+	depends on DT_HAS_CODASIP_L31HELIUM_GPIO_ENABLED
+	help
+	  Enable Codasip L31 Helium GPIO driver.

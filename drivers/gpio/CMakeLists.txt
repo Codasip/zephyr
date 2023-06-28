@@ -91,6 +91,7 @@ zephyr_library_sources_ifdef(CONFIG_GPIO_BCM2711    gpio_bcm2711.c)
 zephyr_library_sources_ifdef(CONFIG_GPIO_RENESAS_RA gpio_renesas_ra.c)
 zephyr_library_sources_ifdef(CONFIG_GPIO_RZT2M    gpio_rzt2m.c)
 zephyr_library_sources_ifdef(CONFIG_GPIO_AMBIQ      gpio_ambiq.c)
+zephyr_library_sources_ifdef(CONFIG_GPIO_L31HELIUM  gpio_l31helium.c)
 
 if (CONFIG_GPIO_EMUL_SDL)
   zephyr_library_sources(gpio_emul_sdl.c)
@@ -100,6 +101,7 @@ if (CONFIG_GPIO_EMUL_SDL)
     target_sources(native_simulator INTERFACE gpio_emul_sdl_bottom.c)
   endif()
 endif()
+
 
 if(CONFIG_GPIO_SC18IM704)
   zephyr_library_include_directories(${ZEPHYR_BASE}/drivers)

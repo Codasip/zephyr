@@ -14,6 +14,7 @@
 
 #include <zephyr/drivers/interrupt_controller/riscv_clic.h>
 #include <zephyr/drivers/interrupt_controller/riscv_plic.h>
+#include <zephyr/drivers/interrupt_controller/codasip_pic.h>
 
 #if defined(CONFIG_RISCV_HAS_CLIC)
 
@@ -37,7 +38,7 @@ void z_riscv_irq_priority_set(unsigned int irq, unsigned int prio, uint32_t flag
 	riscv_clic_irq_priority_set(irq, prio, flags);
 }
 
-#else /* PLIC + HLINT/CLINT or HLINT/CLINT only */
+#else /* PLIC + HLINT/CLINT or HLINT/CLINT only, or Codasip PIC */
 
 void arch_irq_enable(unsigned int irq)
 {
@@ -48,6 +49,15 @@ void arch_irq_enable(unsigned int irq)
 
 	if (level == 2) {
 		riscv_plic_irq_enable(irq);
+		return;
+	}
+
+#elif defined(CONFIG_CODASIP_HAS_PIC)
+	unsigned int level = irq_get_level(irq);
+
+	if (level == 2) {
+		irq = irq_from_level_2(irq);
+		codasip_pic_irq_enable(irq);
 		return;
 	}
 #endif
@@ -70,6 +80,15 @@ void arch_irq_disable(unsigned int irq)
 		riscv_plic_irq_disable(irq);
 		return;
 	}
+
+#elif defined(CONFIG_CODASIP_HAS_PIC)
+	unsigned int level = irq_get_level(irq);
+
+	if (level == 2) {
+		irq = irq_from_level_2(irq);
+		codasip_pic_irq_disable(irq);
+		return;
+	}
 #endif
 
 	/*
@@ -89,6 +108,14 @@ int arch_irq_is_enabled(unsigned int irq)
 	if (level == 2) {
 		return riscv_plic_irq_is_enabled(irq);
 	}
+
+#elif defined(CONFIG_CODASIP_HAS_PIC)
+	unsigned int level = irq_get_level(irq);
+
+	if (level == 2) {
+		irq = irq_from_level_2(irq);
+		return codasip_pic_irq_is_enabled(irq);
+	}
 #endif
 
 	mie = csr_read(mie);
@@ -105,8 +132,9 @@ void z_riscv_irq_priority_set(unsigned int irq, unsigned int prio, uint32_t flag
 		riscv_plic_set_priority(irq, prio);
 	}
 }
-#endif /* CONFIG_RISCV_HAS_PLIC */
-#endif /* CONFIG_RISCV_HAS_CLIC */
+#endif /*  CONFIG_RISCV_HAS_PLIC */
+
+#endif /* !CONFIG_RISCV_HAS_CLIC */
 
 #if defined(CONFIG_RISCV_SOC_INTERRUPT_INIT)
 __weak void soc_interrupt_init(void)

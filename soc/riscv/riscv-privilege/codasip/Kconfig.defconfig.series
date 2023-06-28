@@ -1,0 +1,11 @@
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+#SOC_CODASIP_L31HELIUM
+
+if SOC_SERIES_RISCV_CODASIP_L31
+
+config SOC_SERIES
+	default "codasip"
+
+endif # SOC_SERIES_RISCV_CODASIP_L31

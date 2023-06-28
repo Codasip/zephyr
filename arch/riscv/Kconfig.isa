@@ -94,6 +94,16 @@ config RISCV_ISA_EXT_C
 	  which reduces static and dynamic code size by adding short 16-bit
 	  instruction encodings for common operations.
 
+#config RISCV_ISA_EXT_B
+#	bool
+#	help
+#	  (B) - Standard Extension for Bit Manipulation
+#
+#	  RISC-V standard bit manipulation instruction set extension, named "B",
+#	  The bit-manipulation (bitmanip) extension collection is comprised of several component extensions to the base
+#	  RISC-V architecture that are intended to provide some combination of code size reduction, performance
+#	  improvement, and energy reduction.
+
 config RISCV_ISA_EXT_ZICSR
 	bool
 	help

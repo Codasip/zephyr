@@ -55,6 +55,8 @@ Hints:
   - if your SoC family directory is '/foo/bar/soc/<ARCH>/my_soc_family', then add '/foo/bar' to SOC_ROOT, not the entire SoC family path
   - if in doubt, use absolute paths\n")
   endif()
+message("ARCH = ${ARCH}\n")
+message("SOC_PATH = ${SOC_PATH}\n")
 
   if(EXISTS ${root}/soc/${ARCH}/${SOC_PATH})
     set(SOC_DIR ${root}/soc)

@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: Apache-2.0
+
+description: Codasip L31 Helium GPIO node
+
+compatible: "codasip,l31helium-gpio"
+
+include: [gpio-controller.yaml, base.yaml]
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: false
+
+  "#gpio-cells":
+    const: 2
+
+gpio-cells:
+  - pin
+  - flags

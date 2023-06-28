@@ -1,0 +1,76 @@
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+choice
+	prompt "Codasip L31 SOC implementation"
+	depends on SOC_SERIES_RISCV_CODASIP_L31
+
+config SOC_CODASIP_L31HELIUM
+	bool "Codasip RISC-V L31 Helium system implementation"
+	select RISCV
+	select ATOMIC_OPERATIONS_C
+	select INCLUDE_RESET_VECTOR
+	select RISCV_ISA_RV32I
+	select RISCV_ISA_EXT_M
+#	select RISCV_ISA_EXT_A        NOTE: L31 does not support atomic instructions
+	select RISCV_ISA_EXT_F
+	select RISCV_ISA_EXT_C
+
+	select RISCV_ISA_EXT_ZICSR
+	select RISCV_ISA_EXT_ZIFENCEI
+
+# See: arch/riscv/Kconfig.isa
+	select RISCV_ISA_EXT_ZBA
+	select RISCV_ISA_EXT_ZBB
+	select RISCV_ISA_EXT_ZBC
+	select RISCV_ISA_EXT_ZBS
+
+endchoice
+
+
+if SOC_CODASIP_L31HELIUM
+
+config SOC
+	default "codasip-l31helium"
+
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+	default 25000000
+
+config RISCV_SOC_INTERRUPT_INIT
+	default y
+
+config FPU
+        default n # this should be y, but the link stage fails with: can't link soft-float modules with single-float modules
+
+config RISCV_HAS_CPU_IDLE
+	default y
+
+#config RISCV_HAS_CLIC
+#	default n
+
+#config RISCV_HAS_PLIC
+#	default n
+
+config CODASIP_HAS_PIC
+	default y
+
+config 2ND_LEVEL_INTERRUPTS
+        default y
+
+config 2ND_LVL_ISR_TBL_OFFSET
+        default 12
+
+config NUM_IRQS
+	default 44
+
+config 2ND_LVL_INTR_00_OFFSET
+        default 11
+
+#config NUM_IRQS
+#       default 139
+
+#config NUM_IRQS
+#	default 12
+
+endif # SOC_CODASIP_L31HELIUM
+
