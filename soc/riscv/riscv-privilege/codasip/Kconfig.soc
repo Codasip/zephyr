@@ -45,6 +45,12 @@ config FPU
 config RISCV_HAS_CPU_IDLE
 	default y
 
+config GPIO
+	default y
+
+config SERIAL
+	default y
+
 #config RISCV_HAS_CLIC
 #	default n
 
@@ -60,17 +66,23 @@ config 2ND_LEVEL_INTERRUPTS
 config 2ND_LVL_ISR_TBL_OFFSET
         default 12
 
-config NUM_IRQS
-	default 44
-
 config 2ND_LVL_INTR_00_OFFSET
         default 11
 
-#config NUM_IRQS
-#       default 139
+config NUM_IRQS
+	default 44
 
-#config NUM_IRQS
-#	default 12
+config RISCV_PMP
+	default y
+
+config PMP_SLOTS
+	default 16
+
+config SPI
+	default y
+
+config SPI_EXTENDED_MODES
+	default y
 
 endif # SOC_CODASIP_L31HELIUM
 

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012-2014 Wind River Systems, Inc.
+ * Copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -9,6 +10,7 @@ Hello World! l31helium
 uart0  0 IRQ number 267
 gpio01 0 IRQ number 779
 gpio01 1 IRQ number 1035
+Etc.
 */
 
 #include <zephyr/kernel.h>
@@ -19,8 +21,7 @@ gpio01 1 IRQ number 1035
 
 #define SERIAL DT_NODELABEL(uart0)
 
-/* The devicetree node identifier for the "led0" alias. */
-#define LED0_NODE DT_ALIAS(led0)
+/* The devicetree node identifiers for "irq2" & "irq3" alias. */
 #define IRQ2_NODE DT_ALIAS(irq2)
 #define IRQ3_NODE DT_ALIAS(irq3)
 

@@ -17,6 +17,7 @@ testing:
 supported:
   - uart
   - gpio
+  - spi
 
 #ram: 262144
 #supported:

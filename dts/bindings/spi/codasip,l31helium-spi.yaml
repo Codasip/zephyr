@@ -1,0 +1,26 @@
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+  Codasip L31 Helium SPI controller.
+
+compatible: "codasip,l31helium-spi"
+
+include: [spi-controller.yaml]
+
+properties:
+  reg:
+    required: true
+
+  lines:
+    type: int
+    description: |
+      QMSPI data lines 1, 2, or 4. 1 data line is full-duplex
+      MOSI and MISO or half-duplex on MOSI only. Lines set to 2
+      or 4 indicate dual or quad I/O modes.
+      Defaults to 1 for full duplex driver's support for full-duplex spi.
+    enum:
+      - 1
+      - 2
+      - 4
+

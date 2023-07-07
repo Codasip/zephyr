@@ -262,14 +262,24 @@ static void pic_irq_handler(const void *arg)
 	 * If the IRQ is out of range, call z_irq_spurious.
 	 * A call to z_irq_spurious will not return.
 	 */
-	if (irq == 0U || irq >= PIC_IRQS)
+	if (irq >= PIC_IRQS)
+	{
 		z_irq_spurious(NULL);
+	}
 
 	irq += CONFIG_2ND_LVL_ISR_TBL_OFFSET;
 
 	/* Call the corresponding IRQ handler in _sw_isr_table */
 	ite = (struct _isr_table_entry *)&_sw_isr_table[irq];
-	ite->isr(ite->arg);
+
+	if ( ite != NULL && ite->isr != NULL )
+	{
+		ite->isr(ite->arg);
+	}
+	else
+	{
+		z_irq_spurious(NULL);
+	}
 
 	/*
 	 * Clear the IRQ PIC Flag because the IRQ has been handled.

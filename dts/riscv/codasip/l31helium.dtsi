@@ -15,7 +15,7 @@
         #size-cells = <1>;
 
         compatible = "codasip,l31helium" /*, "codasip-l31helium", "l31helium"*/;
-/*        model = "codasip-l31helium"; generates an error */
+
         clocks {
                 coreclk: core-clk {
                         #clock-cells = <0>;
@@ -51,17 +51,11 @@
                         };
                 };
         };
-/*        dram: memory@0 {
-                device_type = "memory";
-                compatible = "mmio-sram";
-                reg = <0x80000000 0xC0000000>;
-        }; */
 
         soc {
                 #address-cells = <1>;
                 #size-cells = <1>;
-/*                compatible = "codasip,l31helium", "codasip-l31helium", "l31helium"; */
-                compatible = "simple-bus";
+                compatible = "codasip,l31helium", "l31helium", "simple-bus";
                 ranges;
 
                 sram0: memory@20000000 {
@@ -86,23 +80,10 @@
                         interrupt-controller;
                         interrupts-extended = <&intc 11>;
                         #interrupt-cells = <1>;	/* Only interrupt bit positions (no priority on the PIC) */
-			interrupt-parent = <&intc>;
+                        interrupt-parent = <&intc>;
                         codasip-pic,ndev = <4>;	/* 4 Interrupts bits 3:0 */
                         status = "okay";
                 };
-/*                plic: plic@c000000 {
-                        compatible = "sifive,plic-1.0.0";
-                        #address-cells = <0>;
-                        #interrupt-cells = <2>;
-                        interrupt-controller;
-                        interrupts-extended = <&intc 11>;
-                        reg = <0x0 0x0c000000 0x0 0x00002000
-                               0x0 0x0c002000 0x0 0x001fe000
-                               0x0 0x0c200000 0x0 0x03e00000>;
-                        reg-names = "prio", "irq_en", "reg";
-                        riscv,max-priority = <255>;
-                        riscv,ndev = <1023>;
-                }; */
                 uart0: serial@60101000 {
                         compatible = "ns16550";
                         clock-frequency = <25000000>;
@@ -119,7 +100,7 @@
                         compatible = "codasip,l31helium-gpio";
                         reg = <0x60300000 0x10>;
                         gpio-controller;
-                        #gpio-cells = <2>;			/* What's this? */
+                        #gpio-cells = <2>;
                         ngpios = <8>;  				/* Number of GPIO pins. 
 								   gpio_in[7:0]  =  SW[7:0]
 								   gpio_out[7:0] = LED[7:0] */
@@ -129,7 +110,7 @@
                         compatible = "codasip,l31helium-gpio";
                         reg = <0x60310000 0x10>;
                         gpio-controller;
-                        #gpio-cells = <2>;			/* What's this? */
+                        #gpio-cells = <2>;
                         ngpios = <4>;  				/* Number of GPIO pins. 
 								   gpio_in[0]  = SD_CARD_DETECT_N
 								   gpio_in[1]  = SD_PWR_EN_N
@@ -149,6 +130,17 @@
 						/* Note: IRQ numbering format is 0x44332211 where 0x33 = 3rd level irq, 
 							 0x22 = 2nd level irq and 0x11 = 1st level irq.
 							 0x44 is not used, set to 0x00 */
+                        status = "okay";
+                };
+                spi0: spi@60210000 {
+                        compatible = "codasip,l31helium-spi";
+                        reg = <0x60210000 0x1c>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <1>;
+			clock-frequency = <400000>;
+			lines = <1>;
                         status = "okay";
                 };
         };

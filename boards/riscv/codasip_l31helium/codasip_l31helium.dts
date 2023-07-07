@@ -13,8 +13,7 @@
 #include <zephyr/devicetree/gpio.h>
 
 / {
-/*	model = "Codasip L31 Helium"; */
-	compatible = "codasip,l31helium";
+        compatible = "codasip,l31helium";
 
         aliases {
                 led0 = &led0;
@@ -26,7 +25,7 @@
                 led6 = &led6;
                 led7 = &led7;
 
-		sd-pwr-en-n-in = &sd_pwr_en_n_in;
+		sd-pwr-en-n-out  = &sd_pwr_en_n_out;
 		irq2 = &irq2;
 		irq3 = &irq3;
 
@@ -40,7 +39,7 @@
                 sw7 = &sw7;
 
 		sd-card-detect-n = &sd_card_detect_n;
-		sd-pwr-en-n-out  = &sd_pwr_en_n_out;
+		sd-pwr-en-n-in = &sd_pwr_en_n_in;
         };
 
 	chosen {
