@@ -8,13 +8,12 @@
 #include <zephyr/dt-bindings/pwm/pwm.h>
 #include <freq.h>
 #include <mem.h>
-/* #include <zephyr/dt-bindings/interrupt-controller/codasip-l31helium-pic.h> */
 
 / {
         #address-cells = <1>;
         #size-cells = <1>;
 
-        compatible = "codasip,l31helium" /*, "codasip-l31helium", "l31helium"*/;
+        compatible = "codasip,l31helium";
 
         clocks {
                 coreclk: core-clk {
@@ -36,7 +35,6 @@
                 #size-cells = <0>;
                 timebase-frequency = <25000000>;
                 cpu@0 {
-                        /*compatible = "codasip,l31helium", "codasip-l31helium"; */
                         compatible = "riscv";
                         device_type = "cpu";
                         reg = <0>;
@@ -55,8 +53,7 @@
         soc {
                 #address-cells = <1>;
                 #size-cells = <1>;
-                compatible = "codasip,l31helium", "l31helium", "simple-bus";
-                ranges;
+                compatible = "codasip,l31helium", "l31helium";
 
                 sram0: memory@20000000 {
                         compatible = "mmio-sram";
