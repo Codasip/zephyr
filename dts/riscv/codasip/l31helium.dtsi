@@ -76,12 +76,12 @@
 		      lib/include/baremetal/interrupt_low.h:    BM_INTERRUPT_MEIP = 11, // Machine external interrupt
 		*/
                 pic: pic {
-                        compatible = "codasip,pic";
+                        compatible = "codasip,fpga-pic";
                         interrupt-controller;
                         interrupts-extended = <&intc 11>;
                         #interrupt-cells = <1>;	/* Only interrupt bit positions (no priority on the PIC) */
                         interrupt-parent = <&intc>;
-                        codasip-pic,ndev = <4>;	/* 4 Interrupts bits 3:0 */
+                        codasip-fpga-pic,ndev = <4>;	/* 4 Interrupts bits 3:0 */
                         status = "okay";
                 };
                 uart0: serial@60101000 {

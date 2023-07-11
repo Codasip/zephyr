@@ -106,6 +106,6 @@ source "drivers/interrupt_controller/Kconfig.renesas_ra"
 
 source "drivers/interrupt_controller/Kconfig.nxp_irqsteer"
 
-source "drivers/interrupt_controller/Kconfig.codasip_pic"
+source "drivers/interrupt_controller/Kconfig.codasip_fpga_pic"
 
 endmenu

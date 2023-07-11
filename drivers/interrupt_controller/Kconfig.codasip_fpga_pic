@@ -1,0 +1,12 @@
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+config CODASIP_FPGA_PIC
+	bool "Codasip FPGA Peripheral Interrupt Controller (PIC)"
+	default y
+	depends on DT_HAS_CODASIP_FPGA_PIC_ENABLED
+	select MULTI_LEVEL_INTERRUPTS
+	select 2ND_LEVEL_INTERRUPTS
+	help
+	  Codasip FPGA Perpherial Interrupt Controller provides support
+	  for external interrupt lines.

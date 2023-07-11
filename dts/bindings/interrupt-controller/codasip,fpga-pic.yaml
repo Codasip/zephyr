@@ -3,7 +3,7 @@
 
 description: Codasip peripheral interrupt controller
 
-compatible: "codasip,pic"
+compatible: "codasip,fpga-pic"
 
 include: [interrupt-controller.yaml, base.yaml]
 
@@ -18,7 +18,7 @@ interrupt-cells:
   - irq
 
 properties:
-  codasip-pic,ndev:
+  codasip-fpga-pic,ndev:
     type: int
     description: Number of external interrupts supported
     required: true

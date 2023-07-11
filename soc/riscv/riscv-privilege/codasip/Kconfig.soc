@@ -57,7 +57,7 @@ config SERIAL
 #config RISCV_HAS_PLIC
 #	default n
 
-config CODASIP_HAS_PIC
+config CODASIP_HAS_FPGA_PIC
 	default y
 
 config 2ND_LEVEL_INTERRUPTS
