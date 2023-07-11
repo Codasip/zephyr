@@ -97,7 +97,7 @@
                         status = "okay";
                 };
                 gpio00: gpio@60300000 {
-                        compatible = "codasip,l31helium-gpio";
+                        compatible = "codasip,fpga-gpio-1_1";
                         reg = <0x60300000 0x10>;
                         gpio-controller;
                         #gpio-cells = <2>;
@@ -107,7 +107,7 @@
                         status = "okay";
                 };
                 gpio01: gpio@60310000 {
-                        compatible = "codasip,l31helium-gpio";
+                        compatible = "codasip,fpga-gpio-1_1";
                         reg = <0x60310000 0x10>;
                         gpio-controller;
                         #gpio-cells = <2>;

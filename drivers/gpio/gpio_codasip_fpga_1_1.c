@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT codasip_l31helium_gpio
+#define DT_DRV_COMPAT codasip_fpga_gpio_1_1
 
 #include <zephyr/devicetree.h>
 #include <errno.h>
