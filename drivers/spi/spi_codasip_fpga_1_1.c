@@ -11,7 +11,8 @@
  * Codasip license agreement under which you obtained this file.
  */
 
-#define DT_DRV_COMPAT codasip_l31helium_spi
+//#define DT_DRV_COMPAT codasip_l31helium_spi
+#define DT_DRV_COMPAT codasip_fpga_spi_1_1
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -244,12 +245,12 @@ static uint64_t bm_spi_read(bm_spi_t *spi, uint8_t size, uint8_t mode)
 }
 #endif
 
-/* As the l31helium SPI block is only half-duplex in Serial mode, while the above layers of Zephyr 
+/* As the Codasip FPGA SPI block is only half-duplex in Serial mode, while the above layers of Zephyr 
    SD drivers assume full-duplex mode and output dummy bytes (0xff) to clock in input data, then 
-   something has to be done to fix this for the l31helium. 
+   something has to be done to fix this for the FPGA. 
 
    The solution is to switch to data read whenever an 0xff (data/dummy) byte is to be output. 
-   The l31hardware outputs 0xff while reading by default. So this solution works without having to 
+   The FPGA SPI outputs 0xff while reading by default. So this solution works without having to 
    modify other Zephyr layers (phew)!
 */
 static uint64_t bm_spi_transceive_serial(bm_spi_t *spi, uint64_t data, uint8_t num_bytes)
@@ -340,7 +341,7 @@ static int bm_spi_handle_irq(bm_spi_t *spi)
 
 #define LOG_LEVEL CONFIG_SPI_LOG_LEVEL
 #include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(spi_l31helium);
+LOG_MODULE_REGISTER(spi_codasip_fpga);
 
 #include <stdbool.h>
 
@@ -354,26 +355,26 @@ LOG_MODULE_REGISTER(spi_l31helium);
 #define SPI_MAX_CS_SIZE 1
 #define SPI_WORD_SIZE   1
 
-typedef struct spi_l31helium_data_s {
+typedef struct spi_codasip_fpga_data_s {
 	struct spi_context	ctx;
 	bm_spi_t		bm_spi;
 	uint8_t			mode;       ///< BM_SPI_COMMAND_MODE_
 	bool			cs_active_high;
-} spi_l31helium_data_t;
+} spi_codasip_fpga_data_t;
 
-typedef struct spi_l31helium_cfg_s {
+typedef struct spi_codasip_fpga_cfg_s {
 	uint32_t base;
 	uint32_t f_sys;
-} spi_l31helium_cfg_t;
+} spi_codasip_fpga_cfg_t;
 
-#define SPI_DATA(dev) ((spi_l31helium_data_t *) ((dev)->data))
+#define SPI_DATA(dev) ((spi_codasip_fpga_data_t *) ((dev)->data))
 
 
 /* Helper Functions */
-static int spi_l31helium_config( const struct device *dev, const struct spi_config *config )
+static int spi_codasip_fpga_config( const struct device *dev, const struct spi_config *config )
 {
-//	const spi_l31helium_cfg_t      *cfg      =  dev->config;
-	spi_l31helium_data_t           *context  =  dev->data;
+//	const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
+	spi_codasip_fpga_data_t        *context  =  dev->data;
 	bm_spi_t                       *bm_spi   = &context->bm_spi;
 //	SPI_Type                       *base     =  cfg->base;		/* SPI Base address */
 
@@ -493,11 +494,11 @@ static int spi_l31helium_config( const struct device *dev, const struct spi_conf
 	return 0;
 }
 
-static void spi_l31helium_xfer(const struct device *dev,
-			       const struct spi_config *config)
+static void spi_codasip_fpga_xfer(const struct device *dev,
+			          const struct spi_config *config)
 {
-//	const spi_l31helium_cfg_t      *cfg      =  dev->config;
-	spi_l31helium_data_t           *context  =  dev->data;
+//	const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
+	spi_codasip_fpga_data_t        *context  =  dev->data;
 	bm_spi_t                       *bm_spi   = &context->bm_spi;
 
 	struct spi_context *ctx = &SPI_DATA(dev)->ctx;
@@ -540,10 +541,10 @@ static void spi_l31helium_xfer(const struct device *dev,
 #define SD_PWR_EN_N_NODE DT_ALIAS(sd_pwr_en_n_out)
 static const struct gpio_dt_spec sd_pwr_en_n_out = GPIO_DT_SPEC_GET(SD_PWR_EN_N_NODE, gpios);
 
-static int spi_l31helium_init(const struct device *dev)
+static int spi_codasip_fpga_init(const struct device *dev)
 {
-//	const spi_l31helium_cfg_t      *cfg      =  dev->config;
-//	spi_l31helium_data_t           *context  =  dev->data;
+//	const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
+//	spi_codasip_fpga_data_t        *context  =  dev->data;
 //	bm_spi_t                       *bm_spi   = &context->bm_spi;
 
 	// LOG_INF("SPI address 0x%x", (uint32_t) bm_spi->regs);
@@ -554,38 +555,38 @@ static int spi_l31helium_init(const struct device *dev)
 
 /* API Functions */
 
-static int spi_l31helium_transceive(const struct device *dev,
+static int spi_codasip_fpga_transceive(const struct device *dev,
                                     const struct spi_config *config,
                                     const struct spi_buf_set *tx_bufs,
                                     const struct spi_buf_set *rx_bufs)
 {
 	int ret_val;
 
-	ret_val = spi_l31helium_config( dev, config );
+	ret_val = spi_codasip_fpga_config( dev, config );
 
 	if ( ret_val == 0 )
 	{
 		spi_context_buffers_setup( &SPI_DATA(dev)->ctx, tx_bufs, rx_bufs, 1 );
-		spi_l31helium_xfer( dev, config );
+		spi_codasip_fpga_xfer( dev, config );
 	}
 	return ret_val;
 }
 
 #ifdef CONFIG_SPI_ASYNC
-static int spi_l31helium_transceive_async(const struct device *dev,
-					const struct spi_config *config,
-					const struct spi_buf_set *tx_bufs,
-					const struct spi_buf_set *rx_bufs,
-					struct k_poll_signal *async)
+static int spi_codasip_fpga_transceive_async(const struct device *dev,
+					     const struct spi_config *config,
+					     const struct spi_buf_set *tx_bufs,
+					     const struct spi_buf_set *rx_bufs,
+					     struct k_poll_signal *async)
 {
 	return -ENOTSUP;
 }
 #endif /* CONFIG_SPI_ASYNC */
 
-static int spi_l31helium_release(const struct device *dev,
+static int spi_codasip_fpga_release(const struct device *dev,
 			       const struct spi_config *config)
 {
-	spi_l31helium_data_t           *context  =  dev->data;
+	spi_codasip_fpga_data_t           *context  =  dev->data;
 	bm_spi_t                       *bm_spi   = &context->bm_spi;
 
 	if ( bm_spi_busy( bm_spi ) ) {
@@ -596,34 +597,34 @@ static int spi_l31helium_release(const struct device *dev,
 }
 
 /* Device Instantiation */
-static struct spi_driver_api spi_l31helium_api =
+static struct spi_driver_api spi_codasip_fpga_api =
 {
-	.transceive = spi_l31helium_transceive,
+	.transceive = spi_codasip_fpga_transceive,
 
 #ifdef CONFIG_SPI_ASYNC
-	.transceive_async = spi_l31helium_transceive_async,
+	.transceive_async = spi_codasip_fpga_transceive_async,
 #endif /* CONFIG_SPI_ASYNC */
 
-	.release = spi_l31helium_release,
+	.release = spi_codasip_fpga_release,
 };
 
 #define SPI_INIT(n)							\
-	static spi_l31helium_data_t spi_l31helium_data_##n = {		\
-		SPI_CONTEXT_INIT_LOCK(spi_l31helium_data_##n, ctx),	\
-		SPI_CONTEXT_INIT_SYNC(spi_l31helium_data_##n, ctx),	\
+	static spi_codasip_fpga_data_t spi_codasip_fpga_data_##n = {		\
+		SPI_CONTEXT_INIT_LOCK(spi_codasip_fpga_data_##n, ctx),	\
+		SPI_CONTEXT_INIT_SYNC(spi_codasip_fpga_data_##n, ctx),	\
 		.bm_spi.regs = (SPI_Type *) DT_INST_REG_ADDR(n),	\
 	};								\
-	static spi_l31helium_cfg_t spi_l31helium_cfg_##n = {		\
+	static spi_codasip_fpga_cfg_t spi_codasip_fpga_cfg_##n = {		\
 		.base = DT_INST_REG_ADDR(n),				\
 	};								\
 	DEVICE_DT_INST_DEFINE(n,					\
-			spi_l31helium_init,				\
+			spi_codasip_fpga_init,				\
 			NULL,						\
-			&spi_l31helium_data_##n,			\
-			&spi_l31helium_cfg_##n,				\
+			&spi_codasip_fpga_data_##n,			\
+			&spi_codasip_fpga_cfg_##n,				\
 			POST_KERNEL,					\
 			CONFIG_SPI_INIT_PRIORITY,			\
-			&spi_l31helium_api);
+			&spi_codasip_fpga_api);
 
 DT_INST_FOREACH_STATUS_OKAY(SPI_INIT)
 

@@ -2,9 +2,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 description: |
-  Codasip L31 Helium SPI controller.
+  Codasip FPGA SPI controller.
 
-compatible: "codasip,l31helium-spi"
+compatible: "codasip,fpga-spi-1_1"
 
 include: [spi-controller.yaml]
 

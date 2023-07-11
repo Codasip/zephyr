@@ -133,14 +133,14 @@
                         status = "okay";
                 };
                 spi0: spi@60210000 {
-                        compatible = "codasip,l31helium-spi";
+                        compatible = "codasip,fpga-spi-1_1";
                         reg = <0x60210000 0x1c>;
                         #address-cells = <1>;
                         #size-cells = <0>;
                         interrupt-parent = <&pic>;
                         interrupts = <1>;
-			clock-frequency = <400000>;
-			lines = <1>;
+                        clock-frequency = <400000>;
+                        lines = <1>;
                         status = "okay";
                 };
         };
