@@ -36,18 +36,27 @@
 
 /* RISC-V Custom Control and Status Registers */
 #define CCSR_MPICFLAG	0x7c1
-#define CCSR_MPICFLAG1	0x7c4
-#define CCSR_MPICFLAG2	0x7c7
-#define CCSR_MPICFLAG3	0x7ca
-
 #define CCSR_MPICMASK	0x7c2
+
+#if CONFIG_NUM_PIC_IRQS > 32
+#define CCSR_MPICFLAG1	0x7c4
 #define CCSR_MPICMASK1	0x7c5
+#endif
+
+#if CONFIG_NUM_PIC_IRQS > 64
+#define CCSR_MPICFLAG2	0x7c7
 #define CCSR_MPICMASK2	0x7c8
+#endif
+
+#if CONFIG_NUM_PIC_IRQS > 96
+#define CCSR_MPICFLAG3	0x7ca
 #define CCSR_MPICMASK3	0x7cb
+#endif
 
 /* #define CCSR_MEXCAUSE	0x7d4 */
 
-#define PIC_IRQS        (CONFIG_NUM_IRQS - CONFIG_2ND_LVL_ISR_TBL_OFFSET)
+//#define PIC_IRQS        (CONFIG_NUM_IRQS - CONFIG_2ND_LVL_ISR_TBL_OFFSET)
+#define PIC_IRQS        (CONFIG_NUM_PIC_IRQS)
 #define PIC_EN_SIZE     ((PIC_IRQS >> 5) + 1)
 
 #if 0
@@ -85,15 +94,21 @@ void codasip_fpga_pic_irq_enable(uint32_t irq)
 		break;
 
 	case 1:
+#if CONFIG_NUM_PIC_IRQS > 32
 		csr_read_set( CCSR_MPICMASK1, 1 << irq );
+#endif
 		break;
 
 	case 2:
+#if CONFIG_NUM_PIC_IRQS > 64
 		csr_read_set( CCSR_MPICMASK2, 1 << irq );
+#endif
 		break;
 
 	case 3:
+#if CONFIG_NUM_PIC_IRQS > 96
 		csr_read_set( CCSR_MPICMASK3, 1 << irq );
+#endif
 		break;
 	} 
 
@@ -126,15 +141,21 @@ void codasip_fpga_pic_irq_disable(uint32_t irq)
 		break;
 
 	case 1:
+#if CONFIG_NUM_PIC_IRQS > 32
 		csr_read_clear( CCSR_MPICMASK1, 1 << irq );
+#endif
 		break;
 
 	case 2:
+#if CONFIG_NUM_PIC_IRQS > 64
 		csr_read_clear( CCSR_MPICMASK2, 1 << irq );
+#endif
 		break;
 
 	case 3:
+#if CONFIG_NUM_PIC_IRQS > 96
 		csr_read_clear( CCSR_MPICMASK3, 1 << irq );
+#endif
 		break;
 	} 
 
@@ -163,15 +184,21 @@ int codasip_fpga_pic_irq_is_enabled(uint32_t irq)
 		break;
 
 	case 1:
+#if CONFIG_NUM_PIC_IRQS > 32
 		enabled = csr_read( CCSR_MPICMASK1 );
+#endif
 		break;
 
 	case 2:
+#if CONFIG_NUM_PIC_IRQS > 64
 		enabled = csr_read( CCSR_MPICMASK2 );
+#endif
 		break;
 
 	case 3:
+#if CONFIG_NUM_PIC_IRQS > 96
 		enabled = csr_read( CCSR_MPICMASK3 );
+#endif
 		break;
 	} 
 
@@ -223,23 +250,29 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
 	/* Get the IRQ number generating the interrupt */
 	pending = csr_read( CCSR_MPICFLAG ) & csr_read( CCSR_MPICMASK );
 
+#if CONFIG_NUM_PIC_IRQS > 32
 	if ( pending == 0 )
 	{
 		irq += 32;
 		pending = csr_read( CCSR_MPICFLAG1 ) & csr_read( CCSR_MPICMASK1 );
 	}
+#endif
 
+#if CONFIG_NUM_PIC_IRQS > 64
 	if ( pending == 0 )
 	{
 		irq += 32;
 		pending = csr_read( CCSR_MPICFLAG2 ) & csr_read( CCSR_MPICMASK2 );
 	}
+#endif
 
+#if CONFIG_NUM_PIC_IRQS > 96
 	if ( pending == 0 )
 	{
 		irq += 32;
 		pending = csr_read( CCSR_MPICFLAG3 ) & csr_read( CCSR_MPICMASK3 );
 	}
+#endif
 
 	if ( pending == 0 )
 	{
@@ -297,15 +330,21 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
 		break;
 
 	case 1:
+#if CONFIG_NUM_PIC_IRQS > 32
 		csr_read_clear( CCSR_MPICFLAG1, 1 << irq );
+#endif
 		break;
 
 	case 2:
+#if CONFIG_NUM_PIC_IRQS > 64
 		csr_read_clear( CCSR_MPICFLAG2, 1 << irq );
+#endif
 		break;
 
 	case 3:
+#if CONFIG_NUM_PIC_IRQS > 96
 		csr_read_clear( CCSR_MPICFLAG3, 1 << irq );
+#endif
 		break;
 	} 
 }
@@ -319,15 +358,27 @@ static int codasip_fpga_pic_init(void)
 {
 	/* Ensure that all interrupts are disabled initially */
 	csr_write( CCSR_MPICMASK,  0 );
+#if CONFIG_NUM_PIC_IRQS > 32
 	csr_write( CCSR_MPICMASK1, 0 );
+#endif
+#if CONFIG_NUM_PIC_IRQS > 64
 	csr_write( CCSR_MPICMASK2, 0 );
+#endif
+#if CONFIG_NUM_PIC_IRQS > 96
 	csr_write( CCSR_MPICMASK3, 0 );
+#endif
 
 	/* Ensure that all interrupts are cleared initially */
 	csr_write( CCSR_MPICFLAG,  0 );
+#if CONFIG_NUM_PIC_IRQS > 32
 	csr_write( CCSR_MPICFLAG1, 0 );
+#endif
+#if CONFIG_NUM_PIC_IRQS > 64
 	csr_write( CCSR_MPICFLAG2, 0 );
+#endif
+#if CONFIG_NUM_PIC_IRQS > 96
 	csr_write( CCSR_MPICFLAG3, 0 );
+#endif
 
 	/* Setup IRQ handler for PIC driver */
 	IRQ_CONNECT(RISCV_MACHINE_EXT_IRQ,

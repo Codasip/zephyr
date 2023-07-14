@@ -37,34 +37,34 @@ typedef struct
     volatile uint32_t       SET; ///< (@ 0x04) Set register
     const volatile uint32_t RD;  ///< (@ 0x08) Read register */
     volatile uint32_t       DIR; ///< (@ 0x0C) Direction register
-} l31helium_gpio_regs_t;
+} l31fpga_gpio_regs_t;
 
 /** \brief Pin direction definitions */
 typedef enum
 {
-    L31HELIUM_GPIO_DIR_OUTPUT = 0,
-    L31HELIUM_GPIO_DIR_INPUT
-} l31helium_gpio_dir_t;
+    L31FPGA_GPIO_DIR_OUTPUT = 0,
+    L31FPGA_GPIO_DIR_INPUT
+} l31fpga_gpio_dir_t;
 
-typedef struct gpio_l31helium_config_s
+typedef struct gpio_l31fpga_config_s
 {
 	/* gpio_driver_config needs to be first */
 	struct gpio_driver_config  common;
-	l31helium_gpio_regs_t     *base;	/* Pointer to the base of the GPIO registers */
-	uint32_t                   port_map;	/* A bitmap of valid output pins */
+	l31fpga_gpio_regs_t       *base;        /* Pointer to the base of the GPIO registers */
+	uint32_t                   port_map;    /* A bitmap of valid output pins */
 	config_func_t              config_func;
-} gpio_l31helium_config_t;
+} gpio_l31fpga_config_t;
 
-typedef struct gpio_l31helium_data_s {
+typedef struct gpio_l31fpga_data_s {
 	/* gpio_driver_data needs to be first */
 	struct gpio_driver_data common;
 
 	uint32_t                   shadow_out;	/* A copy of the current output pin state */
 
-#ifdef CONFIG_CODASIP_L31HELIUM_IRQ
+#ifdef CONFIG_CODASIP_L31FPGA_IRQ
 	sys_slist_t cb;
 #endif
-} gpio_l31helium_data_t;
+} gpio_l31fpga_data_t;
 
 #if 0
 #define GPIO_REG_ADDR(base, offset) (base + offset)
@@ -77,23 +77,23 @@ typedef struct gpio_l31helium_data_s {
 
 enum gpio_regs {
 	GPIO_DATA_OFFSET = 0x000,
-	GPIO_DIR_OFFSET = 0x400,
-	GPIO_DEN_OFFSET = 0x51C,
-	GPIO_IS_OFFSET = 0x404,
-	GPIO_IBE_OFFSET = 0x408,
-	GPIO_IEV_OFFSET = 0x40C,
-	GPIO_IM_OFFSET = 0x410,
-	GPIO_MIS_OFFSET = 0x418,
-	GPIO_ICR_OFFSET = 0x41C,
+	GPIO_DIR_OFFSET  = 0x400,
+	GPIO_DEN_OFFSET  = 0x51C,
+	GPIO_IS_OFFSET   = 0x404,
+	GPIO_IBE_OFFSET  = 0x408,
+	GPIO_IEV_OFFSET  = 0x40C,
+	GPIO_IM_OFFSET   = 0x410,
+	GPIO_MIS_OFFSET  = 0x418,
+	GPIO_ICR_OFFSET  = 0x41C,
 };
 #endif
 
 #if 0
 /* No L31 Helium GPIO IRQs */
-static void gpio_l31helium_isr(const struct device *dev)
+static void gpio_l31fpga_isr(const struct device *dev)
 {
-	const gpio_l31helium_config_t *const cfg = dev->config;
-	gpio_l31helium_data_t *context = dev->data;
+	const gpio_l31fpga_config_t *const cfg = dev->config;
+	gpio_l31fpga_data_t *context = dev->data;
 	uint32_t base = cfg->base;
 	uint32_t int_stat = sys_read32(GPIO_REG_ADDR(base, GPIO_MIS_OFFSET));
 
@@ -103,13 +103,13 @@ static void gpio_l31helium_isr(const struct device *dev)
 }
 #endif
 
-static int gpio_l31helium_configure(const struct device *dev,
+static int gpio_l31fpga_configure(const struct device *dev,
 				    gpio_pin_t pin, gpio_flags_t flags)
 {
-	const gpio_l31helium_config_t  *cfg      = dev->config;
-	gpio_l31helium_data_t          *context  = dev->data;
-	l31helium_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
-	uint32_t                        port_map = cfg->port_map;	/* GPIO Valid IO bits, for each bit: 1 = GPIO, 0 = not GPIO */
+	const gpio_l31fpga_config_t  *cfg      = dev->config;
+	gpio_l31fpga_data_t          *context  = dev->data;
+	l31fpga_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
+	uint32_t                      port_map = cfg->port_map;	/* GPIO Valid IO bits, for each bit: 1 = GPIO, 0 = not GPIO */
 
 	if ((flags & (GPIO_PULL_UP | GPIO_PULL_DOWN)) != 0)
 	{
@@ -155,24 +155,24 @@ static int gpio_l31helium_configure(const struct device *dev,
 	return 0;
 }
 
-static int gpio_l31helium_port_get_raw(const struct device *dev,
+static int gpio_l31fpga_port_get_raw(const struct device *dev,
 				       uint32_t *value)
 {
-	const gpio_l31helium_config_t  *cfg      = dev->config;
-	l31helium_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
+	const gpio_l31fpga_config_t  *cfg      = dev->config;
+	l31fpga_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
 
 	*value = base->RD;
 
 	return 0;
 }
 
-static int gpio_l31helium_port_set_masked_raw(const struct device *dev,
+static int gpio_l31fpga_port_set_masked_raw(const struct device *dev,
 					      uint32_t mask,
 					      uint32_t value)
 {
-	const gpio_l31helium_config_t  *cfg      = dev->config;
-	gpio_l31helium_data_t          *context  = dev->data;
-	l31helium_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
+	const gpio_l31fpga_config_t  *cfg      = dev->config;
+	gpio_l31fpga_data_t          *context  = dev->data;
+	l31fpga_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
 
 	context->shadow_out &=  ~mask;
 	context->shadow_out |= ( mask & value );
@@ -183,12 +183,12 @@ static int gpio_l31helium_port_set_masked_raw(const struct device *dev,
 	return 0;
 }
 
-static int gpio_l31helium_port_set_bits_raw(const struct device *dev,
+static int gpio_l31fpga_port_set_bits_raw(const struct device *dev,
 					    uint32_t mask)
 {
-	const gpio_l31helium_config_t  *cfg      = dev->config;
-	gpio_l31helium_data_t          *context  = dev->data;
-	l31helium_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
+	const gpio_l31fpga_config_t  *cfg      = dev->config;
+	gpio_l31fpga_data_t          *context  = dev->data;
+	l31fpga_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
 
 	context->shadow_out |= mask;
 
@@ -197,12 +197,12 @@ static int gpio_l31helium_port_set_bits_raw(const struct device *dev,
 	return 0;
 }
 
-static int gpio_l31helium_port_clear_bits_raw(const struct device *dev,
+static int gpio_l31fpga_port_clear_bits_raw(const struct device *dev,
 					      uint32_t mask)
 {
-	const gpio_l31helium_config_t  *cfg      = dev->config;
-	gpio_l31helium_data_t          *context  = dev->data;
-	l31helium_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
+	const gpio_l31fpga_config_t  *cfg      = dev->config;
+	gpio_l31fpga_data_t          *context  = dev->data;
+	l31fpga_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
 
 	context->shadow_out &= ~mask;
 
@@ -211,12 +211,12 @@ static int gpio_l31helium_port_clear_bits_raw(const struct device *dev,
 	return 0;
 }
 
-static int gpio_l31helium_port_toggle_bits(const struct device *dev,
+static int gpio_l31fpga_port_toggle_bits(const struct device *dev,
 					   uint32_t mask)
 {
-	const gpio_l31helium_config_t  *cfg      = dev->config;
-	gpio_l31helium_data_t          *context  = dev->data;
-	l31helium_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
+	const gpio_l31fpga_config_t  *cfg      = dev->config;
+	gpio_l31fpga_data_t          *context  = dev->data;
+	l31fpga_gpio_regs_t          *base     = cfg->base;		/* GPIO Base address */
 
 	/* value = ~base->RD; can't read output port pins */
 
@@ -228,7 +228,7 @@ static int gpio_l31helium_port_toggle_bits(const struct device *dev,
 	return 0;
 }
 
-static int gpio_l31helium_pin_interrupt_configure(const struct device *dev,
+static int gpio_l31fpga_pin_interrupt_configure(const struct device *dev,
 						  gpio_pin_t pin,
 						  enum gpio_int_mode mode,
 						  enum gpio_int_trig trig)
@@ -237,16 +237,16 @@ static int gpio_l31helium_pin_interrupt_configure(const struct device *dev,
 	return -ENOTSUP;
 }
 
-static int gpio_l31helium_init(const struct device *dev)
+static int gpio_l31fpga_init(const struct device *dev)
 {
-	const gpio_l31helium_config_t  *cfg      = dev->config;
+	const gpio_l31fpga_config_t  *cfg      = dev->config;
 
 	cfg->config_func(dev);
 
 	return 0;
 }
 
-static int gpio_l31helium_manage_callback(const struct device *dev,
+static int gpio_l31fpga_manage_callback(const struct device *dev,
 					  struct gpio_callback *callback,
 					  bool set)
 {
@@ -254,62 +254,62 @@ static int gpio_l31helium_manage_callback(const struct device *dev,
 	return -ENOTSUP;
 }
 
-static uint32_t gpio_l31helium_get_pending_int(const struct device *dev)
+static uint32_t gpio_l31fpga_get_pending_int(const struct device *dev)
 {
         return 0;
 }
 
-static const struct gpio_driver_api gpio_l31helium_driver_api = {
-	.pin_configure           = gpio_l31helium_configure,
-	.port_get_raw            = gpio_l31helium_port_get_raw,
-	.port_set_masked_raw     = gpio_l31helium_port_set_masked_raw,
-	.port_set_bits_raw       = gpio_l31helium_port_set_bits_raw,
-	.port_clear_bits_raw     = gpio_l31helium_port_clear_bits_raw,
-	.port_toggle_bits        = gpio_l31helium_port_toggle_bits,
-	.pin_interrupt_configure = gpio_l31helium_pin_interrupt_configure,
-	.manage_callback         = gpio_l31helium_manage_callback,
-        .get_pending_int         = gpio_l31helium_get_pending_int
+static const struct gpio_driver_api gpio_l31fpga_driver_api = {
+	.pin_configure           = gpio_l31fpga_configure,
+	.port_get_raw            = gpio_l31fpga_port_get_raw,
+	.port_set_masked_raw     = gpio_l31fpga_port_set_masked_raw,
+	.port_set_bits_raw       = gpio_l31fpga_port_set_bits_raw,
+	.port_clear_bits_raw     = gpio_l31fpga_port_clear_bits_raw,
+	.port_toggle_bits        = gpio_l31fpga_port_toggle_bits,
+	.pin_interrupt_configure = gpio_l31fpga_pin_interrupt_configure,
+	.manage_callback         = gpio_l31fpga_manage_callback,
+        .get_pending_int     = gpio_l31fpga_get_pending_int
 };
 
-#define L31HELIUM_GPIO_DEVICE(n)							\
-	static void port_## n ##_l31helium_config_func(const struct device *dev);	\
-											\
-	static gpio_l31helium_data_t port_## n ##_l31helium_runtime = {			\
-		.shadow_out  = 0, /* GPIO Output is set to zero on reset */		\
-	};										\
-											\
-	static const gpio_l31helium_config_t gpio_l31helium_port_## n ##_config = {	\
-		.common = {								\
-			.port_pin_mask = GPIO_PORT_PIN_MASK_FROM_DT_INST(n),		\
-		},									\
-		.base        = (l31helium_gpio_regs_t *) DT_INST_REG_ADDR(n),		\
-		.port_map    = BIT_MASK(DT_INST_PROP(n, ngpios)),			\
-		.config_func = port_## n ##_l31helium_config_func,			\
-	};										\
-											\
-	DEVICE_DT_INST_DEFINE(n,							\
-			    gpio_l31helium_init,					\
-			    NULL,							\
-			    &port_## n ##_l31helium_runtime,				\
-			    &gpio_l31helium_port_## n ##_config,			\
-			    POST_KERNEL, CONFIG_GPIO_INIT_PRIORITY,			\
-			    &gpio_l31helium_driver_api);				\
-											\
-	static void port_## n ##_l31helium_config_func(const struct device *dev)	\
-	{										\
-		/* No L31 Helium GPIO IRQs */						\
+#define L31FPGA_GPIO_DEVICE(n)                                                 \
+	static void port_## n ##_l31fpga_config_func(const struct device *dev);    \
+                                                                               \
+	static gpio_l31fpga_data_t port_## n ##_l31fpga_runtime = {                \
+		.shadow_out  = 0, /* GPIO Output is set to zero on reset */            \
+	};                                                                         \
+                                                                               \
+	static const gpio_l31fpga_config_t gpio_l31fpga_port_## n ##_config = {    \
+		.common = {                                                            \
+			.port_pin_mask = GPIO_PORT_PIN_MASK_FROM_DT_INST(n),               \
+		},                                                                     \
+		.base        = (l31fpga_gpio_regs_t *) DT_INST_REG_ADDR(n),            \
+		.port_map    = BIT_MASK(DT_INST_PROP(n, ngpios)),                      \
+		.config_func = port_## n ##_l31fpga_config_func,                       \
+	};                                                                         \
+                                                                               \
+	DEVICE_DT_INST_DEFINE(n,                                                   \
+			    gpio_l31fpga_init,                                             \
+			    NULL,                                                          \
+			    &port_## n ##_l31fpga_runtime,                                 \
+			    &gpio_l31fpga_port_## n ##_config,                             \
+			    POST_KERNEL, CONFIG_GPIO_INIT_PRIORITY,                        \
+			    &gpio_l31fpga_driver_api);                                     \
+                                                                               \
+	static void port_## n ##_l31fpga_config_func(const struct device *dev)     \
+	{                                                                          \
+		/* No L31 FPGA GPIO IRQs */                                          \
 	}
 
 #if 0
-	static void port_## n ##_l31helium_config_func(const struct device *dev)	\
-	{										\
-		IRQ_CONNECT(DT_INST_IRQN(n),			\
-			    DT_INST_IRQ(n, priority),		\
-			    gpio_l31helium_isr,						\
-			    DEVICE_DT_INST_GET(n), 0);					\
-											\
-		irq_enable(DT_INST_IRQN(n));			\
+	static void port_## n ##_l31fpga_config_func(const struct device *dev)     \
+	{                                                                          \
+		IRQ_CONNECT(DT_INST_IRQN(n),                                           \
+			    DT_INST_IRQ(n, priority),                                      \
+			    gpio_l31fpga_isr,                                              \
+			    DEVICE_DT_INST_GET(n), 0);                                     \
+                                                                               \
+		irq_enable(DT_INST_IRQN(n));                                           \
 	}
 #endif
 
-DT_INST_FOREACH_STATUS_OKAY(L31HELIUM_GPIO_DEVICE)
+DT_INST_FOREACH_STATUS_OKAY(L31FPGA_GPIO_DEVICE)

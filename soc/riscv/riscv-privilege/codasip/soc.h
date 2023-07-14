@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#ifndef __CODASIP_L31HELIUM_SOC_H_
-#define __CODASIP_L31HELIUM_SOC_H_
+#ifndef __CODASIP_L31FPGA_SOC_H_
+#define __CODASIP_L31FPGA_SOC_H_
 
 #include "../common/soc_common.h"
 #include <zephyr/devicetree.h>
@@ -17,5 +17,5 @@
 #define SOC_MCAUSE_ECALL_EXP 11 /* Machine ECALL instruction */
 #endif
 
-#endif /* __CODASIP_L31HELIUM_SOC_H_ */
+#endif /* __CODASIP_L31FPGA_SOC_H_ */
 
