@@ -8,12 +8,12 @@
 
 /dts-v1/;
 
-#include <codasip/l31platformiiot.dtsi>
+#include <codasip/l31iiot.dtsi>
 #include <zephyr/dt-bindings/gpio/gpio.h>
 #include <zephyr/devicetree/gpio.h>
 
 / {
-        compatible = "codasip,l31platformiiot";
+        compatible = "codasip,l31iiot";
 
         aliases {
                 led0 = &led0;

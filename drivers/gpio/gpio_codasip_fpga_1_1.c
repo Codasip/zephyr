@@ -18,18 +18,6 @@
 
 typedef void (*config_func_t)(const struct device *dev);
 
-#if 0
-                gpio0: gpio@40004000 {
-                        compatible = "ti,stellaris-gpio";
-                        reg = <0x40004000 0x1000>;
-                        interrupts = <0 3>;
-                        gpio-controller;
-                        #gpio-cells = <2>;			What is this?
-                        ngpios = <8>;  				Number of GPIO pins
-                };
-
-#endif
-
 /** \brief General purpose input and output (GPIO) */
 typedef struct
 {

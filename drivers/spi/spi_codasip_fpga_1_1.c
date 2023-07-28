@@ -262,15 +262,15 @@ static uint64_t bm_spi_transceive_serial(bm_spi_t *spi, uint64_t data, uint8_t n
     {
         spi->regs->DATA = data;
 
-	if ( ( data & 0xff ) == 0xff )
-	{
+		if ( ( data & 0xff ) == 0xff )
+		{
             /* Receive instead of transmit */
             spi->regs->COMMAND =   BM_SPI_COMMAND_RW_Read     << BM_SPI_COMMAND_RW_Pos
                                  | BM_SPI_COMMAND_SIZE_8Bit   << BM_SPI_COMMAND_SIZE_Pos
                                  | BM_SPI_COMMAND_MODE_Serial << BM_SPI_COMMAND_MODE_Pos;
-	}
-	else
-	{
+		}
+		else
+		{
             spi->regs->COMMAND =   BM_SPI_COMMAND_RW_Write    << BM_SPI_COMMAND_RW_Pos
                                  | BM_SPI_COMMAND_SIZE_8Bit   << BM_SPI_COMMAND_SIZE_Pos
                                  | BM_SPI_COMMAND_MODE_Serial << BM_SPI_COMMAND_MODE_Pos;
@@ -278,7 +278,16 @@ static uint64_t bm_spi_transceive_serial(bm_spi_t *spi, uint64_t data, uint8_t n
         bm_spi_wait(spi);
 
         data_rx <<= 8;
-        data_rx  |= (uint8_t) spi->regs->DATAREAD;
+		if ( ( data & 0xff ) == 0xff )
+		{
+            /* Receive instead of transmit */
+			data_rx  |= (uint8_t) spi->regs->DATAREAD;
+		}
+		else
+		{
+            /* "Receive" transmit data */
+			data_rx  |= (uint8_t) data;
+        }
     }
 
     return data_rx;
@@ -502,10 +511,9 @@ static void spi_codasip_fpga_xfer(const struct device *dev,
 	bm_spi_t                       *bm_spi   = &context->bm_spi;
 
 	struct spi_context *ctx = &SPI_DATA(dev)->ctx;
-	uint32_t send_len = spi_context_longest_current_buf(ctx);
-	uint8_t read_data, write_data;
 
-	//LOG_INF("T%d R%d", ctx->tx_len, ctx->rx_len);
+	// LOG_INF(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
+	// printk(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
 
 	if ( context->cs_active_high ) {
 		bm_spi_cs_deassert( bm_spi );
@@ -514,20 +522,54 @@ static void spi_codasip_fpga_xfer(const struct device *dev,
 		bm_spi_cs_assert( bm_spi );
 	}
 
+#if 0
+	/* This fails on write, needs spi_context_update_tx/rx() to chain buffers */
+	uint32_t send_len = spi_context_longest_current_buf(ctx);
+	uint8_t read_data, write_data;
+
 	for (uint32_t i = 0; i < send_len; i++) {
 		/* Send a frame */
-		if ( i < ctx->tx_len ) {
+		if ( ctx->tx_buf != NULL  &&  i < ctx->tx_len ) {
 			write_data = (uint8_t) (ctx->tx_buf)[i];
 		} else {
 			write_data = (uint8_t) 0xff;
 		}
 
 		read_data = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) write_data, 1 );
-		if ( i < ctx->rx_len ) {
+		if ( ctx->rx_buf != NULL  &&  i < ctx->rx_len ) {
 			ctx->rx_buf[i] = read_data;
 		}
 	}
 
+#else
+
+	uint8_t txd, rxd;
+
+	while (spi_context_tx_on(ctx) || spi_context_rx_on(ctx)) {
+		bool send = false;
+
+		if (spi_context_tx_buf_on(ctx)) {
+			send = true;
+			txd = *ctx->tx_buf;
+		}
+		else {
+			txd = 0xff;
+		}
+		
+		rxd = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) txd, 1 );
+
+		if (send) {
+			spi_context_update_tx(ctx, 1, 1);
+		}
+
+		if (spi_context_rx_buf_on(ctx)) {
+			*ctx->rx_buf = rxd;
+			spi_context_update_rx(ctx, 1, 1);
+		}
+	}
+#endif
+
+	/* Deassert the CS line */
 	if ( context->cs_active_high ) {
 		bm_spi_cs_assert( bm_spi );
 	}

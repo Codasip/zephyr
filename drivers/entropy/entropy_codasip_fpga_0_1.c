@@ -168,6 +168,8 @@ static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev,
 
     size_t count = 0;
 
+	// printk( " Getting %d bytes of TRNG ", length );
+
     while (length) {
 #if 0
         size_t available;

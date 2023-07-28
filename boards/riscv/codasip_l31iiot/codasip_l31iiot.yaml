@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-identifier: codasip,l31platformiiot
+identifier: codasip,l31iiot
 name: Codasip SoC with L31 softcore CPU
 type: mcu
 arch: riscv32
