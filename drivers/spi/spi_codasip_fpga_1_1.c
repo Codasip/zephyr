@@ -262,15 +262,15 @@ static uint64_t bm_spi_transceive_serial(bm_spi_t *spi, uint64_t data, uint8_t n
     {
         spi->regs->DATA = data;
 
-		if ( ( data & 0xff ) == 0xff )
-		{
+        if ( ( data & 0xff ) == 0xff )
+        {
             /* Receive instead of transmit */
             spi->regs->COMMAND =   BM_SPI_COMMAND_RW_Read     << BM_SPI_COMMAND_RW_Pos
                                  | BM_SPI_COMMAND_SIZE_8Bit   << BM_SPI_COMMAND_SIZE_Pos
                                  | BM_SPI_COMMAND_MODE_Serial << BM_SPI_COMMAND_MODE_Pos;
-		}
-		else
-		{
+        }
+        else
+        {
             spi->regs->COMMAND =   BM_SPI_COMMAND_RW_Write    << BM_SPI_COMMAND_RW_Pos
                                  | BM_SPI_COMMAND_SIZE_8Bit   << BM_SPI_COMMAND_SIZE_Pos
                                  | BM_SPI_COMMAND_MODE_Serial << BM_SPI_COMMAND_MODE_Pos;
@@ -278,15 +278,15 @@ static uint64_t bm_spi_transceive_serial(bm_spi_t *spi, uint64_t data, uint8_t n
         bm_spi_wait(spi);
 
         data_rx <<= 8;
-		if ( ( data & 0xff ) == 0xff )
-		{
-            /* Receive instead of transmit */
-			data_rx  |= (uint8_t) spi->regs->DATAREAD;
-		}
-		else
-		{
-            /* "Receive" transmit data */
-			data_rx  |= (uint8_t) data;
+        if ( ( data & 0xff ) == 0xff )
+        {
+                /* Receive instead of transmit */
+                data_rx  |= (uint8_t) spi->regs->DATAREAD;
+        }
+        else
+        {
+                /* "Receive" transmit data */
+                data_rx  |= (uint8_t) data;
         }
     }
 
@@ -365,15 +365,15 @@ LOG_MODULE_REGISTER(spi_codasip_fpga);
 #define SPI_WORD_SIZE   1
 
 typedef struct spi_codasip_fpga_data_s {
-	struct spi_context	ctx;
-	bm_spi_t		bm_spi;
-	uint8_t			mode;       ///< BM_SPI_COMMAND_MODE_
-	bool			cs_active_high;
+        struct spi_context      ctx;
+        bm_spi_t                bm_spi;
+        uint8_t                 mode;       ///< BM_SPI_COMMAND_MODE_
+        bool                    cs_active_high;
 } spi_codasip_fpga_data_t;
 
 typedef struct spi_codasip_fpga_cfg_s {
-	uint32_t base;
-	uint32_t f_sys;
+        uint32_t base;
+        uint32_t f_sys;
 } spi_codasip_fpga_cfg_t;
 
 #define SPI_DATA(dev) ((spi_codasip_fpga_data_t *) ((dev)->data))
@@ -382,202 +382,202 @@ typedef struct spi_codasip_fpga_cfg_s {
 /* Helper Functions */
 static int spi_codasip_fpga_config( const struct device *dev, const struct spi_config *config )
 {
-//	const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
-	spi_codasip_fpga_data_t        *context  =  dev->data;
-	bm_spi_t                       *bm_spi   = &context->bm_spi;
-//	SPI_Type                       *base     =  cfg->base;		/* SPI Base address */
+//      const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
+        spi_codasip_fpga_data_t        *context  =  dev->data;
+        bm_spi_t                       *bm_spi   = &context->bm_spi;
+//      SPI_Type                       *base     =  cfg->base;          /* SPI Base address */
 
-	bm_spi_config_t bm_spi_config =
-	{
-		.frequency = config->frequency,
-		.use_irq   = bm_spi->use_irq,
-	};
-	// LOG_INF("config->frequency = %d", config->frequency );
+        bm_spi_config_t bm_spi_config =
+        {
+                .frequency = config->frequency,
+                .use_irq   = bm_spi->use_irq,
+        };
+        // LOG_INF("config->frequency = %d", config->frequency );
 
 
-	uint8_t cs = 0x00;
+        uint8_t cs = 0x00;
 
-	if (config->slave != 0) {
-		if (config->slave > SPI_MAX_CS_SIZE) {
-			LOG_ERR("More slaves than supported");
-			return -ENOTSUP;
-		}
-		cs = (uint8_t)(config->slave);
-	}
+        if (config->slave != 0) {
+                if (config->slave > SPI_MAX_CS_SIZE) {
+                        LOG_ERR("More slaves than supported");
+                        return -ENOTSUP;
+                }
+                cs = (uint8_t)(config->slave);
+        }
 
-	// LOG_INF("config->operation = 0x%x", config->operation );
+        // LOG_INF("config->operation = 0x%x", config->operation );
 
-	if (config->operation & SPI_HALF_DUPLEX) {
-		LOG_ERR("Half-duplex not supported");
-		return -ENOTSUP;
-	}
+        if (config->operation & SPI_HALF_DUPLEX) {
+                LOG_ERR("Half-duplex not supported");
+                return -ENOTSUP;
+        }
 
-	if (SPI_WORD_SIZE_GET(config->operation) != 8) {
-		LOG_ERR("Word size must be %d", SPI_WORD_SIZE);
-		return -ENOTSUP;
-	}
+        if (SPI_WORD_SIZE_GET(config->operation) != 8) {
+                LOG_ERR("Word size must be %d", SPI_WORD_SIZE);
+                return -ENOTSUP;
+        }
 
-	context->cs_active_high = ( config->operation & SPI_CS_ACTIVE_HIGH ) ? true : false; 
-	// LOG_INF("CS active high = %s", context->cs_active_high ? "true" : "false" );
+        context->cs_active_high = ( config->operation & SPI_CS_ACTIVE_HIGH ) ? true : false; 
+        // LOG_INF("CS active high = %s", context->cs_active_high ? "true" : "false" );
 
 #if 0 // ToDo
-	if (config->operation & SPI_LOCK_ON) {
-		LOG_ERR("Lock On not supported");
-		return -ENOTSUP;
-	}
+        if (config->operation & SPI_LOCK_ON) {
+                LOG_ERR("Lock On not supported");
+                return -ENOTSUP;
+        }
 #endif
 
-	if (IS_ENABLED(CONFIG_SPI_EXTENDED_MODES) &&
-	    (config->operation & SPI_LINES_MASK) >= SPI_LINES_OCTAL) {
-		LOG_ERR("Only supports single, dual and quad SPI line modes");
-		return -ENOTSUP;
-	}
+        if (IS_ENABLED(CONFIG_SPI_EXTENDED_MODES) &&
+            (config->operation & SPI_LINES_MASK) >= SPI_LINES_OCTAL) {
+                LOG_ERR("Only supports single, dual and quad SPI line modes");
+                return -ENOTSUP;
+        }
 
         switch ( config->operation & SPI_LINES_MASK )
-	{
+        {
         case SPI_LINES_SINGLE:
                 context->mode = BM_SPI_COMMAND_MODE_Serial;
-		// LOG_INF("SPI_LINES_SINGLE selected");
+                // LOG_INF("SPI_LINES_SINGLE selected");
                 break;
 
 #if 0  // Not supporting 2 or 4 lines (QSPI) at the moment
 #if DT_INST_PROP(0, lines) > 1
         case SPI_LINES_DUAL:
                 context->mode = BM_SPI_COMMAND_MODE_Dual;
-		LOG_INF("SPI_LINES_DUAL selected");
+                LOG_INF("SPI_LINES_DUAL selected");
                 break;
 #endif
 
 #if DT_INST_PROP(0, lines) > 2
         case SPI_LINES_QUAD:
                 context->mode = BM_SPI_COMMAND_MODE_Quad;
-		LOG_INF("SPI_LINES_QUAD selected");
+                LOG_INF("SPI_LINES_QUAD selected");
                 break;
 #endif
 #endif
 
         case SPI_LINES_DUAL:
-		LOG_ERR("SPI_LINES_DUAL not supported");
-		return -ENOTSUP;
+                LOG_ERR("SPI_LINES_DUAL not supported");
+                return -ENOTSUP;
 
         case SPI_LINES_QUAD:
-		LOG_ERR("SPI_LINES_QUAD not supported");
-		return -ENOTSUP;
+                LOG_ERR("SPI_LINES_QUAD not supported");
+                return -ENOTSUP;
 
         case SPI_LINES_OCTAL:
-		LOG_ERR("SPI_LINES_OCTAL not supported");
-		return -ENOTSUP;
+                LOG_ERR("SPI_LINES_OCTAL not supported");
+                return -ENOTSUP;
         }
 
-	if (config->operation & SPI_TRANSFER_LSB) {
-		LOG_ERR("LSB first not supported");
-		return -ENOTSUP;
-	}
+        if (config->operation & SPI_TRANSFER_LSB) {
+                LOG_ERR("LSB first not supported");
+                return -ENOTSUP;
+        }
 
-	/* Actually the L31 Helium SPI module is fixed as CPOL=CPHA=1, which is compatible with CPOL=CPHA=0, apparently.
-	   So, accept CPOL=CPHA=1 or CPOL=CPHA=0 */
-	if (   ( ( config->operation & SPI_MODE_CPOL) != 0 )
-	     ^ ( ( config->operation & SPI_MODE_CPHA) != 0 ) ) {
-		LOG_ERR("Only supports CPOL=CPHA=0 or CPOL=CPHA=1");
-		return -ENOTSUP;
-	}
+        /* Actually the L31 Helium SPI module is fixed as CPOL=CPHA=1, which is compatible with CPOL=CPHA=0, apparently.
+           So, accept CPOL=CPHA=1 or CPOL=CPHA=0 */
+        if (   ( ( config->operation & SPI_MODE_CPOL) != 0 )
+             ^ ( ( config->operation & SPI_MODE_CPHA) != 0 ) ) {
+                LOG_ERR("Only supports CPOL=CPHA=0 or CPOL=CPHA=1");
+                return -ENOTSUP;
+        }
 
-	if (config->operation & SPI_OP_MODE_SLAVE) {
-		LOG_ERR("Slave mode not supported");
-		return -ENOTSUP;
-	}
+        if (config->operation & SPI_OP_MODE_SLAVE) {
+                LOG_ERR("Slave mode not supported");
+                return -ENOTSUP;
+        }
 
-	/* Set Loopback */
-	if (config->operation & SPI_MODE_LOOP) {
-		LOG_ERR("Loopback mode not supported");
-		return -ENOTSUP;
-	}
+        /* Set Loopback */
+        if (config->operation & SPI_MODE_LOOP) {
+                LOG_ERR("Loopback mode not supported");
+                return -ENOTSUP;
+        }
 
-//	bm_spi->regs       = base;  ///< Pointer to the peripheral registers DONE BELOW IN SPI_INIT()
-	bm_spi->ext_irq_id = 0;     ///< External interrupt identifier
-	bm_spi->irq_flag   = 0;     ///< Flag signaling that interrupt happened
-	bm_spi->use_irq    = false; ///< Interrupt configuration
+//      bm_spi->regs       = base;  ///< Pointer to the peripheral registers DONE BELOW IN SPI_INIT()
+        bm_spi->ext_irq_id = 0;     ///< External interrupt identifier
+        bm_spi->irq_flag   = 0;     ///< Flag signaling that interrupt happened
+        bm_spi->use_irq    = false; ///< Interrupt configuration
 
-	bm_spi_init( bm_spi, &bm_spi_config );
+        bm_spi_init( bm_spi, &bm_spi_config );
 
-	return 0;
+        return 0;
 }
 
 static void spi_codasip_fpga_xfer(const struct device *dev,
-			          const struct spi_config *config)
+                                  const struct spi_config *config)
 {
-//	const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
-	spi_codasip_fpga_data_t        *context  =  dev->data;
-	bm_spi_t                       *bm_spi   = &context->bm_spi;
+//      const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
+        spi_codasip_fpga_data_t        *context  =  dev->data;
+        bm_spi_t                       *bm_spi   = &context->bm_spi;
 
-	struct spi_context *ctx = &SPI_DATA(dev)->ctx;
+        struct spi_context *ctx = &SPI_DATA(dev)->ctx;
 
-	// LOG_INF(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
-	// printk(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
+        // LOG_INF(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
+        // printk(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
 
-	if ( context->cs_active_high ) {
-		bm_spi_cs_deassert( bm_spi );
-	}
-	else {
-		bm_spi_cs_assert( bm_spi );
-	}
+        if ( context->cs_active_high ) {
+                bm_spi_cs_deassert( bm_spi );
+        }
+        else {
+                bm_spi_cs_assert( bm_spi );
+        }
 
 #if 0
-	/* This fails on write, needs spi_context_update_tx/rx() to chain buffers */
-	uint32_t send_len = spi_context_longest_current_buf(ctx);
-	uint8_t read_data, write_data;
+        /* This fails on write, needs spi_context_update_tx/rx() to chain buffers */
+        uint32_t send_len = spi_context_longest_current_buf(ctx);
+        uint8_t read_data, write_data;
 
-	for (uint32_t i = 0; i < send_len; i++) {
-		/* Send a frame */
-		if ( ctx->tx_buf != NULL  &&  i < ctx->tx_len ) {
-			write_data = (uint8_t) (ctx->tx_buf)[i];
-		} else {
-			write_data = (uint8_t) 0xff;
-		}
+        for (uint32_t i = 0; i < send_len; i++) {
+                /* Send a frame */
+                if ( ctx->tx_buf != NULL  &&  i < ctx->tx_len ) {
+                        write_data = (uint8_t) (ctx->tx_buf)[i];
+                } else {
+                        write_data = (uint8_t) 0xff;
+                }
 
-		read_data = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) write_data, 1 );
-		if ( ctx->rx_buf != NULL  &&  i < ctx->rx_len ) {
-			ctx->rx_buf[i] = read_data;
-		}
-	}
+                read_data = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) write_data, 1 );
+                if ( ctx->rx_buf != NULL  &&  i < ctx->rx_len ) {
+                        ctx->rx_buf[i] = read_data;
+                }
+        }
 
 #else
 
-	uint8_t txd, rxd;
+        uint8_t txd, rxd;
 
-	while (spi_context_tx_on(ctx) || spi_context_rx_on(ctx)) {
-		bool send = false;
+        while (spi_context_tx_on(ctx) || spi_context_rx_on(ctx)) {
+                bool send = false;
 
-		if (spi_context_tx_buf_on(ctx)) {
-			send = true;
-			txd = *ctx->tx_buf;
-		}
-		else {
-			txd = 0xff;
-		}
-		
-		rxd = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) txd, 1 );
+                if (spi_context_tx_buf_on(ctx)) {
+                        send = true;
+                        txd = *ctx->tx_buf;
+                }
+                else {
+                        txd = 0xff;
+                }
+                
+                rxd = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) txd, 1 );
 
-		if (send) {
-			spi_context_update_tx(ctx, 1, 1);
-		}
+                if (send) {
+                        spi_context_update_tx(ctx, 1, 1);
+                }
 
-		if (spi_context_rx_buf_on(ctx)) {
-			*ctx->rx_buf = rxd;
-			spi_context_update_rx(ctx, 1, 1);
-		}
-	}
+                if (spi_context_rx_buf_on(ctx)) {
+                        *ctx->rx_buf = rxd;
+                        spi_context_update_rx(ctx, 1, 1);
+                }
+        }
 #endif
 
-	/* Deassert the CS line */
-	if ( context->cs_active_high ) {
-		bm_spi_cs_assert( bm_spi );
-	}
-	else {
-		bm_spi_cs_deassert( bm_spi );
-	}
+        /* Deassert the CS line */
+        if ( context->cs_active_high ) {
+                bm_spi_cs_assert( bm_spi );
+        }
+        else {
+                bm_spi_cs_deassert( bm_spi );
+        }
 
-	spi_context_complete(ctx, dev, 0);
+        spi_context_complete(ctx, dev, 0);
 }
 
 #define SD_PWR_EN_N_NODE DT_ALIAS(sd_pwr_en_n_out)
@@ -585,14 +585,14 @@ static const struct gpio_dt_spec sd_pwr_en_n_out = GPIO_DT_SPEC_GET(SD_PWR_EN_N_
 
 static int spi_codasip_fpga_init(const struct device *dev)
 {
-//	const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
-//	spi_codasip_fpga_data_t        *context  =  dev->data;
-//	bm_spi_t                       *bm_spi   = &context->bm_spi;
+//      const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
+//      spi_codasip_fpga_data_t        *context  =  dev->data;
+//      bm_spi_t                       *bm_spi   = &context->bm_spi;
 
-	// LOG_INF("SPI address 0x%x", (uint32_t) bm_spi->regs);
-	gpio_pin_set_dt(&sd_pwr_en_n_out, 0);
+        // LOG_INF("SPI address 0x%x", (uint32_t) bm_spi->regs);
+        gpio_pin_set_dt(&sd_pwr_en_n_out, 0);
 
-	return 0;
+        return 0;
 }
 
 /* API Functions */
@@ -602,71 +602,71 @@ static int spi_codasip_fpga_transceive(const struct device *dev,
                                     const struct spi_buf_set *tx_bufs,
                                     const struct spi_buf_set *rx_bufs)
 {
-	int ret_val;
+        int ret_val;
 
-	ret_val = spi_codasip_fpga_config( dev, config );
+        ret_val = spi_codasip_fpga_config( dev, config );
 
-	if ( ret_val == 0 )
-	{
-		spi_context_buffers_setup( &SPI_DATA(dev)->ctx, tx_bufs, rx_bufs, 1 );
-		spi_codasip_fpga_xfer( dev, config );
-	}
-	return ret_val;
+        if ( ret_val == 0 )
+        {
+                spi_context_buffers_setup( &SPI_DATA(dev)->ctx, tx_bufs, rx_bufs, 1 );
+                spi_codasip_fpga_xfer( dev, config );
+        }
+        return ret_val;
 }
 
 #ifdef CONFIG_SPI_ASYNC
 static int spi_codasip_fpga_transceive_async(const struct device *dev,
-					     const struct spi_config *config,
-					     const struct spi_buf_set *tx_bufs,
-					     const struct spi_buf_set *rx_bufs,
-					     struct k_poll_signal *async)
+                                             const struct spi_config *config,
+                                             const struct spi_buf_set *tx_bufs,
+                                             const struct spi_buf_set *rx_bufs,
+                                             struct k_poll_signal *async)
 {
-	return -ENOTSUP;
+        return -ENOTSUP;
 }
 #endif /* CONFIG_SPI_ASYNC */
 
 static int spi_codasip_fpga_release(const struct device *dev,
-			       const struct spi_config *config)
+                               const struct spi_config *config)
 {
-	spi_codasip_fpga_data_t           *context  =  dev->data;
-	bm_spi_t                       *bm_spi   = &context->bm_spi;
+        spi_codasip_fpga_data_t           *context  =  dev->data;
+        bm_spi_t                       *bm_spi   = &context->bm_spi;
 
-	if ( bm_spi_busy( bm_spi ) ) {
-		return -EBUSY;
-	}
+        if ( bm_spi_busy( bm_spi ) ) {
+                return -EBUSY;
+        }
 
-	return 0;
+        return 0;
 }
 
 /* Device Instantiation */
 static struct spi_driver_api spi_codasip_fpga_api =
 {
-	.transceive = spi_codasip_fpga_transceive,
+        .transceive = spi_codasip_fpga_transceive,
 
 #ifdef CONFIG_SPI_ASYNC
-	.transceive_async = spi_codasip_fpga_transceive_async,
+        .transceive_async = spi_codasip_fpga_transceive_async,
 #endif /* CONFIG_SPI_ASYNC */
 
-	.release = spi_codasip_fpga_release,
+        .release = spi_codasip_fpga_release,
 };
 
-#define SPI_INIT(n)							\
-	static spi_codasip_fpga_data_t spi_codasip_fpga_data_##n = {		\
-		SPI_CONTEXT_INIT_LOCK(spi_codasip_fpga_data_##n, ctx),	\
-		SPI_CONTEXT_INIT_SYNC(spi_codasip_fpga_data_##n, ctx),	\
-		.bm_spi.regs = (SPI_Type *) DT_INST_REG_ADDR(n),	\
-	};								\
-	static spi_codasip_fpga_cfg_t spi_codasip_fpga_cfg_##n = {		\
-		.base = DT_INST_REG_ADDR(n),				\
-	};								\
-	DEVICE_DT_INST_DEFINE(n,					\
-			spi_codasip_fpga_init,				\
-			NULL,						\
-			&spi_codasip_fpga_data_##n,			\
-			&spi_codasip_fpga_cfg_##n,				\
-			POST_KERNEL,					\
-			CONFIG_SPI_INIT_PRIORITY,			\
-			&spi_codasip_fpga_api);
+#define SPI_INIT(n)                                                     \
+        static spi_codasip_fpga_data_t spi_codasip_fpga_data_##n = {    \
+                SPI_CONTEXT_INIT_LOCK(spi_codasip_fpga_data_##n, ctx),  \
+                SPI_CONTEXT_INIT_SYNC(spi_codasip_fpga_data_##n, ctx),  \
+                .bm_spi.regs = (SPI_Type *) DT_INST_REG_ADDR(n),        \
+        };                                                              \
+        static spi_codasip_fpga_cfg_t spi_codasip_fpga_cfg_##n = {      \
+                .base = DT_INST_REG_ADDR(n),                            \
+        };                                                              \
+        DEVICE_DT_INST_DEFINE(n,                                        \
+                        spi_codasip_fpga_init,                          \
+                        NULL,                                           \
+                        &spi_codasip_fpga_data_##n,                     \
+                        &spi_codasip_fpga_cfg_##n,                      \
+                        POST_KERNEL,                                    \
+                        CONFIG_SPI_INIT_PRIORITY,                       \
+                        &spi_codasip_fpga_api);
 
 DT_INST_FOREACH_STATUS_OKAY(SPI_INIT)
 

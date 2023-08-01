@@ -141,23 +141,23 @@ void bm_trng_configure(bm_trng_t *trng,
 
 static void entropy_codasip_fpga_trng_read(bm_trng_t *trng, uint8_t *output, size_t len)
 {
-	int      bytes = 0;
-	uint32_t rnd_number;
-	
-	while(len)
-	{
-		if (bytes == 0)
-		{
-			/* Read a random number */
-			rnd_number = bm_trng_get_rnd(trng);
-			bytes = 4;
-		}
-		
-		*output++    = (uint8_t) rnd_number;
-		rnd_number >>= 8;
-		bytes --;
-		len   --;
-	}
+    int      bytes = 0;
+    uint32_t rnd_number;
+    
+    while(len)
+    {
+        if (bytes == 0)
+        {
+            /* Read a random number */
+            rnd_number = bm_trng_get_rnd(trng);
+            bytes = 4;
+        }
+        
+        *output++    = (uint8_t) rnd_number;
+        rnd_number >>= 8;
+        bytes --;
+        len   --;
+    }
 }
 
 static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev,
@@ -168,29 +168,18 @@ static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev,
 
     size_t count = 0;
 
-	// printk( " Getting %d bytes of TRNG ", length );
+    // printk( " Getting %d bytes of TRNG ", length );
 
     while (length) {
-#if 0
-        size_t available;
-
-        available = trng->regs->RNDN * 4;
-		if (available == 0) {
-			return -EINVAL;
-		}
-		count = Z_MIN(length, available);
-#else
-
         /* Block and get all required values */
         count = length;
-#endif
 
-		entropy_codasip_fpga_trng_read(trng, buffer, count);
-		buffer += count;
-		length -= count;
-	}
+        entropy_codasip_fpga_trng_read(trng, buffer, count);
+        buffer += count;
+        length -= count;
+    }
 
-	return 0;
+    return 0;
 }
 
 static int entropy_codasip_fpga_trng_get_entropy_isr(const struct device *dev,
@@ -200,46 +189,46 @@ static int entropy_codasip_fpga_trng_get_entropy_isr(const struct device *dev,
 {
     bm_trng_t *trng = (bm_trng_t *) dev->config;
 
-	if ((flags & ENTROPY_BUSYWAIT) == 0U) {
+    if ((flags & ENTROPY_BUSYWAIT) == 0U) {
 
-		/* No busy wait; return whatever data is available. */
-		size_t count;
-		size_t available = trng->regs->RNDN * 4;
+        /* No busy wait; return whatever data is available. */
+        size_t count;
+        size_t available = trng->regs->RNDN * 4;
 
-		if (available == 0) {
-			return -ENODATA;
-		}
-		count = Z_MIN(len, available);
-		entropy_codasip_fpga_trng_read(trng, buf, count);
-		return count;
+        if (available == 0) {
+            return -ENODATA;
+        }
+        count = Z_MIN(len, available);
+        entropy_codasip_fpga_trng_read(trng, buf, count);
+        return count;
 
-	} else {
-		/* Allowed to busy-wait */
-		int ret = entropy_codasip_fpga_trng_get_entropy(dev, buf, len);
+    } else {
+        /* Allowed to busy-wait */
+        int ret = entropy_codasip_fpga_trng_get_entropy(dev, buf, len);
 
-		if (ret == 0) {
-			/* Data retrieved successfully. */
-			return len;
-		}
-		return ret;
-	}
+        if (ret == 0) {
+            /* Data retrieved successfully. */
+            return len;
+        }
+        return ret;
+    }
 
-	return 0;
+    return 0;
 }
 
 static int entropy_codasip_fpga_trng_init(const struct device *dev)
 {
-	const bm_trng_t *bm_trng = (bm_trng_t *) dev->config;
-	
-	/* Should call bm_trng_configure() instead of using a magic number: */
-	bm_trng->regs->CONFIG = 0x00ff847f;	/* Magic Number from Lib BareMetal trng-demo.c */
+    const bm_trng_t *bm_trng = (bm_trng_t *) dev->config;
+    
+    /* Should call bm_trng_configure() instead of using a magic number: */
+    bm_trng->regs->CONFIG = 0x00ff847f; /* Magic Number from Lib BareMetal trng-demo.c */
 
-	return 0;
+    return 0;
 }
 
 static struct entropy_driver_api entropy_codasip_fpga_trng_api_funcs = {
-	.get_entropy     = entropy_codasip_fpga_trng_get_entropy,
-	.get_entropy_isr = entropy_codasip_fpga_trng_get_entropy_isr
+    .get_entropy     = entropy_codasip_fpga_trng_get_entropy,
+    .get_entropy_isr = entropy_codasip_fpga_trng_get_entropy_isr
 };
 
 #define ENTROPY_INIT(n)                                                        \
@@ -247,12 +236,12 @@ static struct entropy_driver_api entropy_codasip_fpga_trng_api_funcs = {
         .regs = (TRNG_Type *) DT_INST_REG_ADDR(n),                             \
     };                                                                         \
 DEVICE_DT_INST_DEFINE(n,                                                       \
-			entropy_codasip_fpga_trng_init,                                    \
-			NULL,                                                              \
-			NULL,                                                              \
-			&entropy_codasip_fpga_trng_cfg_##n,                                \
-			PRE_KERNEL_1,                                                      \
-			CONFIG_ENTROPY_INIT_PRIORITY,                                      \
-			&entropy_codasip_fpga_trng_api_funcs);
+            entropy_codasip_fpga_trng_init,                                    \
+            NULL,                                                              \
+            NULL,                                                              \
+            &entropy_codasip_fpga_trng_cfg_##n,                                \
+            PRE_KERNEL_1,                                                      \
+            CONFIG_ENTROPY_INIT_PRIORITY,                                      \
+            &entropy_codasip_fpga_trng_api_funcs);
 
 DT_INST_FOREACH_STATUS_OKAY(ENTROPY_INIT)

@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 config GPIO_CODASIP_FPGA_1_1
-	bool "Codasip FPGA GPIO (revision 1.1) driver"
-	default y
-	depends on DT_HAS_CODASIP_FPGA_GPIO_1_1_ENABLED
-	help
-	  Enable the GPIO peripherals on Codasip FPGA SOC.
+    bool "Codasip FPGA GPIO (revision 1.1) driver"
+    default y
+    depends on DT_HAS_CODASIP_FPGA_GPIO_1_1_ENABLED
+    help
+      Enable the GPIO peripherals on Codasip FPGA SOC.

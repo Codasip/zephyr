@@ -2,12 +2,12 @@
 
 if [ $# -lt 3 ]
 then
-	echo "$0 <core_name> <sample/dir> <app-name> [<new-name>]"
-	echo E.g.: $0 codasip_l31carbon samples/codasip blinkers
-	exit 1
+    echo "$0 <core_name> <sample/dir> <app-name> [<new-name>]"
+    echo E.g.: $0 codasip_l31carbon samples/codasip blinkers
+    exit 1
 else
-	core=$1
-	dir=$2
+    core=$1
+    dir=$2
     app=$3
     name=$app
 fi

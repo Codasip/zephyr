@@ -7,5 +7,5 @@
 / {
         chosen {
                 zephyr,sram = &dram0;
-		};
+        };
 };
