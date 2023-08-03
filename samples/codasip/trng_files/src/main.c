@@ -106,7 +106,8 @@ static void write_trng( const char *path_filename, get_random_fn_t get_random_fn
 
     if ( err == 0 )
     {
-        int buf_len;
+        size_t buf_len, written = 0, written_last_update = 0;
+        
         for( ; len > 0; len -= buf_len )
         {
             buf_len = ( BUFFER_MAX < len ) ? BUFFER_MAX : len;
@@ -118,6 +119,13 @@ static void write_trng( const char *path_filename, get_random_fn_t get_random_fn
             {
                 printk( "Error writing %s\n", path_filename );
                 break;
+            }
+
+            written += buf_len;
+            if ( written >= written_last_update + 0x10000 )
+            {
+                printk( "Written 0x%x to file %s\n", written, path_filename );
+                written_last_update = written;
             }
         }
 

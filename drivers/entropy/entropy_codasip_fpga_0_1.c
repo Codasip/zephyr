@@ -221,7 +221,9 @@ static int entropy_codasip_fpga_trng_init(const struct device *dev)
     const bm_trng_t *bm_trng = (bm_trng_t *) dev->config;
     
     /* Should call bm_trng_configure() instead of using a magic number: */
-    bm_trng->regs->CONFIG = 0x00ff847f; /* Magic Number from Lib BareMetal trng-demo.c */
+//  bm_trng->regs->CONFIG = 0x00ff847f; /* Magic Number from Lib BareMetal trng-demo.c */
+    bm_trng->regs->CONFIG = 0x80ff847f; /* Magic Number from Sam Obuch - this should disable the error checking which supposedly introduces some bias 
+                                           (but I was getting worse results with this disabled) */
 
     return 0;
 }
