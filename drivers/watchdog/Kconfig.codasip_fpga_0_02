@@ -1,0 +1,12 @@
+# Watchdog configuration options
+#
+# Copyright (C) 2023 Codasip s.r.o.
+#
+# SPDX-License-Identifier: Apache-2.0
+
+config WDT_CODASIP_FPGA_0_02
+	bool "Codasip Policy Manager Watchdog Driver"
+	depends on DT_HAS_CODASIP_FPGA_WDT_0_02_ENABLED
+	default y
+	help
+	  Enable Watchdog driver for Codasip MCUs

@@ -122,4 +122,6 @@ source "drivers/watchdog/Kconfig.shell"
 
 source "drivers/watchdog/Kconfig.xmc4xxx"
 
+source "drivers/watchdog/Kconfig.codasip_fpga_0_02"
+
 endif # WATCHDOG

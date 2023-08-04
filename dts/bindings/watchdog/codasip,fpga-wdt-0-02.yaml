@@ -1,0 +1,16 @@
+# Copyright (c) Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+description: Codasip Policy Manager Watchdog driver
+
+compatible: "codasip,fpga-wdt-0_02"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+  clock-frequency:
+    type: int
+    description: Wdt clock frequency in Hz
+    required: true
