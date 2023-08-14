@@ -47,10 +47,10 @@
                 zephyr,shell-uart = &uart0;
                 zephyr,sram = &sram0;
                 zephyr,entropy = &trng0;
-		};
+        };
 
         leds {
-		/* GPI0O = SWITCH/LED */
+            /* GPIO0 = SWITCH/LED */
                 compatible = "gpio-leds";
                 led0: led0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
@@ -85,23 +85,23 @@
                         label = "LED_7";
                 };
 
-		/* GPIO1 - AUX */
-		sd_pwr_en_n_in: sd_pwr_en_n_in {
+                /* GPIO1 - AUX */
+                sd_pwr_en_n_in: sd_pwr_en_n_in {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
-                        label = "SD_PWR_EN_N_IN";	
+                        label = "SD_PWR_EN_N_IN";   
                 };
-		irq2: irq2 {
-                        gpios = <&gpio01 2 GPIO_ACTIVE_HIGH>;	/* This output connects to PIC interrupt input port 2 */
-                        label = "IRQ_2";	
+                irq2: irq2 {
+                        gpios = <&gpio01 2 GPIO_ACTIVE_HIGH>;   /* This output connects to PIC interrupt input port 2 */
+                        label = "IRQ_2";    
                 };
-		irq3: irq3 {
-                        gpios = <&gpio01 3 GPIO_ACTIVE_HIGH>;	/* This output connects to PIC interrupt input port 3 */
-                        label = "IRQ_3";	
+                irq3: irq3 {
+                        gpios = <&gpio01 3 GPIO_ACTIVE_HIGH>;   /* This output connects to PIC interrupt input port 3 */
+                        label = "IRQ_3";    
                 };
         };
 
         keys {
-		/* GPIO = SWITCH/LED */
+        /* GPIO0 = SWITCH/LED */
                 compatible = "gpio-keys";
                 sw0: sw0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
@@ -136,7 +136,7 @@
                         label = "SW_7";
                 };
 
-		/* GPIO - AUX */
+        /* GPIO1 - AUX */
                 sd_card_detect_n: sd_card_detect_n {
                         gpios = <&gpio01 0 GPIO_ACTIVE_LOW>;
                         label = "SD_CARD_DETECT_N";
@@ -149,9 +149,9 @@
 };
 
 &gpio00 {
-	status = "okay";
+    status = "okay";
 };
 
 &gpio01 {
-	status = "okay";
+    status = "okay";
 };

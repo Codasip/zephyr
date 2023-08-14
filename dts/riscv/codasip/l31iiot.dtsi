@@ -19,7 +19,18 @@
                 };
                 wdt0: wdt@60520000 {
                         compatible = "codasip,fpga-wdt-0_02";
-                        reg = <0x60520000 0x1C>;
+                        reg = <0x60520000 0x4>;
+                        clock-frequency = <25000000>;
+                        status = "okay";
+                };
+                policy_mngr0: policy_mngr@60520010 {
+                        compatible = "codasip,fpga-policy-mngr-0_02";
+                        reg = <0x60520010 0xC>;
+                        nalarms = <3>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <5>;       /* <5> is irq=1547 (0x60B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(policy_mngr0), 0, irq), 
+                                                   which is correct -> 0x600 is the sixth IRQ (i.e. 5 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                                   while 0xB is 1st level interrupt &intc 11 */
                         clock-frequency = <25000000>;
                         status = "okay";
                 };

@@ -5,6 +5,7 @@
 ./make-sample.sh codasip_l31iiot   samples/codasip        hmac_drbg             # HMAC DRBG demo using Codasip Entropy TRNG as the seed
 ./make-sample.sh codasip_l31iiot   samples/codasip        trng_files            # Write 1GB random TRNG and DRBG data to SD Card files trng.bin and drbg.bin
 ./make-sample.sh codasip_l31iiot   samples/codasip        watchdog              # Codasip Watchdog (feeding and reset) example
+./make-sample.sh codasip_l31iiot   samples/codasip        policy_mngr           # Codasip Policy Manager example
 
 ./make-sample.sh codasip_l31iiot   samples/codasip        blinkers              # GPIO demo - Flash some LEDs and get switch input
 ./make-sample.sh codasip_l31iiot   samples/subsys/console getchar               # UART demo - input and output over the UART

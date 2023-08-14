@@ -1,0 +1,19 @@
+# Codasip Policy Manager configuration options
+
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig POLICY_MNGR
+	bool "Policy Manager drivers"
+	help
+	  Codasip IIOT policy alarm manager.
+
+if POLICY_MNGR
+
+module = POLICY_MNGR
+module-str = policy_manager
+source "subsys/logging/Kconfig.template.log_config"
+
+source "drivers/policy_mngr/Kconfig.codasip_fpga_0_02"
+
+endif # POLICY_MNGR

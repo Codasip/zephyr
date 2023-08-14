@@ -1,0 +1,29 @@
+# Copyright (c) Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+description: Codasip Policy Manager Watchdog driver
+
+compatible: "codasip,fpga-policy-mngr-0_02"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+  clock-frequency:
+    type: int
+    description: Wdt clock frequency in Hz
+    required: true
+  nalarms:
+    type: int
+    default: 32
+    description: |
+        This property indicates the number of in-use slots of available slots
+        for alarms. The typical example is something like this: the hardware
+        register is 32 bits wide, but only 3 of the bits have a physical
+        counterpart. The driver is generally written so that all 32 bits can
+        be used, but the IP block is reused in a lot of designs, some using
+        all 32 bits, some using 3 and some using 12. In this case, setting
+        "nalarms = <3>;" informs the driver that only the first 3 alarms, at
+        local offset 0 .. 2, are in use.  For cases in which there might be
+        holes in the slot range, this value should be the max slot number+1.
