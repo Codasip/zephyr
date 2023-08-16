@@ -11,7 +11,6 @@
  * Codasip license agreement under which you obtained this file.
  */
 
-//#define DT_DRV_COMPAT codasip_l31helium_spi
 #define DT_DRV_COMPAT codasip_fpga_spi_1_1
 
 #include <stdbool.h>

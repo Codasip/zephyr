@@ -8,12 +8,12 @@
 
 /dts-v1/;
 
-#include <codasip/l31iiot.dtsi>
-#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <codasip/l31fluorine.dtsi>
+#include <codasip/iiot_rp.dtsi>
 #include <zephyr/devicetree/gpio.h>
 
 / {
-        compatible = "codasip,l31iiot";
+        compatible = "codasip,iiot-rp-l31fluorine";
 
         aliases {
                 led0 = &led0;

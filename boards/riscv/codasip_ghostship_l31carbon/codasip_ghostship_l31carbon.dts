@@ -9,11 +9,11 @@
 /dts-v1/;
 
 #include <codasip/l31carbon.dtsi>
-#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <codasip/ghostship.dtsi>
 #include <zephyr/devicetree/gpio.h>
 
 / {
-        compatible = "codasip,l31carbon";
+        compatible = "codasip,ghostship-l31carbon";
 
         aliases {
                 led0 = &led0;
@@ -25,9 +25,9 @@
                 led6 = &led6;
                 led7 = &led7;
 
-		sd-pwr-en-n-out  = &sd_pwr_en_n_out;
-		irq2 = &irq2;
-		irq3 = &irq3;
+                sd-pwr-en-n-out  = &sd_pwr_en_n_out;
+                irq2 = &irq2;
+                irq3 = &irq3;
 
                 sw0 = &sw0;
                 sw1 = &sw1;
@@ -38,8 +38,8 @@
                 sw6 = &sw6;
                 sw7 = &sw7;
 
-		sd-card-detect-n = &sd_card_detect_n;
-		sd-pwr-en-n-in = &sd_pwr_en_n_in;
+                sd-card-detect-n = &sd_card_detect_n;
+                sd-pwr-en-n-in = &sd_pwr_en_n_in;
         };
 
         chosen {
