@@ -1,0 +1,9 @@
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_CODASIP_INFERNO_L31HELIUM
+
+config BOARD
+	default "inferno-l31helium"
+
+endif # BOARD_CODASIP_INFERNO_L31HELIUM

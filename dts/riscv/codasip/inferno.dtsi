@@ -1,0 +1,104 @@
+/* Copyright (c) 2023 Codasip s.r.o.   */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* Info: dts/bindings/base/base.yaml */
+
+#include "skeleton.dtsi"
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <freq.h>
+#include <mem.h>
+
+/* Codasip Inferno Platform (use with L31 Carbon or Helium Cores) */
+
+/ {
+        soc {
+                #address-cells = <1>;
+                #size-cells = <1>;
+
+                sram0: memory@20000000 {
+                        compatible = "mmio-sram";
+                        reg = <0x20000000 DT_SIZE_K(512)>;
+                };
+                dram0: memory@80000000 {
+                        compatible = "mmio-sram";
+                        reg = <0x80000000 DT_SIZE_M(1024)>;
+                };
+                uart0: serial@60101000 {
+                        compatible = "ns16550";
+                        clock-frequency = <25000000>;
+                        reg = <0x60101000 0x1c>;
+                        reg-shift = <2>;
+
+                        interrupt-parent = <&pic>;
+                        interrupts = <0>;   /* This is irq=267 (0x10B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(uart0), 0, irq), 
+                                               which is correct -> 0x100 is the first IRQ (i.e. 0 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                               while 0xB is 1st level interrupt &intc 11 */
+                        status = "okay";
+                };
+                gpio00: gpio@60300000 {
+                        compatible = "xlnx,xps-gpio-1.00.a";
+                        reg = <0x60300000 0x10>;
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        ngpios = <8>;   /* Number of GPIO pins. 
+                                           gpio_in[7:0]  =  SW[7:0]
+                                           gpio_out[7:0] = LED[7:0] */
+                        status = "okay";
+                };
+                gpio01: gpio@60310000 {
+                        /* compatible = "codasip,fpga-gpio-1_1"; */
+                        compatible = "xlnx,xps-gpio-1.00.a";
+                        reg = <0x60310000 0x10>;
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        ngpios = <4>;   /* Number of GPIO pins. 
+                                           gpio_in[0]  = SD_CARD_DETECT_N
+                                           gpio_in[1]  = SD_PWR_EN_N
+                                           gpio_out[1] = SD_PWR_EN_N
+                                           gpio_out[2] = IRQ 2 (send interrupt request to the PIC)
+                                           gpio_out[3] = IRQ 3 (send interrupt request to the PIC) */
+                        interrupt-parent = <&pic>;
+                        interrupts = <2>, <3>;  /* <2> is irq=779 (0x30B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq), 
+                                                   which is correct -> 0x300 is the third IRQ (i.e. 2 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                                   while 0xB is 1st level interrupt &intc 11 */
+                                                /* <3> is irq=1035 (0x40B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 1, irq), 
+                                                   which is correct -> 0x400 is the fourth IRQ (i.e. 3 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                                   while 0xB is 1st level interrupt &intc 11 */
+
+                        /* Note: 1st level interrupts start at 0, 2nd and 3rd level interrupts start at 1, 
+                                 as 0 in each of those byte positions = no interrupt */
+                        /* Note: IRQ numbering format is 0x44332211 where 0x33 = 3rd level irq, 
+                                 0x22 = 2nd level irq and 0x11 = 1st level irq.
+                                 0x44 is not used, set to 0x00 */
+                        status = "okay";
+                };
+                spi_flash: spi@60200000 {
+                        compatible = "codasip,fpga-spi-1_1";
+                        reg = <0x60200000 0x1c>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <4>;
+                        clock-frequency = <400000>;
+                        lines = <1>;
+                        status = "okay";
+                };
+                spi0: spi@60210000 {
+                        /* compatible = "codasip,fpga-spi-1_1"; */
+                        /* reg = <0x60210000 0x1c>; */
+                        /* lines = <1>; */
+                        compatible = "xlnx,xps-spi-2.00.a";
+                        reg = <0x60210000 0x100>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <1>;
+                        clock-frequency = <400000>;
+                        xlnx,num-ss-bits = <0x1>;
+                        xlnx,num-transfer-bits = <0x8>;
+                        status = "okay";
+                };
+        };
+};
+

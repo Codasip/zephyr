@@ -121,6 +121,12 @@ static void xlnx_quadspi_cs_control(const struct device *dev, bool on)
 		return;
 	}
 
+    /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
+     * see: sdhc_spi_init_card() in drivers/sdhc/sdhc_spi.c */
+	if (ctx->config->operation & SPI_CS_ACTIVE_HIGH) {
+        on = !on;
+	}
+
 	if (on) {
 		/* SPISSR is one-hot, active-low */
 		spissr &= ~BIT(ctx->config->slave);
@@ -162,10 +168,13 @@ static int xlnx_quadspi_configure(const struct device *dev,
 		return -ENOTSUP;
 	}
 
+#if 0   /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
+         * see: sdhc_spi_init_card() in drivers/sdhc/sdhc_spi.c */
 	if (spi_cfg->operation & SPI_CS_ACTIVE_HIGH) {
 		LOG_ERR("unsupported CS polarity active high");
 		return -ENOTSUP;
 	}
+#endif
 
 	if (!IS_ENABLED(CONFIG_SPI_SLAVE) && \
 	    (spi_cfg->operation & SPI_OP_MODE_SLAVE)) {
