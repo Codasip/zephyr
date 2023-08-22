@@ -44,6 +44,12 @@
                         ngpios = <8>;   /* Number of GPIO pins. 
                                            gpio_in[7:0]  =  SW[7:0]
                                            gpio_out[7:0] = LED[7:0] */
+                        interrupt-parent = <&pic>;
+                        interrupts = <4>;
+                                /* <4> is irq=1035 (0x40B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq), 
+                                   which is correct -> 0x400 is the 5th IRQ (i.e. 4 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                   while 0xB is 1st level interrupt &intc 11 - this is the Xilinx GPIO Input 
+                                   Transition Interrupt */
                         status = "okay";
                 };
                 gpio01: gpio@60310000 {
@@ -59,18 +65,25 @@
                                            gpio_out[2] = IRQ 2 (send interrupt request to the PIC)
                                            gpio_out[3] = IRQ 3 (send interrupt request to the PIC) */
                         interrupt-parent = <&pic>;
-                        interrupts = <2>, <3>;  /* <2> is irq=779 (0x30B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq), 
-                                                   which is correct -> 0x300 is the third IRQ (i.e. 2 [+ 1]) 2ND_LEVEL_INTERRUPTS,
-                                                   while 0xB is 1st level interrupt &intc 11 */
-                                                /* <3> is irq=1035 (0x40B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 1, irq), 
-                                                   which is correct -> 0x400 is the fourth IRQ (i.e. 3 [+ 1]) 2ND_LEVEL_INTERRUPTS,
-                                                   while 0xB is 1st level interrupt &intc 11 */
+                        interrupts = <5>, <2>, <3>;
+                                /* <5> is irq=1291 (0x50B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq), 
+                                   which is correct -> 0x500 is the 6th IRQ (i.e. 5 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                   while 0xB is 1st level interrupt &intc 11 - this is the Xilinx GPIO Input 
+                                   Transition Interrupt */
+                                   
+                                /* The following interrupts are here as it's an easy place for testing */
+                                /* <2> is irq=779 (0x30B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 1, irq), 
+                                   which is correct -> 0x300 is the third IRQ (i.e. 2 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                   while 0xB is 1st level interrupt &intc 11 */
+                                /* <3> is irq=1035 (0x40B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 2, irq), 
+                                   which is correct -> 0x400 is the fourth IRQ (i.e. 3 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                   while 0xB is 1st level interrupt &intc 11 */
 
-                        /* Note: 1st level interrupts start at 0, 2nd and 3rd level interrupts start at 1, 
-                                 as 0 in each of those byte positions = no interrupt */
-                        /* Note: IRQ numbering format is 0x44332211 where 0x33 = 3rd level irq, 
-                                 0x22 = 2nd level irq and 0x11 = 1st level irq.
-                                 0x44 is not used, set to 0x00 */
+                                /* Note: 1st level interrupts start at 0, 2nd and 3rd level interrupts start at 1, 
+                                         as 0 in each of those byte positions = no interrupt */
+                                /* Note: IRQ numbering format is 0x44332211 where 0x33 = 3rd level irq, 
+                                         0x22 = 2nd level irq and 0x11 = 1st level irq.
+                                         0x44 is not used, set to 0x00 */
                         status = "okay";
                 };
                 spi_flash: spi@60200000 {

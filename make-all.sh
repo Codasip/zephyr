@@ -18,8 +18,6 @@
 ./make-sample.sh codasip_inferno_l31helium     samples/codasip          hello_world_user
 ./make-sample.sh codasip_inferno_l31helium     samples/codasip          fat_fs
 
-goto end:;
-
 ./make-sample.sh codasip_iiot_rp_l31fluorine   samples/codasip          entropy               # Codasip Entropy TRNG
 ./make-sample.sh codasip_iiot_rp_l31fluorine   samples/codasip          mbedtls               # mbedtls test suite (not using Entropy TRNG, uses fixed seed)
 ./make-sample.sh codasip_iiot_rp_l31fluorine   samples/codasip          hmac_drbg             # HMAC DRBG demo using Codasip Entropy TRNG as the seed
@@ -53,5 +51,3 @@ goto end:;
 ./make-sample.sh codasip_ghostship_l31helium   samples/codasip          hello_world_interrupt
 ./make-sample.sh codasip_ghostship_l31helium   samples/codasip          hello_world_user
 ./make-sample.sh codasip_ghostship_l31helium   samples/codasip          fat_fs
-
-end:

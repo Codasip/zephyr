@@ -26,8 +26,8 @@ Etc.
 #define IRQ3_NODE DT_ALIAS(irq3)
 
 #define SERIAL_IRQ_NUM  DT_IRQ_BY_IDX(SERIAL, 0, irq)
-#define IRQ2_NUM        DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq)
-#define IRQ3_NUM        DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 1, irq)
+#define IRQ2_NUM        DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 1, irq)
+#define IRQ3_NUM        DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 2, irq)
 
 /*
  * A build error on this line means your board is unsupported.
