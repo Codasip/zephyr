@@ -26,8 +26,6 @@
                 led7 = &led7;
 
                 sd-pwr-en-n-out  = &sd_pwr_en_n_out;
-                irq2 = &irq2;
-                irq3 = &irq3;
 
                 sw0 = &sw0;
                 sw1 = &sw1;
@@ -89,14 +87,6 @@
                 sd_pwr_en_n_in: sd_pwr_en_n_in {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
                         label = "SD_PWR_EN_N_IN";   
-                };
-                irq2: irq2 {
-                        gpios = <&gpio01 2 GPIO_ACTIVE_HIGH>;   /* This output connects to PIC interrupt input port 2 */
-                        label = "IRQ_2";    
-                };
-                irq3: irq3 {
-                        gpios = <&gpio01 3 GPIO_ACTIVE_HIGH>;   /* This output connects to PIC interrupt input port 3 */
-                        label = "IRQ_3";    
                 };
         };
 

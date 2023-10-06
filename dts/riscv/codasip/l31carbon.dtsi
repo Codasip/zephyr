@@ -64,7 +64,7 @@
                         interrupts-extended = <&intc 11>;
                         #interrupt-cells = <1>;         /* Only interrupt bit positions (no priority on the PIC) */
                         interrupt-parent = <&intc>;
-                        codasip-fpga-pic,ndev = <6>;    /* 6 Interrupts bits 5:0 */
+                        codasip-fpga-pic,ndev = <32>;    /* 32 Interrupts bits 31:0 */
                         status = "okay";
                 };
         };
