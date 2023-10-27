@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2023 Codasip s.r.o.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/* See: https://docs.zephyrproject.org/latest/hardware/porting/board_porting.html */
+
+/* Codasip IIOT-DoomBar Platform (use with L31 Fluorine Core) */
+
+#include <codasip/inferno.dtsi>
+
+/ {
+        soc {
+#if 0   /* Unified Interrupt Map */
+                spi_flash: spi@60200000 {
+                        compatible = "xlnx,xps-spi-2.00.a";
+                        reg = <0x60200000 0x100>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <2>;
+                        clock-frequency = <400000>;
+                        xlnx,num-ss-bits = <0x1>;
+                        xlnx,num-transfer-bits = <0x8>;
+                };
+                
+#else   /* For upto IIoT RTL Version 2.0.2, see Jira https://codasip.atlassian.net/browse/PLAT-1684 */
+                spi_flash: spi@60200000 {
+                        compatible = "xlnx,xps-spi-2.00.a";
+                        reg = <0x60200000 0x100>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <3>;
+                        clock-frequency = <400000>;
+                        xlnx,num-ss-bits = <0x1>;
+                        xlnx,num-transfer-bits = <0x8>;
+                };
+
+                spi0: spi@60210000 {
+                        compatible = "xlnx,xps-spi-2.00.a";
+                        reg = <0x60210000 0x100>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <2>;
+                        clock-frequency = <400000>;
+                        xlnx,num-ss-bits = <0x1>;
+                        xlnx,num-transfer-bits = <0x8>;
+                };
+#endif
+
+                trng0: trng@60510000 {
+                        compatible = "codasip,fpga-trng-0_1";
+                        reg = <0x60510000 0x18>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                };
+                wdt0: wdt@60520000 {            /* This is actually part of the Policy Manager */
+                        compatible = "codasip,fpga-wdt-0_02";
+                        reg = <0x60520000 0x4>;
+                        clock-frequency = <25000000>;
+                };
+                policy_mngr0: policy_mngr@60520010 {
+                        compatible = "codasip,fpga-policy-mngr-0_02";
+                        reg = <0x60520010 0xC>;
+                        nalarms = <3>;
+                        interrupt-parent = <&pic>;
+                        interrupts = <20>;      /* <20> is irq=5387 (0x150B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(policy_mngr0), 0, irq), 
+                                                   which is correct -> 0x1500 is the 20th IRQ (i.e. 20 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                                   while 0xB is 1st level interrupt &intc 11 */
+                        clock-frequency = <25000000>;
+                };
+        };
+};

@@ -34,7 +34,6 @@
                         interrupts = <0>;   /* This is irq=267 (0x10B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(uart0), 0, irq), 
                                                which is correct -> 0x100 is the first IRQ (i.e. 0 [+ 1]) 2ND_LEVEL_INTERRUPTS,
                                                while 0xB is 1st level interrupt &intc 11 */
-                        status = "okay";
                 };
                 gpio00: gpio@60300000 {
                         compatible = "xlnx,xps-gpio-1.00.a";
@@ -50,7 +49,6 @@
                                    which is correct -> 0x700 is the 7th IRQ (i.e. 6 [+ 1]) 2ND_LEVEL_INTERRUPTS,
                                    while 0xB is 1st level interrupt &intc 11 - this is the Xilinx GPIO Input 
                                    Transition Interrupt */
-                        status = "okay";
                 };
                 gpio01: gpio@60310000 {
                         /* compatible = "codasip,fpga-gpio-1_1"; */
@@ -76,23 +74,9 @@
                                 /* Note: IRQ numbering format is 0x44332211 where 0x33 = 3rd level irq, 
                                          0x22 = 2nd level irq and 0x11 = 1st level irq.
                                          0x44 is not used, set to 0x00 */
-                        status = "okay";
                 };
-                spi_flash: spi@60200000 {
-                        compatible = "codasip,fpga-spi-1_1";
-                        reg = <0x60200000 0x1c>;
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-                        interrupt-parent = <&pic>;
-                        interrupts = <2>;
-                        clock-frequency = <400000>;
-                        lines = <1>;
-                        status = "okay";
-                };
+
                 spi0: spi@60210000 {
-                        /* compatible = "codasip,fpga-spi-1_1"; */
-                        /* reg = <0x60210000 0x1c>; */
-                        /* lines = <1>; */
                         compatible = "xlnx,xps-spi-2.00.a";
                         reg = <0x60210000 0x100>;
                         #address-cells = <1>;
@@ -102,8 +86,6 @@
                         clock-frequency = <400000>;
                         xlnx,num-ss-bits = <0x1>;
                         xlnx,num-transfer-bits = <0x8>;
-                        status = "okay";
                 };
         };
 };
-

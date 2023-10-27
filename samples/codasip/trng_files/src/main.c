@@ -14,6 +14,7 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/fs/fs.h>
 #include <ff.h>
+#include <zephyr/drivers/gpio.h>
 
 #include <zephyr/drivers/entropy.h>
 
@@ -32,6 +33,15 @@ unsigned char buf[16000];
 
 
 LOG_MODULE_REGISTER(main);
+
+#if 1   /* This is now done my the SD Card driver (YAML pwr-gpios) */
+/* The devicetree node identifier for the "sd-pwr-en-n-out" alias. */
+#define SD_PWR_EN_N_NODE  DT_ALIAS(sd_pwr_en_n_out)
+static const struct gpio_dt_spec sd_pwr_en_n = GPIO_DT_SPEC_GET(SD_PWR_EN_N_NODE, gpios);
+#endif
+
+#define SD_20MHZ_CLK_EN_NODE  DT_ALIAS(sd_20mhz_clk_en)
+static const struct gpio_dt_spec sd_20mhz_clk_en = GPIO_DT_SPEC_GET(SD_20MHZ_CLK_EN_NODE, gpios);
 
 #define DISK_DRIVE_NAME "SD"
 #define DISK_MOUNT_PT "/"DISK_DRIVE_NAME":"
@@ -153,6 +163,61 @@ int main(void)
 {
     /* raw disk i/o */
     do {
+#if 0
+        if ( !gpio_is_ready_dt(&sd_20mhz_clk_en) )
+        {
+			LOG_ERR("gpio_is_ready_dt(&sd_20mhz_clk_en) failed!");
+            break;
+        }
+
+        if ( gpio_pin_configure_dt(&sd_20mhz_clk_en, GPIO_OUTPUT_ACTIVE) < 0 )
+        {
+			LOG_ERR("gpio_pin_configure_dt(&sd_20mhz_clk_en, GPIO_OUTPUT_ACTIVE) failed!");
+            break;
+        }
+
+		printk( "Switching SD Clock to 20MHz\n" );
+        if ( gpio_pin_set_dt( &sd_20mhz_clk_en, 1 ) < 0 )
+        {
+			LOG_ERR("gpio_pin_set_dt( &sd_20mhz_clk_en, 1 ) failed!");
+            break;
+        }
+#endif
+
+        if ( !gpio_is_ready_dt(&sd_pwr_en_n) )
+        {
+			LOG_ERR("gpio_is_ready_dt(&sd_pwr_en_n) failed!");
+            break;
+        }
+
+        if ( gpio_pin_configure_dt(&sd_pwr_en_n, GPIO_OUTPUT_ACTIVE) < 0 )
+        {
+			LOG_ERR("gpio_pin_configure_dt(&sd_pwr_en_n, GPIO_OUTPUT_ACTIVE) failed!");
+            break;
+        }
+        
+#if 0   /* This is now done by the SD Card driver (YAML pwr-gpios) */
+        /* Turn off the SD Card */
+		printk( "Turning off the SD Card power\n" );
+        if ( gpio_pin_set_dt( &sd_pwr_en_n, 0 ) < 0 )
+        {
+			LOG_ERR("gpio_pin_set_dt( &sd_pwr_en_n, 0 ) failed!");
+            break;
+        }
+
+        /* Wait 1 second */
+		printk( "Wait 1s...\n" );
+		k_sleep(K_MSEC(1000));
+        
+        /* Turn on the SD Card */
+		printk( "Turning on the SD Card power\n" );
+        if ( gpio_pin_set_dt( &sd_pwr_en_n, 1 ) < 0 )
+        {
+			LOG_ERR("gpio_pin_set_dt( &sd_pwr_en_n, 1 ) failed!");
+            break;
+        }
+#endif
+        
         static const char *disk_pdrv = DISK_DRIVE_NAME;
         uint64_t memory_size_mb;
         uint32_t block_count;

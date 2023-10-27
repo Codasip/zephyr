@@ -1,0 +1,59 @@
+/*
+ * Copyright (c) 2023 Codasip s.r.o.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/ {
+        aliases {
+            alarm1 = &alarm1;
+            alarm2 = &alarm2;
+            watchdog0 = &wdt0;
+        };
+
+        soc {
+                gpio01: gpio@60310000 {
+                    ngpios = <10>;  /* Number of GPIO pins. */
+                        /*
+                               gpio_in[0]  = SD_CARD_DETECT_N
+                               gpio_in[1]  = SD_PWR_EN_N
+                               gpio_out[1] = SD_PWR_EN_N
+
+                        The following is only in the following BitStream for testing: 
+                               gpio_out[2] = IRQ 2 (send interrupt request to the PIC)
+                               gpio_out[3] = IRQ 3 (send interrupt request to the PIC) 
+
+                        https://gitlab.codasip.com/platforms/l31-fpga-platform/-/jobs/1166045/artifacts/file/work/l31-dcls-5.0.3-9.4.1-vivado-project-platform-0.10.0.zip
+
+                        For more info see:
+                            https://codasip.atlassian.net/browse/PLAT-1536
+                        */
+                };
+        };
+
+        leds {
+                /*  The following is only in the following BitStream for testing: 
+                       gpio_out[8] = Alarm 1 (send alarm to Policy Manager) 
+                       gpio_out[9] = Alarm 2 (send alarm to Policy Manager) 
+                       
+                    https://gitlab.codasip.com/platforms/l31-fpga-platform/-/jobs/1166045/artifacts/file/work/l31-dcls-5.0.3-9.4.1-vivado-project-platform-0.10.0.zip
+                    
+                For more info see:
+                    https://codasip.atlassian.net/browse/PLAT-1536 */
+
+            /* GPI00 = SWITCH/LED */
+            alarm1: alarm1 {
+                gpios = <&gpio00 8 GPIO_ACTIVE_HIGH>;	/* This output connects to Policy Manager Alarm input port 1 */
+                label = "ALARM_1";
+            };
+            alarm2: alarm2 {
+                gpios = <&gpio00 9 GPIO_ACTIVE_HIGH>;	/* This output connects to Policy Manager Alarm input port 2 */
+                label = "ALARM_2";
+            };
+        };
+
+};
+
+&wdt0 {
+	status = "okay";
+};

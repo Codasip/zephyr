@@ -9,11 +9,11 @@
 /dts-v1/;
 
 #include <codasip/l31fluorine.dtsi>
-#include <codasip/iiot_rp.dtsi>
+#include <codasip/iiot-doombar.dtsi>
 #include <zephyr/devicetree/gpio.h>
 
 / {
-        compatible = "codasip,iiot-rp-l31fluorine";
+        compatible = "codasip,iiot-doombar-l31fluorine";
 
         aliases {
                 led0 = &led0;
@@ -26,6 +26,7 @@
                 led7 = &led7;
 
                 sd-pwr-en-n-out  = &sd_pwr_en_n_out;
+                sd-20mhz-clk-en  = &sd_20mhz_clk_en;
 
                 sw0 = &sw0;
                 sw1 = &sw1;
@@ -83,15 +84,20 @@
                         label = "LED_7";
                 };
 
-            /* GPIO1 - AUX */
-                sd_pwr_en_n_in: sd_pwr_en_n_in {
+            /* GPIO01 - AUX */
+                sd_pwr_en_n_out: sd_pwr_en_n_out {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
-                        label = "SD_PWR_EN_N_IN";   
+                        label = "SD_PWR_EN_N_OUT";
+                };
+                
+                sd_20mhz_clk_en: sd_20mhz_clk_en {
+                        gpios = <&gpio01 2 GPIO_ACTIVE_HIGH>;
+                        label = "SD_20MHZ_CLK_EN";
                 };
         };
 
         keys {
-        /* GPIO00 = SWITCH/LED */
+            /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-keys";
                 sw0: sw0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
@@ -126,14 +132,15 @@
                         label = "SW_7";
                 };
 
-        /* GPIO01 - AUX */
+            /* GPIO01 - AUX */
                 sd_card_detect_n: sd_card_detect_n {
                         gpios = <&gpio01 0 GPIO_ACTIVE_LOW>;
                         label = "SD_CARD_DETECT_N";
                 };
-                sd_pwr_en_n_out: sd_pwr_en_n_out {
+
+                sd_pwr_en_n_in: sd_pwr_en_n_in {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
-                        label = "SD_PWR_EN_N_OUT";
+                        label = "SD_PWR_EN_N_IN";   
                 };
         };
 };
@@ -151,6 +158,22 @@
     status = "okay";
 };
 
+&spi_flash {
+    status = "okay";
+};
+
 &spi0 {
+    status = "okay";
+};
+
+&trng0 {
+    status = "okay";
+};
+
+&wdt0 {
+    status = "okay";
+};
+
+&policy_mngr0 {
     status = "okay";
 };

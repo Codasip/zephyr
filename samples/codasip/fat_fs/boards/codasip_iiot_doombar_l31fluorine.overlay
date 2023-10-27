@@ -13,6 +13,9 @@
                 status = "okay";
 /*                spi-clock-mode-cpol;
                 spi-clock-mode-cpha; */
+                /* power-delay-ms = <1000>; */
+/*              cd-gpios  = <&gpio01 0 GPIO_ACTIVE_LOW>; only for imx_usdhc.c */
+                pwr-gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
                 mmc {
                     compatible = "zephyr,sdmmc-disk";
                     status = "okay";

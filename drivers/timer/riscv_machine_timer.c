@@ -146,9 +146,21 @@ static void timer_isr(const void *arg)
 
 	uint64_t now = mtime();
 	uint64_t dcycles = now - last_count;
-	uint32_t dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
-
-	last_count += (cycle_diff_t)dticks * CYC_PER_TICK;
+	uint32_t dticks;
+    
+    if ( dcycles < UINT32_MAX || sizeof( cycle_diff_t ) == sizeof( uint64_t ) )
+    {
+        /* For speed use native divide */
+        dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
+        last_count += (cycle_diff_t)dticks * CYC_PER_TICK;
+    }
+    else
+    {
+        /* This fixes continous machine timer interrupts in tickless mode, when the mtimer rolls over UINT32_MAX */
+        dticks = dcycles / CYC_PER_TICK;
+        last_count += (uint64_t)dticks * CYC_PER_TICK;
+    }
+    
 	last_ticks += dticks;
 	last_elapsed = 0;
 
@@ -203,7 +215,18 @@ uint32_t sys_clock_elapsed(void)
 	k_spinlock_key_t key = k_spin_lock(&lock);
 	uint64_t now = mtime();
 	uint64_t dcycles = now - last_count;
-	uint32_t dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
+	uint32_t dticks;
+
+    if ( dcycles < UINT32_MAX || sizeof( cycle_diff_t ) == sizeof( uint64_t ) )
+    {
+        /* For speed use native divide */
+        dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
+    }
+    else
+    {
+        /* This fixes continous machine timer interrupts in tickless mode, when the mtimer rolls over UINT32_MAX */
+        dticks = dcycles / CYC_PER_TICK;
+    }
 
 	last_elapsed = dticks;
 	k_spin_unlock(&lock, key);

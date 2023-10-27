@@ -59,8 +59,8 @@ int main(void)
 	int seconds = 0;
 	printk( "Hello World! %s\n", CONFIG_BOARD );
 	printk( "uart0  0 IRQ number %d\n", SERIAL_IRQ_NUM );
-	printk( "gpio01 0 IRQ number %d\n", IRQ2_NUM );
-	printk( "gpio01 1 IRQ number %d\n", IRQ3_NUM );
+	printk( "gpio01 2 IRQ number %d\n", IRQ2_NUM );
+	printk( "gpio01 3 IRQ number %d\n", IRQ3_NUM );
 
 	if (  !gpio_is_ready_dt(&irq2)
             | !gpio_is_ready_dt(&irq3)) {

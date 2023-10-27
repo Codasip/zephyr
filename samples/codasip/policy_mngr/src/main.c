@@ -50,6 +50,8 @@ int main( void )
     const struct device *const policy_mngr_dev = DEVICE_DT_GET( DT_NODELABEL( policy_mngr0 ) );
 
     printk( "Policy Manager sample application\n" );
+    printk( "NOTE: THIS TEST CODE ONLY WORKS IF AUX GPIO8 & 9 CONNECTIONS TO THE POLICY MANAGER HAVE BEEN CONNECTED IN THE RTL\n" );
+    printk( "This was done in: https://gitlab.codasip.com/platforms/l31-fpga-platform/-/jobs/1166045/artifacts/file/work/l31-dcls-5.0.3-9.4.1-vivado-project-platform-0.10.0.zip\n" );
 
     if ( !device_is_ready(policy_mngr_dev) ) {
         printk( "%s: device not ready.\n", policy_mngr_dev->name );

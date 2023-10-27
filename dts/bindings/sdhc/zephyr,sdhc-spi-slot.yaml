@@ -13,6 +13,14 @@ properties:
       delay gives the card time to power up or down fully. It can be increased
       if you observe issues initializing your card.
 
+  pwr-gpios:
+    type: phandle-array
+    description: |
+      Power pin
+      This pin defaults to active high when consumed by the SD card. The
+      property value should ensure the flags properly describe the signal
+      that is presented to the driver.
+
   spi-clock-mode-cpol:
     type: boolean
     description: |

@@ -229,6 +229,38 @@ static int xlnx_quadspi_configure(const struct device *dev,
 
 	ctx->config = spi_cfg;
 
+#if 1   // CODASIP Test
+#define SD_20MHZ_CLK_EN_NODE  DT_ALIAS(sd_20mhz_clk_en)
+    static const struct gpio_dt_spec sd_20mhz_clk_en = GPIO_DT_SPEC_GET(SD_20MHZ_CLK_EN_NODE, gpios);
+
+    if ( !gpio_is_ready_dt(&sd_20mhz_clk_en) )
+    {
+        LOG_ERR("gpio_is_ready_dt(&sd_20mhz_clk_en) failed!");
+    }
+
+    if ( gpio_pin_configure_dt(&sd_20mhz_clk_en, GPIO_OUTPUT_ACTIVE) < 0 )
+    {
+        LOG_ERR("gpio_pin_configure_dt(&sd_20mhz_clk_en, GPIO_OUTPUT_ACTIVE) failed!");
+    }
+
+    if ( spi_cfg->frequency <= 400000 /*SDMMC_CLOCK_400KHZ*/ )
+    {
+        printk( "Switching SD Clock to 400kHz\n" );
+        if ( gpio_pin_set_dt( &sd_20mhz_clk_en, 0 ) < 0 )
+        {
+            LOG_ERR("gpio_pin_set_dt( &sd_20mhz_clk_en, 0 ) failed!");
+        }
+    }
+    else
+    {
+        printk( "Switching SD Clock to 20MHz\n" );
+        if ( gpio_pin_set_dt( &sd_20mhz_clk_en, 1 ) < 0 )
+        {
+            LOG_ERR("gpio_pin_set_dt( &sd_20mhz_clk_en, 1 ) failed!");
+        }
+    }
+#endif
+
 	return 0;
 }
 
