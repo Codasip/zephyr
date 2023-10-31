@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2020 Henrik Brix Andersen <henrik@brixandersen.dk>
+ * Changes copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */

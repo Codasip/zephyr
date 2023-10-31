@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018-2023 Intel Corporation
+ * Changes copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
