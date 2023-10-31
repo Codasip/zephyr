@@ -4,14 +4,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT xlnx_xps_spi_2_00_a
+#define DT_DRV_COMPAT codasip_xlnx_xps_spi_2_00_a
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/spi.h>
 #include <zephyr/sys/sys_io.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/irq.h>
-LOG_MODULE_REGISTER(xlnx_quadspi, CONFIG_SPI_LOG_LEVEL);
+LOG_MODULE_REGISTER(codasip_xlnx_quadspi, CONFIG_SPI_LOG_LEVEL);
 
 #include "spi_context.h"
 
@@ -121,7 +121,7 @@ static void xlnx_quadspi_cs_control(const struct device *dev, bool on)
 		return;
 	}
 
-    /* Fix (1/2) for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
+    /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
      * see: sdhc_spi_init_card() in drivers/sdhc/sdhc_spi.c */
 	if (ctx->config->operation & SPI_CS_ACTIVE_HIGH) {
         on = !on;
@@ -168,8 +168,7 @@ static int xlnx_quadspi_configure(const struct device *dev,
 		return -ENOTSUP;
 	}
 
-#if 0   /* Fix (2/2) for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation
-         * This part of the fix is to remove this check.
+#if 0   /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
          * see: sdhc_spi_init_card() in drivers/sdhc/sdhc_spi.c */
 	if (spi_cfg->operation & SPI_CS_ACTIVE_HIGH) {
 		LOG_ERR("unsupported CS polarity active high");
@@ -229,6 +228,38 @@ static int xlnx_quadspi_configure(const struct device *dev,
 	}
 
 	ctx->config = spi_cfg;
+
+#if 1   // CODASIP Test
+#define SD_20MHZ_CLK_EN_NODE  DT_ALIAS(sd_20mhz_clk_en)
+    static const struct gpio_dt_spec sd_20mhz_clk_en = GPIO_DT_SPEC_GET(SD_20MHZ_CLK_EN_NODE, gpios);
+
+    if ( !gpio_is_ready_dt(&sd_20mhz_clk_en) )
+    {
+        LOG_ERR("gpio_is_ready_dt(&sd_20mhz_clk_en) failed!");
+    }
+
+    if ( gpio_pin_configure_dt(&sd_20mhz_clk_en, GPIO_OUTPUT_ACTIVE) < 0 )
+    {
+        LOG_ERR("gpio_pin_configure_dt(&sd_20mhz_clk_en, GPIO_OUTPUT_ACTIVE) failed!");
+    }
+
+    if ( spi_cfg->frequency <= 400000 /*SDMMC_CLOCK_400KHZ*/ )
+    {
+        printk( "Switching SD Clock to 400kHz\n" );
+        if ( gpio_pin_set_dt( &sd_20mhz_clk_en, 0 ) < 0 )
+        {
+            LOG_ERR("gpio_pin_set_dt( &sd_20mhz_clk_en, 0 ) failed!");
+        }
+    }
+    else
+    {
+        printk( "Switching SD Clock to 20MHz\n" );
+        if ( gpio_pin_set_dt( &sd_20mhz_clk_en, 1 ) < 0 )
+        {
+            LOG_ERR("gpio_pin_set_dt( &sd_20mhz_clk_en, 1 ) failed!");
+        }
+    }
+#endif
 
 	return 0;
 }

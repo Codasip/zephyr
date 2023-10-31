@@ -684,6 +684,14 @@ static int sdhc_spi_set_io(const struct device *dev, struct sdhc_io *ios)
 		}
 		if (cfg->pwr_gpio.port) {
 			/* If power control GPIO is defined, toggle SD power */
+            if ( !gpio_is_ready_dt(&cfg->pwr_gpio) ) {
+				return -EIO;
+            }
+
+            if ( gpio_pin_configure_dt(&cfg->pwr_gpio, GPIO_OUTPUT_ACTIVE) < 0 ) {
+                return -EIO;
+            }
+        
 			if (ios->power_mode == SDHC_POWER_ON) {
 				if (gpio_pin_set_dt(&cfg->pwr_gpio, 1)) {
 					return -EIO;

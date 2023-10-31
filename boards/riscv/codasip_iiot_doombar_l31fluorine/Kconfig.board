@@ -2,6 +2,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 config BOARD_CODASIP_IIOT_DOOMBAR_L31FLUORINE
-	bool "Board with Codasip RISC-V Security L31 Carbon CPU"
+	bool "Board with Codasip RISC-V Security L31 Fluorine (Carbon like with DCLS) CPU"
 	depends on SOC_CODASIP_L31FLUORINE
     select ENTROPY_GENERATOR

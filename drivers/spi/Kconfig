@@ -145,4 +145,6 @@ source "drivers/spi/Kconfig.grlib_spimctrl"
 
 source "drivers/spi/Kconfig.codasip_fpga_1_1"
 
+source "drivers/spi/Kconfig.codasip_xlnx"
+
 endif # SPI

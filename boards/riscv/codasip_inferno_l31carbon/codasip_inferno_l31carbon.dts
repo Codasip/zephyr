@@ -26,6 +26,7 @@
                 led7 = &led7;
 
                 sd-pwr-en-n-out  = &sd_pwr_en_n_out;
+                sd-20mhz-clk-en  = &sd_20mhz_clk_en;
 
                 sw0 = &sw0;
                 sw1 = &sw1;
@@ -82,10 +83,15 @@
                         label = "LED_7";
                 };
 
-        /* GPIO01 - AUX */
-                sd_pwr_en_n_in: sd_pwr_en_n_in {
+            /* GPIO01 - AUX */
+                sd_pwr_en_n_out: sd_pwr_en_n_out {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
-                        label = "SD_PWR_EN_N_IN";   
+                        label = "SD_PWR_EN_N_OUT";
+                };
+                
+                sd_20mhz_clk_en: sd_20mhz_clk_en {
+                        gpios = <&gpio01 2 GPIO_ACTIVE_HIGH>;
+                        label = "SD_20MHZ_CLK_EN";
                 };
         };
 
@@ -125,14 +131,15 @@
                         label = "SW_7";
                 };
 
-        /* GPIO01 - AUX */
+            /* GPIO01 - AUX */
                 sd_card_detect_n: sd_card_detect_n {
                         gpios = <&gpio01 0 GPIO_ACTIVE_LOW>;
                         label = "SD_CARD_DETECT_N";
                 };
-                sd_pwr_en_n_out: sd_pwr_en_n_out {
+
+                sd_pwr_en_n_in: sd_pwr_en_n_in {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
-                        label = "SD_PWR_EN_N_OUT";
+                        label = "SD_PWR_EN_N_IN";   
                 };
         };
 };
