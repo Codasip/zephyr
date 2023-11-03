@@ -77,7 +77,7 @@
                                          0x44 is not used, set to 0x00 */
                         status = "okay";
                 };
-                spi_flash: spi@60200000 {
+                spi0: spi@60200000 {    /* Flash */
                         compatible = "codasip,fpga-spi-1_1";
                         reg = <0x60200000 0x1c>;
                         #address-cells = <1>;
@@ -88,7 +88,7 @@
                         lines = <1>;
                         status = "okay";
                 };
-                spi0: spi@60210000 {
+                spi1: spi@60210000 {    /* SD Card */
                         compatible = "codasip,fpga-spi-1_1";
                         reg = <0x60210000 0x1c>;
                         #address-cells = <1>;

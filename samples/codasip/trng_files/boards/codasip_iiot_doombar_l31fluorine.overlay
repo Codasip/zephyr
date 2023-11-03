@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-&spi0 {
+&spi1 { /* SD Card */
         status = "okay";
 
         compatible = "codasip-xlnx,xps-spi-2.00.a";

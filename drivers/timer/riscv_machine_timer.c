@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018-2023 Intel Corporation
- * Changes copyright (c) 2023 Codasip s.r.o.
+ * Fix copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -147,21 +147,9 @@ static void timer_isr(const void *arg)
 
 	uint64_t now = mtime();
 	uint64_t dcycles = now - last_count;
-	uint32_t dticks;
-    
-    if ( dcycles < UINT32_MAX || sizeof( cycle_diff_t ) == sizeof( uint64_t ) )
-    {
-        /* For speed use native divide */
-        dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
-        last_count += (cycle_diff_t)dticks * CYC_PER_TICK;
-    }
-    else
-    {
-        /* This fixes continous machine timer interrupts in tickless mode, when the mtimer rolls over UINT32_MAX */
-        dticks = dcycles / CYC_PER_TICK;
-        last_count += (uint64_t)dticks * CYC_PER_TICK;
-    }
-    
+	uint32_t dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
+
+	last_count += (cycle_diff_t)dticks * CYC_PER_TICK;
 	last_ticks += dticks;
 	last_elapsed = 0;
 
@@ -216,18 +204,26 @@ uint32_t sys_clock_elapsed(void)
 	k_spinlock_key_t key = k_spin_lock(&lock);
 	uint64_t now = mtime();
 	uint64_t dcycles = now - last_count;
-	uint32_t dticks;
 
-    if ( dcycles < UINT32_MAX || sizeof( cycle_diff_t ) == sizeof( uint64_t ) )
+    if ( dcycles >= UINT32_MAX / 2 )
     {
-        /* For speed use native divide */
-        dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
+        /* This fixes continuous machine timer interrupts in tickless mode,
+         * when the mtimer rolls over UINT32_MAX and no timers are set.
+         * It also keeps last_elapsed within the 32-bit range (required
+         * for sys_clock_announce()) and gives enought time for a
+         * call to sys_clock_set_timeout() to update the timer compare via
+         * set_mtimecmp().
+         *
+         * Note: Spurious calls to sys_clock_announce() [via timer_isr()] are
+         *       allowed according to the "Clock APIs" comment in system_timer.h
+         */
+        timer_isr( 0 );
+
+        /* Update dcycles as last_count will have changed */
+        dcycles = now - last_count;
     }
-    else
-    {
-        /* This fixes continous machine timer interrupts in tickless mode, when the mtimer rolls over UINT32_MAX */
-        dticks = dcycles / CYC_PER_TICK;
-    }
+
+	uint32_t dticks = (cycle_diff_t)dcycles / CYC_PER_TICK;
 
 	last_elapsed = dticks;
 	k_spin_unlock(&lock, key);

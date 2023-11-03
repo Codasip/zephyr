@@ -13,7 +13,7 @@
 / {
         soc {
 #if 1   /* Unified Interrupt Map */
-                spi_flash: spi@60200000 {
+                spi0: spi@60200000 {    /* Flash */
                         compatible = "xlnx,xps-spi-2.00.a";
                         reg = <0x60200000 0x100>;
                         #address-cells = <1>;
@@ -26,7 +26,7 @@
                 };
                 
 #else   /* For upto IIoT RTL Version 2.0.2, see Jira https://codasip.atlassian.net/browse/PLAT-1684 */
-                spi_flash: spi@60200000 {
+                spi0: spi@60200000 {    /* Flash */
                         compatible = "xlnx,xps-spi-2.00.a";
                         reg = <0x60200000 0x100>;
                         #address-cells = <1>;
@@ -38,7 +38,7 @@
                         xlnx,num-transfer-bits = <0x8>;
                 };
 
-                spi0: spi@60210000 {
+                spi1: spi@60210000 {    /* SD Card */
                         compatible = "codasip-xlnx,xps-spi-2.00.a";
                         reg = <0x60210000 0x100>;
                         #address-cells = <1>;

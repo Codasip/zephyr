@@ -157,6 +157,6 @@
     status = "okay";
 };
 
-&spi0 {
+&spi1 {
     status = "okay";
 };

@@ -76,7 +76,7 @@
                                          0x44 is not used, set to 0x00 */
                 };
 
-                spi0: spi@60210000 {
+                spi1: spi@60210000 {    /* SD Card */
                         compatible = "xlnx,xps-spi-2.00.a";
                         reg = <0x60210000 0x100>;
                         #address-cells = <1>;

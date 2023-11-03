@@ -21,7 +21,7 @@ static void user_function(void *p1, void *p2, void *p3)
 	       CONFIG_BOARD);
 	__ASSERT(k_is_user_context(), "User mode execution was expected");
 	
-	printf( "Reading from address 0x00\n" );
+	printf( "Reading data from address 0x00 - This should fail with 'E:  mcause: 5, Load access fault'\n" );
 	k_msleep(SLEEP_TIME_MS);
 
 	printf( "Read %d from address 0x00\n", *ptr );	

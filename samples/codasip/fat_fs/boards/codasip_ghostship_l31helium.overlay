@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-&spi0 {
+&spi1 { /* SD Card */
         status = "okay";
         sdhc0: sdhc@0 {
                 compatible = "zephyr,sdhc-spi-slot";

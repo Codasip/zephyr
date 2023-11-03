@@ -14,6 +14,7 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/fs/fs.h>
 #include <ff.h>
+#include <zephyr/drivers/gpio.h>
 
 LOG_MODULE_REGISTER(main);
 
@@ -74,11 +75,72 @@ static bool create_some_entries(const char *base_path)
 }
 #endif
 
+
+#define DISK_DRIVE_NAME "SD"
+#define DISK_MOUNT_PT "/"DISK_DRIVE_NAME":"
+#define MAX_PATH 128
+
 /*
 *  Note the fatfs library is able to mount only strings inside _VOLUME_STRS
 *  in ffconf.h
 */
 static const char *disk_mount_pt = DISK_MOUNT_PT;
+
+#define COUNTING_FILENAME   DISK_MOUNT_PT "/counting.dat"
+
+#define BUFFER_MAX 1024
+static unsigned char buffer[ BUFFER_MAX ];
+
+static void write_counting( const char *path_filename, size_t len )
+{
+    int err, ctr = 0;
+
+    struct fs_file_t zfp;
+
+    printk("Writing %d counting bytes to file \"%s\"\n", len, path_filename );
+
+    fs_file_t_init( &zfp );
+    err = fs_open( &zfp, path_filename, FS_O_CREATE | FS_O_RDWR );
+
+    if ( err == 0 )
+    {
+        size_t buf_len, written = 0, written_last_update = 0;
+
+        for( ; len > 0; len -= buf_len )
+        {
+            buf_len = ( BUFFER_MAX < len ) ? BUFFER_MAX : len;
+
+            /* Get counting data */
+            // get_random_fn( random_context, buffer, buf_len );
+            uint32_t idx;
+            for( idx = 0; idx < buf_len; idx++ )
+            {
+                buffer[ idx ] = ctr++;
+            }
+
+            if ( fs_write( &zfp, &buffer, buf_len ) != buf_len )
+            {
+                printk( "Error writing %s\n", path_filename );
+                break;
+            }
+
+            written += buf_len;
+            if ( written >= written_last_update + 0x10000 )
+            {
+                printk( "Written 0x%x to file %s\n", written, path_filename );
+                written_last_update = written;
+            }
+        }
+
+        fs_close( &zfp );
+
+        printk("File \"%s\" written OK\n", path_filename );
+    }
+    else
+    {
+        printk("Can't open \"%s\" error %d\n", path_filename, err );
+    }
+}
 
 int main(void)
 {
@@ -144,8 +206,10 @@ int main(void)
         }
 	} while (0);
 
+        write_counting( COUNTING_FILENAME, 0x1000000 );
+
 	while (1)
-    {
+        {
 		k_sleep(K_MSEC(1000));
 	}
 	return 0;
