@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+#if 0 /* Old Test Setup */
 / {
         aliases {
             alarm1 = &alarm1;
@@ -53,6 +54,40 @@
         };
 
 };
+
+#else
+/ {
+        aliases {
+            alarm1 = &alarm1;
+            alarm2 = &alarm2;
+            watchdog0 = &wdt0;
+        };
+
+        leds {
+                /*  GPIO01 - AUX
+                    gpio_in[0]  = SD_CARD_DETECT_N
+                    gpio_in[1]  = SD_PWR_EN_N
+                    gpio_out[1] = SD_PWR_EN_N
+                    gpio_out[2] = SD_20MHZ_CLK_EN
+
+                    gpio_out[3] = ALARM_1 (send alarm to Policy Manager)
+                    gpio_out[4] = ALARM_2 (send alarm to Policy Manager)
+                    - For more info see: https://codasip.atlassian.net/browse/PLAT-1772
+                */
+
+            /* GPIO01 = AUX */
+            alarm1: alarm1 {
+                gpios = <&gpio01 3 GPIO_ACTIVE_HIGH>;	/* This output connects to Policy Manager Alarm input port 1 */
+                label = "ALARM_1";
+            };
+            alarm2: alarm2 {
+                gpios = <&gpio01 4 GPIO_ACTIVE_HIGH>;	/* This output connects to Policy Manager Alarm input port 2 */
+                label = "ALARM_2";
+            };
+        };
+
+};
+#endif
 
 &wdt0 {
 	status = "okay";

@@ -17,6 +17,9 @@
 #include <zephyr/irq.h>
 #include <zephyr/arch/common/ffs.h> /* For find_lsb_set() */
 
+/* #define POLICY_MNGR_USE_SHADOW_REGS to use shadow registers - required for the first Policy Manager */
+// #define POLICY_MNGR_USE_SHADOW_REGS
+
 LOG_MODULE_REGISTER(policy_mngr_codasip, CONFIG_POLICY_MNGR_LOG_LEVEL);
 
 // #define POLICY_MANAGER_ALARMS ( 3 ) /* Bits 2:0 of RST_MASK, INT_MASK and INT_PEND */
@@ -49,8 +52,10 @@ struct policy_mngr_codasip_cfg
 struct policy_mngr_codasip_data
 {
     policy_mngr_callback_t callback;
+#ifdef POLICY_MNGR_USE_SHADOW_REGS
     uint32_t               rst_mask_shadow;
     uint32_t               int_mask_shadow;
+#endif /* POLICY_MNGR_USE_SHADOW_REGS */
 };
 
 static int policy_mngr_codasip_setup( const struct device *dev, policy_mngr_callback_t callback ) /* callback can be NULL for no-callback */
@@ -67,7 +72,6 @@ static int policy_mngr_codasip_setup( const struct device *dev, policy_mngr_call
 static int policy_mngr_codasip_set_alarm( const struct device *dev, int alarm_id, policy_mngr_action_t action )
 {
     const struct policy_mngr_codasip_cfg *config = dev->config;
-    struct policy_mngr_codasip_data      *data   = dev->data;
     POLICY_MANAGER_Type                  *pm     = config->policy_mgr;
     uint32_t                              port_map = config->port_map; /* GPIO Valid IO bits, for each bit: 1 = GPIO, 0 = not GPIO */
 
@@ -80,7 +84,10 @@ static int policy_mngr_codasip_set_alarm( const struct device *dev, int alarm_id
     }
 
     uint32_t bit_mask = BIT( alarm_id );
-    
+
+#ifdef POLICY_MNGR_USE_SHADOW_REGS
+    struct policy_mngr_codasip_data      *data   = dev->data;
+
     switch( action )
     {
         case POLICY_MNGR_ALARM_ACTION_NONE:
@@ -101,11 +108,38 @@ static int policy_mngr_codasip_set_alarm( const struct device *dev, int alarm_id
             data->int_mask_shadow &= ~bit_mask;
         break;
     }
+
+    LOG_INF( "_set_alarm(): int_pend = 0x%x", pm->INT_PEND );
     
     /* Registers are write only */
     pm->RST_MASK = data->rst_mask_shadow;
+    LOG_INF( "_set_alarm(): rst_mask = 0x%x", data->rst_mask_shadow );
     pm->INT_MASK = data->int_mask_shadow;
-    
+    LOG_INF( "_set_alarm(): int_mask = 0x%x", data->int_mask_shadow );
+
+#else  /* !POLICY_MNGR_USE_SHADOW_REGS */
+    switch( action )
+    {
+        case POLICY_MNGR_ALARM_ACTION_NONE:
+            LOG_INF( "_set_alarm(): POLICY_MNGR_ALARM_ACTION_NONE set for alarm_id = %d", alarm_id );
+            pm->RST_MASK &= ~bit_mask;
+            pm->INT_MASK &= ~bit_mask;
+        break;
+
+        case POLICY_MNGR_ALARM_ACTION_INT_CALLBACK:
+            LOG_INF( "_set_alarm(): POLICY_MNGR_ALARM_ACTION_INT_CALLBACK set for alarm_id = %d", alarm_id );
+            pm->RST_MASK &= ~bit_mask;
+            pm->INT_MASK |=  bit_mask;
+        break;
+
+        case POLICY_MNGR_ALARM_ACTION_RESET:
+            LOG_INF( "_set_alarm(): POLICY_MNGR_ALARM_ACTION_RESET set for alarm_id = %d", alarm_id );
+            pm->RST_MASK |=  bit_mask;
+            pm->INT_MASK &= ~bit_mask;
+        break;
+    }
+#endif /* !POLICY_MNGR_USE_SHADOW_REGS */
+
     return 0;
 }
 
@@ -116,11 +150,21 @@ void policy_mngr_codasip_isr( const struct device *dev )
     POLICY_MANAGER_Type                  *pm     = config->policy_mgr;
 
     uint32_t int_pend = pm->INT_PEND;
+
+#ifdef POLICY_MNGR_USE_SHADOW_REGS
     uint32_t bit_mask = data->int_mask_shadow & int_pend;
-    int      alarm_id = find_lsb_set( bit_mask ); /* Note: This function returns the the first set lsb bit pos + 1 (!). alternative: __builtin_ffs( pending ); */
 
     LOG_INF( "_isr(): int_pend = 0x%x", int_pend );
     LOG_INF( "_isr(): int_mask = 0x%x", data->int_mask_shadow );
+
+#else
+    uint32_t bit_mask = pm->INT_MASK & int_pend;
+
+    LOG_INF( "_isr(): int_pend = 0x%x", int_pend );
+    LOG_INF( "_isr(): int_mask = 0x%x", pm->INT_MASK );
+#endif
+
+    int      alarm_id = find_lsb_set( bit_mask ); /* Note: This function returns the the first set lsb bit pos + 1 (!). alternative: __builtin_ffs( pending ); */
 
     if ( alarm_id == 0 )
     {
@@ -142,15 +186,19 @@ void policy_mngr_codasip_isr( const struct device *dev )
         pm->INT_PEND = 1UL << alarm_id;        
     }
 
+#ifdef POLICY_MNGR_USE_SHADOW_REGS
     /* Clear all masked interrupts - there is a bug in the hardware that allows masked interrupts to interrupt! */
     pm->INT_PEND = ~data->int_mask_shadow;
+#endif
 }
 
 static int policy_mngr_codasip_init( const struct device *dev )
 {
     const struct policy_mngr_codasip_cfg *config = dev->config;
-    struct policy_mngr_codasip_data      *data   = dev->data;
     POLICY_MANAGER_Type                  *pm     = config->policy_mgr;
+
+#ifdef POLICY_MNGR_USE_SHADOW_REGS
+    struct policy_mngr_codasip_data      *data   = dev->data;
 
     /* All alarms are disabled at reset */
     data->rst_mask_shadow = 0;
@@ -159,6 +207,12 @@ static int policy_mngr_codasip_init( const struct device *dev )
     /* Registers are write only */
     pm->RST_MASK = data->rst_mask_shadow;
     pm->INT_MASK = data->int_mask_shadow;
+
+#else
+    /* All alarms are disabled at reset */
+    pm->RST_MASK = 0;
+    pm->INT_MASK = 0;
+#endif
     
     /* Enable IRQ */
     config->irq_cfg_func( );

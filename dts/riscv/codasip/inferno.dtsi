@@ -51,17 +51,15 @@
                                    Transition Interrupt */
                 };
                 gpio01: gpio@60310000 {
-                        /* compatible = "codasip,fpga-gpio-1_1"; */
                         compatible = "xlnx,xps-gpio-1.00.a";
                         reg = <0x60310000 0x10>;
                         gpio-controller;
                         #gpio-cells = <2>;
-                        ngpios = <4>;   /* Number of GPIO pins. 
+                        ngpios = <5>;   /* Number of GPIO pins.
                                            gpio_in[0]  = SD_CARD_DETECT_N
                                            gpio_in[1]  = SD_PWR_EN_N
                                            gpio_out[1] = SD_PWR_EN_N
-                                           gpio_out[2] = IRQ 2 (send interrupt request to the PIC)
-                                           gpio_out[3] = IRQ 3 (send interrupt request to the PIC) */
+                                           gpio_out[2] = SD_20MHZ_CLK_EN */
                         interrupt-parent = <&pic>;
                         interrupts = <7>;
                                 /* <7> is irq=2059 (0x80B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq), 

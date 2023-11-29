@@ -32,7 +32,7 @@
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          hmac_drbg             # HMAC DRBG demo using Codasip Entropy TRNG as the seed
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          trng_files            # Write 1GB random TRNG and DRBG data to SD Card files trng.bin and drbg.bin
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          watchdog              # Codasip Watchdog (feeding and reset) example
-# ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          policy_mngr           # Codasip Policy Manager example. USER TEST ALARMS HAVE REMOVED FROM THE RTL
+./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          policy_mngr           # Codasip Policy Manager example.
 
 # Old deprecated platforms:
 # ./make-sample.sh codasip_ghostship_l31carbon   samples/codasip          blinkers

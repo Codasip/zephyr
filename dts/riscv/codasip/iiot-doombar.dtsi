@@ -65,7 +65,7 @@
                 policy_mngr0: policy_mngr@60520010 {
                         compatible = "codasip,fpga-policy-mngr-0_02";
                         reg = <0x60520010 0xC>;
-                        nalarms = <3>;
+                        nalarms = <4>;
                         interrupt-parent = <&pic>;
                         interrupts = <20>;      /* <20> is irq=5387 (0x150B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(policy_mngr0), 0, irq), 
                                                    which is correct -> 0x1500 is the 20th IRQ (i.e. 20 [+ 1]) 2ND_LEVEL_INTERRUPTS,
