@@ -1,0 +1,101 @@
+/* Copyright (c) 2024 Codasip s.r.o.   */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* Info: dts/bindings/base/base.yaml */
+
+#include "skeleton.dtsi"
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <freq.h>
+#include <mem.h>
+
+/* Codasip Hobgoblin Platform (use with 700 Series Cores, e.g. A730) */
+
+/ {
+        soc {
+                #address-cells = <1>;
+                #size-cells = <1>;
+
+                sram0: memory@20000000 {
+                        compatible = "mmio-sram";
+                        reg = <0x20000000 DT_SIZE_K(512)>;
+                };
+                dram0: memory@80000000 {
+                        compatible = "mmio-sram";
+                        reg = <0x80000000 DT_SIZE_M(1024)>;
+                };
+                
+                /* Note: For PLIC Interrupts, as PLIC IRQ 0 is not an interrupt, then all the interrupt
+                         numbers have been incremented by 1 from the ones defined in the Unified Interrupt Map */
+                        
+                uart0: serial@60101000 {
+                        compatible = "ns16550";
+                        clock-frequency = <100000000>;
+                        reg = <0x60101000 0x1c>;
+                        reg-shift = <2>;
+
+                        interrupt-parent = <&plic>;
+                        /* interrupts = <0>;   This is irq=267 (0x10B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(uart0), 0, irq), 
+                                               which is correct -> 0x100 is the first IRQ (i.e. 0 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                               while 0xB is 1st level interrupt &intc 11 */
+                        interrupts = <1 1>; /* This is irq=523 (0x20B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(uart0), 0, irq), 
+                                               which is correct -> 0x200 is the first IRQ (i.e. 1 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                               while 0xB is 1st level interrupt &intc 11. Priority 1. */
+                };
+                gpio00: gpio@60300000 {
+                        compatible = "xlnx,xps-gpio-1.00.a";
+                        reg = <0x60300000 0x10>;
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        ngpios = <8>;   /* Number of GPIO pins. 
+                                           gpio_in[7:0]  =  SW[7:0]
+                                           gpio_out[7:0] = LED[7:0] */
+                        interrupt-parent = <&plic>;
+                        /* interrupts = <6>;   This is irq=1803 (0x70B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio00), 0, irq), 
+                                               which is correct -> 0x700 is the 7th IRQ (i.e. 6 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                               while 0xB is 1st level interrupt &intc 11 - this is the Xilinx GPIO Input 
+                                               Transition Interrupt */
+                        interrupts = <7 1>; /* This is irq=2059 (0x80B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio00), 0, irq), 
+                                               which is correct -> 0x800 is the first IRQ (i.e. 7 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                               while 0xB is 1st level interrupt &intc 11. Priority 1. */
+                };
+                gpio01: gpio@60310000 {
+                        compatible = "xlnx,xps-gpio-1.00.a";
+                        reg = <0x60310000 0x10>;
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        ngpios = <5>;   /* Number of GPIO pins.
+                                           gpio_in[0]  = SD_CARD_DETECT_N
+                                           gpio_in[1]  = SD_PWR_EN_N
+                                           gpio_out[1] = SD_PWR_EN_N
+                                           gpio_out[2] = SD_20MHZ_CLK_EN */
+                        interrupt-parent = <&plic>;
+                        /* interrupts = <7>;   This is irq=2059 (0x80B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq), 
+                                               which is correct -> 0x800 is the 8th IRQ (i.e. 7 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                               while 0xB is 1st level interrupt &intc 11 - this is the Xilinx GPIO Input 
+                                               Transition Interrupt */
+                        interrupts = <8 1>; /* This is irq=2315 (0x90B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio00), 0, irq), 
+                                               which is correct -> 0x900 is the first IRQ (i.e. 8 [+ 1]) 2ND_LEVEL_INTERRUPTS,
+                                               while 0xB is 1st level interrupt &intc 11. Priority 1. */
+                                   
+                                /* Note: 1st level interrupts start at 0, 2nd and 3rd level interrupts start at 1, 
+                                         as 0 in each of those byte positions = no interrupt */
+                                /* Note: IRQ numbering format is 0x44332211 where 0x33 = 3rd level irq, 
+                                         0x22 = 2nd level irq and 0x11 = 1st level irq.
+                                         0x44 is not used, set to 0x00 */
+                };
+
+                spi1: spi@60210000 {    /* SD Card */
+                        compatible = "xlnx,xps-spi-2.00.a";
+                        reg = <0x60210000 0x100>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&plic>;
+                        /* interrupts = <3>; */
+                        interrupts = <4 1>;     /* IRQ 4 (MEIP), Priority 1 */
+                        clock-frequency = <40000000>;
+                        xlnx,num-ss-bits = <0x1>;
+                        xlnx,num-transfer-bits = <0x8>;
+                };
+        };
+};

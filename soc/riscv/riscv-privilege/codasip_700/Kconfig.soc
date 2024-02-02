@@ -1,0 +1,150 @@
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+choice
+    prompt "Codasip 700 Series SOC implementation"
+    depends on SOC_SERIES_RISCV_CODASIP_700
+
+
+
+config SOC_CODASIP_A730HOBGOBLIN
+    bool "Codasip RISC-V A730 (Obilix core) Hobgoblin (FPGA platform) system implementation"
+    select RISCV
+    select ATOMIC_OPERATIONS_C
+    select INCLUDE_RESET_VECTOR
+    select 64BIT
+    select RISCV_ISA_RV64I
+    select RISCV_ISA_EXT_M
+    select RISCV_ISA_EXT_A
+    select RISCV_ISA_EXT_F
+    select RISCV_ISA_EXT_D
+    select RISCV_ISA_EXT_C
+
+    select RISCV_ISA_EXT_ZICSR
+    select RISCV_ISA_EXT_ZIFENCEI
+
+# See: arch/riscv/Kconfig.isa
+# Removed all the following to get Zephyr to link and run on QEMU
+#   select RISCV_ISA_EXT_ZBA
+#   select RISCV_ISA_EXT_ZBB
+##   select RISCV_ISA_EXT_ZBC # Disabled in A730 Hobgoblin
+#   select RISCV_ISA_EXT_ZBS
+#   select RISCV_ISA_EXT_ZCB # Enabled in A730 Hobgoblin, but not in Zephyr at the moment
+
+
+
+config SOC_CODASIP_H730HOBGOBLIN
+    bool "Codasip RISC-V H730 (Obilix core) Hobgoblin (FPGA platform) system implementation"
+    select RISCV
+    select ATOMIC_OPERATIONS_C
+    select INCLUDE_RESET_VECTOR
+    select 64BIT
+    select RISCV_ISA_RV64I
+    select RISCV_ISA_EXT_M
+    select RISCV_ISA_EXT_A
+    select RISCV_ISA_EXT_F
+    select RISCV_ISA_EXT_D
+    select RISCV_ISA_EXT_C
+
+    select RISCV_ISA_EXT_ZICSR
+    select RISCV_ISA_EXT_ZIFENCEI
+
+# See: arch/riscv/Kconfig.isa
+# Removed all the following to get Zephyr to link and run on QEMU
+#   select RISCV_ISA_EXT_ZBA
+#   select RISCV_ISA_EXT_ZBB
+##   select RISCV_ISA_EXT_ZBC # Disabled in A730 Hobgoblin
+#   select RISCV_ISA_EXT_ZBS
+#   select RISCV_ISA_EXT_ZCB # Enabled in A730 Hobgoblin, but not in Zephyr at the moment
+
+endchoice
+
+
+# Common to all x730 Cores on Hobgoblin FPGA Platform
+if SOC_CODASIP_A730HOBGOBLIN || SOC_CODASIP_H730HOBGOBLIN
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+    default 100000000   # Set to 100MHz for ACLINT to be accurate
+#   default  25000000 the Core runs at 25MHz, but all the peripherials run at 100MHz, except SPI
+
+config RISCV_SOC_INTERRUPT_INIT
+    default y
+
+config FPU
+    default n # this should be y, but the link stage fails with: can't link soft-float modules with single-float modules
+
+config RISCV_HAS_CPU_IDLE
+    default y
+
+config GPIO
+    default y
+
+config SERIAL
+    default y
+
+#config RISCV_HAS_CLIC
+#   default n
+
+config RISCV_HAS_PLIC
+    default y
+
+#config CODASIP_HAS_FPGA_PIC
+#   default n
+
+#config NUM_PIC_IRQS
+#    int "Codasip PIC interrupt controller implementation"
+#    help
+#      Enable support for Codasip PIC interrupt controller
+#    default 128
+
+config 2ND_LEVEL_INTERRUPTS
+    default y
+
+config 2ND_LVL_ISR_TBL_OFFSET
+    default 12
+
+config 2ND_LVL_INTR_00_OFFSET
+    default 11
+
+# Total number of interrupts (NUM_PIC_IRQS + 2ND_LVL_ISR_TBL_OFFSET)
+config NUM_IRQS
+    default 76
+
+config SPI
+    default y
+
+config SPI_EXTENDED_MODES
+    default y
+
+endif # SOC_CODASIP_A730HOBGOBLIN || SOC_CODASIP_H730HOBGOBLIN
+
+
+# A730 HOBGOBLIN specifics (MMU - not supported in Zephyr, no PMP)
+if SOC_CODASIP_A730HOBGOBLIN
+
+config SOC
+    default "codasip-a730hobgoblin"
+
+# No PMP, only MMU which is not supported in Zephyr
+#config RISCV_PMP
+#    default y
+
+#config PMP_SLOTS
+#    default 16
+
+endif # SOC_CODASIP_A730HOBGOBLIN
+
+
+
+# H730 HOBGOBLIN specifics (no MMU, PMP 16)
+if SOC_CODASIP_H730HOBGOBLIN
+
+config SOC
+    default "codasip-h730hobgoblin"
+
+config RISCV_PMP
+    default y
+
+config PMP_SLOTS
+    default 16
+    
+endif # SOC_CODASIP_H730HOBGOBLIN

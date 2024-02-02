@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Codasip s.r.o.
+ * Copyright (c) 2024 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -8,12 +8,12 @@
 
 /dts-v1/;
 
-#include <codasip/l31fluorine.dtsi>
-#include <codasip/iiot-doombar.dtsi>
+#include <codasip/h730.dtsi>
+#include <codasip/hobgoblin.dtsi>
 #include <zephyr/devicetree/gpio.h>
 
 / {
-        compatible = "codasip,iiot-doombar-l31fluorine";
+        compatible = "codasip,hobgoblin-h730";
 
         aliases {
                 led0 = &led0;
@@ -26,7 +26,8 @@
                 led7 = &led7;
 
                 sd-pwr-en-n-out  = &sd_pwr_en_n_out;
-                sd-fast-clk-en   = &sd_20mhz_clk_en;
+                sd-fast-clk-en   = &sd_40mhz_clk_en;
+                sys-rst-req      = &sys_rst_req;
 
                 sw0 = &sw0;
                 sw1 = &sw1;
@@ -45,11 +46,11 @@
                 zephyr,console = &uart0;
                 zephyr,shell-uart = &uart0;
                 zephyr,sram = &sram0;
-                zephyr,entropy = &trng0;
+                /* zephyr,sram = &dram0; */
         };
 
         leds {
-            /* GPIO00 = SWITCH/LED */
+        /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-leds";
                 led0: led0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
@@ -90,14 +91,19 @@
                         label = "SD_PWR_EN_N_OUT";
                 };
                 
-                sd_20mhz_clk_en: sd_20mhz_clk_en {
+                sd_40mhz_clk_en: sd_40mhz_clk_en {
                         gpios = <&gpio01 2 GPIO_ACTIVE_HIGH>;
-                        label = "SD_20MHZ_CLK_EN";
+                        label = "SD_40MHZ_CLK_EN";
+                };
+
+                sys_rst_req: sys_rst_req {
+                        gpios = <&gpio01 3 GPIO_ACTIVE_HIGH>;
+                        label = "SYS_RST_REQ";
                 };
         };
 
         keys {
-            /* GPIO00 = SWITCH/LED */
+        /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-keys";
                 sw0: sw0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
@@ -158,22 +164,6 @@
     status = "okay";
 };
 
-&spi0 {
-    status = "okay";
-};
-
 &spi1 {
-    status = "okay";
-};
-
-&trng0 {
-    status = "okay";
-};
-
-&wdt0 {
-    status = "okay";
-};
-
-&policy_mngr0 {
     status = "okay";
 };

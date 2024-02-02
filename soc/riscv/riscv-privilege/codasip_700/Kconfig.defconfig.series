@@ -1,0 +1,9 @@
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_SERIES_RISCV_CODASIP_700
+
+config SOC_SERIES
+	default "codasip_700"
+
+endif # SOC_SERIES_RISCV_CODASIP_700

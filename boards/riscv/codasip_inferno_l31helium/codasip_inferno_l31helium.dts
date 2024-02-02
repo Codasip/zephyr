@@ -26,7 +26,7 @@
                 led7 = &led7;
 
                 sd-pwr-en-n-out  = &sd_pwr_en_n_out;
-                sd-20mhz-clk-en  = &sd_20mhz_clk_en;
+                sd-fast-clk-en   = &sd_20mhz_clk_en;
 
                 sw0 = &sw0;
                 sw1 = &sw1;

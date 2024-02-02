@@ -4,6 +4,6 @@
 if SOC_SERIES_RISCV_CODASIP_L31
 
 config SOC_SERIES
-	default "codasip"
+	default "codasip_l31"
 
 endif # SOC_SERIES_RISCV_CODASIP_L31

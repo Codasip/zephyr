@@ -1,0 +1,77 @@
+/* Copyright (c) 2024 Codasip s.r.o.   */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* Info: dts/bindings/base/base.yaml */
+
+#include "skeleton.dtsi"
+#include <freq.h>
+#include <mem.h>
+
+/* Codasip H730 Core */
+
+/ {
+        compatible = "codasip,h730";
+
+        clocks {
+                coreclk: core-clk {
+                        #clock-cells = <0>;
+                        compatible = "fixed-clock";
+                        clock-frequency = <DT_FREQ_M(25)>;
+                };
+
+                tlclk: tl-clk {
+                        #clock-cells = <0>;
+                        compatible = "fixed-factor-clock";
+                        clocks = <&coreclk>;
+                        clock-div = <1>;
+                };
+        };
+
+        cpus {
+                #address-cells = <1>;
+                #size-cells = <0>;
+                timebase-frequency = <25000000>;
+                cpu@0 {
+                        compatible = "riscv";
+                        device_type = "cpu";
+                        reg = <0>;
+                        riscv,isa = "rv64imafdc";
+                        clock-frequency = <25000000>;
+                        status = "okay";
+                        intc: interrupt-controller {
+                                compatible = "riscv,cpu-intc";
+                                #address-cells = <0>;
+                                #interrupt-cells = <1>;
+                                interrupt-controller;
+                        };
+                };
+        };
+
+        soc {
+                clint: clint@60014000 {
+                        compatible = "sifive,clint0";
+                        interrupts-extended = <&intc 3>, <&intc 7>;
+/*                      reg = <0x60010000 0x1BFF8>; */
+                        reg = <0x60014000 0xC000>; /* ACLINT devices have alignment requirements which make us instantiate them at 0x6001_4000 */
+                        status = "okay";
+                };
+
+                plic: interrupt-controller@40000000 {
+                        compatible = "sifive,plic-1.0.0";
+                        #address-cells = <0>;
+                        #interrupt-cells = <2>;
+                        interrupt-controller;
+                        interrupts-extended = <&intc 11 &intc 9>;   /* 11 is meip bit, 9 is seip bit */
+                        reg = <0x40000000 0x00002000
+                               0x40002000 0x001fe000
+                               0x40200000 0x03e00000>;
+                        reg-names = "prio", "irq_en", "reg";
+
+                        /* Values from the RTL plic.tlc and plic.sv */
+                        riscv,max-priority = <3>;
+                        riscv,ndev = <64>;      /* 2 Targets (0 = meip and 1 = seip) with 32 IRQs each.
+                                                   Note: IRQ 0 is not an interrupt on the PLIC */
+                        status = "okay";
+                };
+        };
+};

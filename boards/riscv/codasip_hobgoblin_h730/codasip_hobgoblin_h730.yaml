@@ -1,0 +1,34 @@
+#
+# Copyright (c) 2024 Codasip s.r.o.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+identifier: codasip,hobgoblin-h730
+name: Codasip Hobgoblin (FPGA) SoC with H730 softcore CPU
+type: mcu
+arch: riscv64
+toolchain:
+  - zephyr
+testing:
+  ignore_tags:
+    - net
+    - bluetooth
+supported:
+  - uart
+  - gpio
+  - spi
+
+#ram: 262144
+#supported:
+#  - spi
+#  - i2s
+#testing:
+#  ignore_tags:
+#    - bluetooth
+#    - xip
+#  - i2c
+#  - spi
+#  - pwm
+#  - watchdog
+

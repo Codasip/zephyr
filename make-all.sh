@@ -1,5 +1,23 @@
 #!/bin/bash -xe
 
+./make-sample.sh codasip_hobgoblin_h730     samples/codasip          blinkers
+./make-sample.sh codasip_hobgoblin_h730     samples/subsys/console   getchar
+./make-sample.sh codasip_hobgoblin_h730     samples                  synchronization
+./make-sample.sh codasip_hobgoblin_h730     samples                  philosophers
+./make-sample.sh codasip_hobgoblin_h730     samples/drivers/uart     echo_bot               echo_bot-rx_interrupt
+#./make-sample.sh codasip_hobgoblin_h730     samples/codasip          hello_world_interrupt USER TEST INTERRUPTS HAVE BEEN REMOVED FROM THE RTL
+./make-sample.sh codasip_hobgoblin_h730     samples/codasip          hello_world_user
+./make-sample.sh codasip_hobgoblin_h730     samples/codasip          fat_fs
+
+./make-sample.sh codasip_hobgoblin_a730     samples/codasip          blinkers
+./make-sample.sh codasip_hobgoblin_a730     samples/subsys/console   getchar
+./make-sample.sh codasip_hobgoblin_a730     samples                  synchronization
+./make-sample.sh codasip_hobgoblin_a730     samples                  philosophers
+./make-sample.sh codasip_hobgoblin_a730     samples/drivers/uart     echo_bot               echo_bot-rx_interrupt
+#./make-sample.sh codasip_hobgoblin_a730     samples/codasip          hello_world_interrupt USER TEST INTERRUPTS HAVE BEEN REMOVED FROM THE RTL
+#./make-sample.sh codasip_hobgoblin_a730     samples/codasip          hello_world_user      NO PMP ON A730 SO THIS DOES NOT WORK
+./make-sample.sh codasip_hobgoblin_a730     samples/codasip          fat_fs
+
 ./make-sample.sh codasip_inferno_l31carbon     samples/codasip          blinkers
 ./make-sample.sh codasip_inferno_l31carbon     samples/subsys/console   getchar
 ./make-sample.sh codasip_inferno_l31carbon     samples                  synchronization
