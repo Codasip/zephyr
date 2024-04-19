@@ -8,8 +8,8 @@
 #define ZEPHYR_INCLUDE_DRIVERS_POLICY_MNGR_H_
 
 /**
- * @brief Watchdog Interface
- * @defgroup watchdog_interface Watchdog Interface
+ * @brief Policy Manager Interface
+ * @defgroup ploicy_manager_interface Policy Manager Interface
  * @ingroup io_interfaces
  * @{
  */

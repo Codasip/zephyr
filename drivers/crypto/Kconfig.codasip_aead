@@ -1,0 +1,11 @@
+# Codasip AEAD configuration options
+
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+config CRYPTO_CODASIP_AEAD_ADAPTOR
+	bool "Codasip AEAD Adaptor"
+	default y
+	#depends on DT_HAS_NORDIC_NRF_ECB_ENABLED
+	help
+	  Enable Codasip AEAD Adaptor encryption driver
