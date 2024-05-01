@@ -1,0 +1,19 @@
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+description: Codasip AEAD Adaptor
+
+compatible: "codasip,aead-adaptor"
+
+include: base.yaml
+
+properties:
+  reg:
+    required: true
+  algo:
+    type: int
+    required: true
+    description: Crypto Algorithm
+  mode:
+    type: int
+    description: Crypto Algorithm Mode (not all crypto algorithms have a mode)

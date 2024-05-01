@@ -6,6 +6,6 @@
 config CRYPTO_CODASIP_AEAD_ADAPTOR
 	bool "Codasip AEAD Adaptor"
 	default y
-	#depends on DT_HAS_NORDIC_NRF_ECB_ENABLED
+    depends on DT_HAS_CODASIP_AEAD_ADAPTOR_ENABLED
 	help
 	  Enable Codasip AEAD Adaptor encryption driver

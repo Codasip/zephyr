@@ -76,6 +76,7 @@ config CRYPTO_CODASIP_AEAD_DRV_NAME
 	string "Device name for Codasip AEAD Adaptor device"
 	default "CRYPTO_CODASIP_AEAD"
 	#depends on CRYPTO_TINYCRYPT_SHIM
+    depends on CRYPTO_CODASIP_AEAD_ADAPTOR
 	help
 	  Device name for Codasip AEAD Adaptor device.
 

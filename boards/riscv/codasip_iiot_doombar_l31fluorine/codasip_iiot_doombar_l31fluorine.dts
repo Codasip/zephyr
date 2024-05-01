@@ -177,3 +177,7 @@
 &policy_mngr0 {
     status = "okay";
 };
+
+&aead_adaptor0 {
+    status = "okay";
+};                

@@ -51,6 +51,7 @@
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          trng_files            # Write 1GB random TRNG and DRBG data to SD Card files trng.bin and drbg.bin
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          watchdog              # Codasip Watchdog (feeding and reset) example
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          policy_mngr           # Codasip Policy Manager example.
+./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          crypto                # Codasip Fake AEAD Adpator Crypto example.
 
 # Old deprecated platforms:
 # ./make-sample.sh codasip_ghostship_l31carbon   samples/codasip          blinkers
