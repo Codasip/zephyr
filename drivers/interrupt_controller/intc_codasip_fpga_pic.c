@@ -2,7 +2,7 @@
  * Copyright (c) 2017 Jean-Paul Etienne <fractalclone@gmail.com>
  * Contributors: 2018 Antmicro <www.antmicro.com>
  *
- * Changes Copyright (c) 2023 Codasip s.r.o.
+ * Copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -66,8 +66,7 @@ static int save_irq;
  *
  * @param irq IRQ number to enable
  */
-void codasip_fpga_pic_irq_enable(uint32_t irq)
-{
+void codasip_fpga_pic_irq_enable(uint32_t irq) {
     uint32_t key, reg;
 
     key = irq_lock();
@@ -75,30 +74,29 @@ void codasip_fpga_pic_irq_enable(uint32_t irq)
     reg  = irq >> 5;
     irq &= 31;
 
-    switch( reg )
-    {
+    switch(reg) {
     case 0:
-        csr_read_set( CCSR_MPICMASK,  1 << irq );
+        csr_read_set(CCSR_MPICMASK,  1 << irq);
         break;
 
     case 1:
 #if CONFIG_NUM_PIC_IRQS > 32
-        csr_read_set( CCSR_MPICMASK1, 1 << irq );
+        csr_read_set(CCSR_MPICMASK1, 1 << irq);
 #endif
         break;
 
     case 2:
 #if CONFIG_NUM_PIC_IRQS > 64
-        csr_read_set( CCSR_MPICMASK2, 1 << irq );
+        csr_read_set(CCSR_MPICMASK2, 1 << irq);
 #endif
         break;
 
     case 3:
 #if CONFIG_NUM_PIC_IRQS > 96
-        csr_read_set( CCSR_MPICMASK3, 1 << irq );
+        csr_read_set(CCSR_MPICMASK3, 1 << irq);
 #endif
         break;
-    } 
+    }
 
     irq_unlock(key);
 }
@@ -113,8 +111,7 @@ void codasip_fpga_pic_irq_enable(uint32_t irq)
  *
  * @param irq IRQ number to disable
  */
-void codasip_fpga_pic_irq_disable(uint32_t irq)
-{
+void codasip_fpga_pic_irq_disable(uint32_t irq) {
     uint32_t key, reg;
 
     key = irq_lock();
@@ -122,30 +119,29 @@ void codasip_fpga_pic_irq_disable(uint32_t irq)
     reg  = irq >> 5;
     irq &= 31;
 
-    switch( reg )
-    {
+    switch( reg ) {
     case 0:
-        csr_read_clear( CCSR_MPICMASK,  1 << irq );
+        csr_read_clear(CCSR_MPICMASK,  1 << irq);
         break;
 
     case 1:
 #if CONFIG_NUM_PIC_IRQS > 32
-        csr_read_clear( CCSR_MPICMASK1, 1 << irq );
+        csr_read_clear(CCSR_MPICMASK1, 1 << irq);
 #endif
         break;
 
     case 2:
 #if CONFIG_NUM_PIC_IRQS > 64
-        csr_read_clear( CCSR_MPICMASK2, 1 << irq );
+        csr_read_clear(CCSR_MPICMASK2, 1 << irq);
 #endif
         break;
 
     case 3:
 #if CONFIG_NUM_PIC_IRQS > 96
-        csr_read_clear( CCSR_MPICMASK3, 1 << irq );
+        csr_read_clear(CCSR_MPICMASK3, 1 << irq);
 #endif
         break;
-    } 
+    }
 
     irq_unlock(key);
 }
@@ -158,39 +154,37 @@ void codasip_fpga_pic_irq_disable(uint32_t irq)
  *
  * @return 1 or 0
  */
-int codasip_fpga_pic_irq_is_enabled(uint32_t irq)
-{
+int codasip_fpga_pic_irq_is_enabled(uint32_t irq) {
     uint32_t enabled = 0, reg;
 
     reg  = irq >> 5;
     irq &= 31;
 
-    switch( reg )
-    {
+    switch( reg ) {
     case 0:
-        enabled = csr_read( CCSR_MPICMASK  );
+        enabled = csr_read(CCSR_MPICMASK );
         break;
 
     case 1:
 #if CONFIG_NUM_PIC_IRQS > 32
-        enabled = csr_read( CCSR_MPICMASK1 );
+        enabled = csr_read(CCSR_MPICMASK1);
 #endif
         break;
 
     case 2:
 #if CONFIG_NUM_PIC_IRQS > 64
-        enabled = csr_read( CCSR_MPICMASK2 );
+        enabled = csr_read(CCSR_MPICMASK2);
 #endif
         break;
 
     case 3:
 #if CONFIG_NUM_PIC_IRQS > 96
-        enabled = csr_read( CCSR_MPICMASK3 );
+        enabled = csr_read(CCSR_MPICMASK3);
 #endif
         break;
-    } 
+    }
 
-    return ( enabled & ( 1UL << irq ) ) != 0;
+    return (enabled & ( 1UL << irq )) != 0;
 }
 
 /**
@@ -201,8 +195,7 @@ int codasip_fpga_pic_irq_is_enabled(uint32_t irq)
  *
  * @return PIC-specific interrupt line causing an interrupt.
  */
-int codasip_fpga_pic_get_irq(void)
-{
+int codasip_fpga_pic_get_irq(void) {
     return save_irq;
 }
 
@@ -212,38 +205,32 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
     struct _isr_table_entry *ite;
 
     /* Get the IRQ number generating the interrupt */
-    pending = csr_read( CCSR_MPICFLAG ) & csr_read( CCSR_MPICMASK );
+    pending = csr_read(CCSR_MPICFLAG) & csr_read(CCSR_MPICMASK);
 
 #if CONFIG_NUM_PIC_IRQS > 32
-    if ( pending == 0 )
-    {
+    if (pending == 0) {
         irq += 32;
-        pending = csr_read( CCSR_MPICFLAG1 ) & csr_read( CCSR_MPICMASK1 );
+        pending = csr_read(CCSR_MPICFLAG1) & csr_read(CCSR_MPICMASK1);
     }
 #endif
 
 #if CONFIG_NUM_PIC_IRQS > 64
-    if ( pending == 0 )
-    {
+    if (pending == 0) {
         irq += 32;
-        pending = csr_read( CCSR_MPICFLAG2 ) & csr_read( CCSR_MPICMASK2 );
+        pending = csr_read(CCSR_MPICFLAG2) & csr_read(CCSR_MPICMASK2);
     }
 #endif
 
 #if CONFIG_NUM_PIC_IRQS > 96
-    if ( pending == 0 )
-    {
+    if (pending == 0) {
         irq += 32;
-        pending = csr_read( CCSR_MPICFLAG3 ) & csr_read( CCSR_MPICMASK3 );
+        pending = csr_read(CCSR_MPICFLAG3) & csr_read(CCSR_MPICMASK3);
     }
 #endif
 
-    if ( pending == 0 )
-    {
+    if (pending == 0) {
         irq += 32;
-    }
-    else
-    {
+    } else {
         irq += find_lsb_set( pending ) - 1; /* Note: This function returns the the first set lsb bit pos + 1 (!). alternative: __builtin_ffs( pending ); */
     }
 
@@ -259,8 +246,7 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
      * If the IRQ is out of range, call z_irq_spurious.
      * A call to z_irq_spurious will not return.
      */
-    if (irq >= PIC_IRQS)
-    {
+    if (irq >= PIC_IRQS) {
         z_irq_spurious(NULL);
     }
 
@@ -269,12 +255,9 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
     /* Call the corresponding IRQ handler in _sw_isr_table */
     ite = (struct _isr_table_entry *)&_sw_isr_table[irq];
 
-    if ( ite != NULL && ite->isr != NULL )
-    {
+    if (ite != NULL && ite->isr != NULL) {
         ite->isr(ite->arg);
-    }
-    else
-    {
+    } else {
         z_irq_spurious(NULL);
     }
 
@@ -287,30 +270,29 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
     reg  = irq >> 5;
     irq &= 31;
 
-    switch( reg )
-    {
+    switch(reg) {
     case 0:
-        csr_read_clear( CCSR_MPICFLAG,  1 << irq );
+        csr_read_clear(CCSR_MPICFLAG,  1 << irq);
         break;
 
     case 1:
 #if CONFIG_NUM_PIC_IRQS > 32
-        csr_read_clear( CCSR_MPICFLAG1, 1 << irq );
+        csr_read_clear(CCSR_MPICFLAG1, 1 << irq);
 #endif
         break;
 
     case 2:
 #if CONFIG_NUM_PIC_IRQS > 64
-        csr_read_clear( CCSR_MPICFLAG2, 1 << irq );
+        csr_read_clear(CCSR_MPICFLAG2, 1 << irq);
 #endif
         break;
 
     case 3:
 #if CONFIG_NUM_PIC_IRQS > 96
-        csr_read_clear( CCSR_MPICFLAG3, 1 << irq );
+        csr_read_clear(CCSR_MPICFLAG3, 1 << irq);
 #endif
         break;
-    } 
+    }
 }
 
 /**
@@ -318,30 +300,29 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
  *
  * @retval 0 on success.
  */
-static int codasip_fpga_pic_init(void)
-{
+static int codasip_fpga_pic_init(void) {
     /* Ensure that all interrupts are disabled initially */
-    csr_write( CCSR_MPICMASK,  0 );
+    csr_write(CCSR_MPICMASK,  0);
 #if CONFIG_NUM_PIC_IRQS > 32
-    csr_write( CCSR_MPICMASK1, 0 );
+    csr_write(CCSR_MPICMASK1, 0);
 #endif
 #if CONFIG_NUM_PIC_IRQS > 64
-    csr_write( CCSR_MPICMASK2, 0 );
+    csr_write(CCSR_MPICMASK2, 0);
 #endif
 #if CONFIG_NUM_PIC_IRQS > 96
-    csr_write( CCSR_MPICMASK3, 0 );
+    csr_write(CCSR_MPICMASK3, 0);
 #endif
 
     /* Ensure that all interrupts are cleared initially */
-    csr_write( CCSR_MPICFLAG,  0 );
+    csr_write(CCSR_MPICFLAG,  0);
 #if CONFIG_NUM_PIC_IRQS > 32
-    csr_write( CCSR_MPICFLAG1, 0 );
+    csr_write(CCSR_MPICFLAG1, 0);
 #endif
 #if CONFIG_NUM_PIC_IRQS > 64
-    csr_write( CCSR_MPICFLAG2, 0 );
+    csr_write(CCSR_MPICFLAG2, 0);
 #endif
 #if CONFIG_NUM_PIC_IRQS > 96
-    csr_write( CCSR_MPICFLAG3, 0 );
+    csr_write(CCSR_MPICFLAG3, 0);
 #endif
 
     /* Setup IRQ handler for PIC driver */

@@ -11,8 +11,8 @@
                 reg = <0>;
                 spi-max-frequency = <10000000>;
                 status = "okay";
-/*                spi-clock-mode-cpol;
-                spi-clock-mode-cpha; */
+                /* spi-clock-mode-cpol; */
+                /* spi-clock-mode-cpha; */
                 mmc {
                     compatible = "zephyr,sdmmc-disk";
                     status = "okay";

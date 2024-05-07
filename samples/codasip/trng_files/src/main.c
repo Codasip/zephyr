@@ -1,4 +1,5 @@
-/*
+/* From: samples/subsys/fs/fat_fs/src/main.c
+ * 
  * Copyright (c) 2019 Tavish Naruka <tavishnaruka@gmail.com>
  * Copyright (c) 2023 Nordic Semiconductor ASA
  * Copyright (c) 2023 Codasip s.r.o.

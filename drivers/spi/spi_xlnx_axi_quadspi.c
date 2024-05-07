@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Henrik Brix Andersen <henrik@brixandersen.dk>
- * Changes copyright (c) 2023 Codasip s.r.o.
+ * Copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -122,7 +122,7 @@ static void xlnx_quadspi_cs_control(const struct device *dev, bool on)
 		return;
 	}
 
-    /* Fix (1/2) for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
+    /* Fix (1/2) for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation,
      * see: sdhc_spi_init_card() in drivers/sdhc/sdhc_spi.c */
 	if (ctx->config->operation & SPI_CS_ACTIVE_HIGH) {
         on = !on;

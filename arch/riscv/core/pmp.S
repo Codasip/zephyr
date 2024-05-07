@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2022 BayLibre, SAS
+ * Copyright (c) 2024 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */

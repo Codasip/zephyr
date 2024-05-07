@@ -1,4 +1,5 @@
 # Copyright (c) 2022 Carlo Caione <ccaione@baylibre.com>
+# Copyright (c) 2024 Codasip s.r.o.
 # SPDX-License-Identifier: Apache-2.0
 
 config RISCV_ISA_RV32I
@@ -100,9 +101,10 @@ config RISCV_ISA_EXT_C
 #	  (B) - Standard Extension for Bit Manipulation
 #
 #	  RISC-V standard bit manipulation instruction set extension, named "B",
-#	  The bit-manipulation (bitmanip) extension collection is comprised of several component extensions to the base
-#	  RISC-V architecture that are intended to provide some combination of code size reduction, performance
-#	  improvement, and energy reduction.
+#	  The bit-manipulation (bitmanip) extension collection is comprised
+#     of several component extensions to the base RISC-V architecture
+#	  that are intended to provide some combination of code size reduction,
+#	  performance improvement, and energy reduction.
 
 config RISCV_ISA_EXT_ZICSR
 	bool

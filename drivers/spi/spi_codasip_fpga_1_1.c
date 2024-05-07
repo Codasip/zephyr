@@ -1,14 +1,7 @@
 /**
- * Codasip s.r.o.
- *
- * CONFIDENTIAL
- *
  * Copyright 2023 Codasip s.r.o.
  *
- * All Rights Reserved.
- * This file is part of a Codasip product. No part of this file may be use, copied,
- * modified, or distributed except in accordance with the terms contained in the
- * Codasip license agreement under which you obtained this file.
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 #define DT_DRV_COMPAT codasip_fpga_spi_1_1
@@ -244,12 +237,12 @@ static uint64_t bm_spi_read(bm_spi_t *spi, uint8_t size, uint8_t mode)
 }
 #endif
 
-/* As the Codasip FPGA SPI block is only half-duplex in Serial mode, while the above layers of Zephyr 
-   SD drivers assume full-duplex mode and output dummy bytes (0xff) to clock in input data, then 
-   something has to be done to fix this for the FPGA. 
+/* As the Codasip FPGA SPI block is only half-duplex in Serial mode, while the above layers of Zephyr
+   SD drivers assume full-duplex mode and output dummy bytes (0xff) to clock in input data, then
+   something has to be done to fix this for the FPGA.
 
-   The solution is to switch to data read whenever an 0xff (data/dummy) byte is to be output. 
-   The FPGA SPI outputs 0xff while reading by default. So this solution works without having to 
+   The solution is to switch to data read whenever an 0xff (data/dummy) byte is to be output.
+   The FPGA SPI outputs 0xff while reading by default. So this solution works without having to
    modify other Zephyr layers (phew)!
 */
 static uint64_t bm_spi_transceive_serial(bm_spi_t *spi, uint64_t data, uint8_t num_bytes)
@@ -379,19 +372,18 @@ typedef struct spi_codasip_fpga_cfg_s {
 
 
 /* Helper Functions */
-static int spi_codasip_fpga_config( const struct device *dev, const struct spi_config *config )
+static int spi_codasip_fpga_config(const struct device *dev, const struct spi_config *config)
 {
 //      const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
         spi_codasip_fpga_data_t        *context  =  dev->data;
         bm_spi_t                       *bm_spi   = &context->bm_spi;
 //      SPI_Type                       *base     =  cfg->base;          /* SPI Base address */
 
-        bm_spi_config_t bm_spi_config =
-        {
+        bm_spi_config_t bm_spi_config = {
                 .frequency = config->frequency,
                 .use_irq   = bm_spi->use_irq,
         };
-        // LOG_INF("config->frequency = %d", config->frequency );
+        // LOG_INF("config->frequency = %d", config->frequency);
 
 
         uint8_t cs = 0x00;
@@ -416,7 +408,7 @@ static int spi_codasip_fpga_config( const struct device *dev, const struct spi_c
                 return -ENOTSUP;
         }
 
-        context->cs_active_high = ( config->operation & SPI_CS_ACTIVE_HIGH ) ? true : false; 
+        context->cs_active_high = ( config->operation & SPI_CS_ACTIVE_HIGH ) ? true : false;
         // LOG_INF("CS active high = %s", context->cs_active_high ? "true" : "false" );
 
 #if 0 // ToDo
@@ -475,8 +467,8 @@ static int spi_codasip_fpga_config( const struct device *dev, const struct spi_c
 
         /* Actually the L31 Helium SPI module is fixed as CPOL=CPHA=1, which is compatible with CPOL=CPHA=0, apparently.
            So, accept CPOL=CPHA=1 or CPOL=CPHA=0 */
-        if (   ( ( config->operation & SPI_MODE_CPOL) != 0 )
-             ^ ( ( config->operation & SPI_MODE_CPHA) != 0 ) ) {
+        if (   ((config->operation & SPI_MODE_CPOL) != 0)
+             ^ ((config->operation & SPI_MODE_CPHA) != 0)) {
                 LOG_ERR("Only supports CPOL=CPHA=0 or CPOL=CPHA=1");
                 return -ENOTSUP;
         }
@@ -497,7 +489,7 @@ static int spi_codasip_fpga_config( const struct device *dev, const struct spi_c
         bm_spi->irq_flag   = 0;     ///< Flag signaling that interrupt happened
         bm_spi->use_irq    = false; ///< Interrupt configuration
 
-        bm_spi_init( bm_spi, &bm_spi_config );
+        bm_spi_init(bm_spi, &bm_spi_config);
 
         return 0;
 }
@@ -514,11 +506,11 @@ static void spi_codasip_fpga_xfer(const struct device *dev,
         // LOG_INF(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
         // printk(" T%d-R%d ", ctx->tx_len, ctx->rx_len);
 
-        if ( context->cs_active_high ) {
-                bm_spi_cs_deassert( bm_spi );
+        if (context->cs_active_high) {
+                bm_spi_cs_deassert(bm_spi);
         }
         else {
-                bm_spi_cs_assert( bm_spi );
+                bm_spi_cs_assert(bm_spi);
         }
 
 #if 0
@@ -528,14 +520,14 @@ static void spi_codasip_fpga_xfer(const struct device *dev,
 
         for (uint32_t i = 0; i < send_len; i++) {
                 /* Send a frame */
-                if ( ctx->tx_buf != NULL  &&  i < ctx->tx_len ) {
+                if (ctx->tx_buf != NULL  &&  i < ctx->tx_len) {
                         write_data = (uint8_t) (ctx->tx_buf)[i];
                 } else {
                         write_data = (uint8_t) 0xff;
                 }
 
-                read_data = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) write_data, 1 );
-                if ( ctx->rx_buf != NULL  &&  i < ctx->rx_len ) {
+                read_data = (uint8_t) bm_spi_transceive_serial(bm_spi, (uint64_t) write_data, 1);
+                if (ctx->rx_buf != NULL  &&  i < ctx->rx_len) {
                         ctx->rx_buf[i] = read_data;
                 }
         }
@@ -554,8 +546,8 @@ static void spi_codasip_fpga_xfer(const struct device *dev,
                 else {
                         txd = 0xff;
                 }
-                
-                rxd = (uint8_t) bm_spi_transceive_serial( bm_spi, (uint64_t) txd, 1 );
+
+                rxd = (uint8_t) bm_spi_transceive_serial(bm_spi, (uint64_t) txd, 1);
 
                 if (send) {
                         spi_context_update_tx(ctx, 1, 1);
@@ -569,11 +561,11 @@ static void spi_codasip_fpga_xfer(const struct device *dev,
 #endif
 
         /* Deassert the CS line */
-        if ( context->cs_active_high ) {
-                bm_spi_cs_assert( bm_spi );
+        if (context->cs_active_high) {
+                bm_spi_cs_assert(bm_spi);
         }
         else {
-                bm_spi_cs_deassert( bm_spi );
+                bm_spi_cs_deassert(bm_spi);
         }
 
         spi_context_complete(ctx, dev, 0);
@@ -582,8 +574,7 @@ static void spi_codasip_fpga_xfer(const struct device *dev,
 #define SD_PWR_EN_N_NODE DT_ALIAS(sd_pwr_en_n_out)
 static const struct gpio_dt_spec sd_pwr_en_n_out = GPIO_DT_SPEC_GET(SD_PWR_EN_N_NODE, gpios);
 
-static int spi_codasip_fpga_init(const struct device *dev)
-{
+static int spi_codasip_fpga_init(const struct device *dev) {
 //      const spi_codasip_fpga_cfg_t   *cfg      =  dev->config;
 //      spi_codasip_fpga_data_t        *context  =  dev->data;
 //      bm_spi_t                       *bm_spi   = &context->bm_spi;
@@ -599,16 +590,14 @@ static int spi_codasip_fpga_init(const struct device *dev)
 static int spi_codasip_fpga_transceive(const struct device *dev,
                                     const struct spi_config *config,
                                     const struct spi_buf_set *tx_bufs,
-                                    const struct spi_buf_set *rx_bufs)
-{
+                                    const struct spi_buf_set *rx_bufs) {
         int ret_val;
 
-        ret_val = spi_codasip_fpga_config( dev, config );
+        ret_val = spi_codasip_fpga_config(dev, config);
 
-        if ( ret_val == 0 )
-        {
-                spi_context_buffers_setup( &SPI_DATA(dev)->ctx, tx_bufs, rx_bufs, 1 );
-                spi_codasip_fpga_xfer( dev, config );
+        if (ret_val == 0) {
+                spi_context_buffers_setup(&SPI_DATA(dev)->ctx, tx_bufs, rx_bufs, 1);
+                spi_codasip_fpga_xfer(dev, config);
         }
         return ret_val;
 }
@@ -618,16 +607,14 @@ static int spi_codasip_fpga_transceive_async(const struct device *dev,
                                              const struct spi_config *config,
                                              const struct spi_buf_set *tx_bufs,
                                              const struct spi_buf_set *rx_bufs,
-                                             struct k_poll_signal *async)
-{
+                                             struct k_poll_signal *async) {
         return -ENOTSUP;
 }
 #endif /* CONFIG_SPI_ASYNC */
 
 static int spi_codasip_fpga_release(const struct device *dev,
-                               const struct spi_config *config)
-{
-        spi_codasip_fpga_data_t           *context  =  dev->data;
+                               const struct spi_config *config) {
+        spi_codasip_fpga_data_t        *context  =  dev->data;
         bm_spi_t                       *bm_spi   = &context->bm_spi;
 
         if ( bm_spi_busy( bm_spi ) ) {
@@ -638,8 +625,7 @@ static int spi_codasip_fpga_release(const struct device *dev,
 }
 
 /* Device Instantiation */
-static struct spi_driver_api spi_codasip_fpga_api =
-{
+static struct spi_driver_api spi_codasip_fpga_api = {
         .transceive = spi_codasip_fpga_transceive,
 
 #ifdef CONFIG_SPI_ASYNC

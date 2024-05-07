@@ -1,7 +1,6 @@
 /* Based on riscv_plic.h
  * Copyright (c) 2022 Carlo Caione <ccaione@baylibre.com>
- *
- * Changes Copyright (c) 2023 Codasip s.r.o.
+ * Copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */

@@ -139,20 +139,17 @@ void bm_trng_configure(bm_trng_t *trng,
 }
 #endif
 
-static void entropy_codasip_fpga_trng_read(bm_trng_t *trng, uint8_t *output, size_t len)
-{
+static void entropy_codasip_fpga_trng_read(bm_trng_t *trng, uint8_t *output, size_t len) {
     int      bytes = 0;
     uint32_t rnd_number;
-    
-    while(len)
-    {
-        if (bytes == 0)
-        {
+
+    while(len) {
+        if (bytes == 0) {
             /* Read a random number */
             rnd_number = bm_trng_get_rnd(trng);
             bytes = 4;
         }
-        
+
         *output++    = (uint8_t) rnd_number;
         rnd_number >>= 8;
         bytes --;
@@ -162,8 +159,7 @@ static void entropy_codasip_fpga_trng_read(bm_trng_t *trng, uint8_t *output, siz
 
 static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev,
                                                        uint8_t       *buffer,
-                                                       uint16_t       length)
-{
+                                                       uint16_t       length) {
     bm_trng_t *trng = (bm_trng_t *) dev->config;
 
     size_t count = 0;
@@ -185,8 +181,7 @@ static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev,
 static int entropy_codasip_fpga_trng_get_entropy_isr(const struct device *dev,
                                                            uint8_t       *buf,
                                                            uint16_t       len,
-                                                           uint32_t       flags)
-{
+                                                           uint32_t       flags) {
     bm_trng_t *trng = (bm_trng_t *) dev->config;
 
     if ((flags & ENTROPY_BUSYWAIT) == 0U) {
@@ -219,10 +214,11 @@ static int entropy_codasip_fpga_trng_get_entropy_isr(const struct device *dev,
 static int entropy_codasip_fpga_trng_init(const struct device *dev)
 {
     const bm_trng_t *bm_trng = (bm_trng_t *) dev->config;
-    
+
     /* Should call bm_trng_configure() instead of using a magic number: */
 //  bm_trng->regs->CONFIG = 0x00ff847f; /* Magic Number from Lib BareMetal trng-demo.c */
-    bm_trng->regs->CONFIG = 0x80ff847f; /* Magic Number from Sam Obuch - this should disable the error checking which supposedly introduces some bias 
+    bm_trng->regs->CONFIG = 0x80ff847f; /* Magic Number from Platforms Team - this should disable
+                                           the error checking which supposedly introduces some bias
                                            (but I was getting worse results with this disabled) */
 
     return 0;

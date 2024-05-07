@@ -90,7 +90,7 @@
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
                         label = "SD_PWR_EN_N_OUT";
                 };
-                
+
                 sd_40mhz_clk_en: sd_40mhz_clk_en {
                         gpios = <&gpio01 2 GPIO_ACTIVE_HIGH>;
                         label = "SD_40MHZ_CLK_EN";
@@ -146,7 +146,7 @@
 
                 sd_pwr_en_n_in: sd_pwr_en_n_in {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
-                        label = "SD_PWR_EN_N_IN";   
+                        label = "SD_PWR_EN_N_IN";
                 };
         };
 };

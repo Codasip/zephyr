@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2018-2023 Intel Corporation
- * Fix copyright (c) 2023 Codasip s.r.o.
+ * Copyright (c) 2023 Codasip s.r.o. (Fixed continuous machine timer interrupts in tickless mode)
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -205,8 +205,7 @@ uint32_t sys_clock_elapsed(void)
 	uint64_t now = mtime();
 	uint64_t dcycles = now - last_count;
 
-    if ( dcycles >= UINT32_MAX / 2 )
-    {
+    if (dcycles >= UINT32_MAX / 2) {
         /* This fixes continuous machine timer interrupts in tickless mode,
          * when the mtimer rolls over UINT32_MAX and no timers are set.
          * It also keeps last_elapsed within the 32-bit range (required
@@ -217,7 +216,7 @@ uint32_t sys_clock_elapsed(void)
          * Note: Spurious calls to sys_clock_announce() [via timer_isr()] are
          *       allowed according to the "Clock APIs" comment in system_timer.h
          */
-        timer_isr( 0 );
+        timer_isr(0);
 
         /* Update dcycles as last_count will have changed */
         dcycles = now - last_count;

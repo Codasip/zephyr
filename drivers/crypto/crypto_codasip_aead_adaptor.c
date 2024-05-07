@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2016 Intel Corporation. Original TinyCrypt Shim Layer
  * Copyright (C) 2024 Codasip s.r.o.  Port to Codasip AEAD Adaptor
- * 
+ *
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -265,7 +265,7 @@ void bm_aead_run(bm_aead_t *aead, bm_aead_command_t *command)
     {
         aead_copy_data_out(command->tag, aead->regs->TAG, aead->tag_size);
     }
-    
+
     // Reset AEAD
     aead->regs->COMMAND = COMMAND_FINALIZE;
     aead->regs->COMMAND = COMMAND_RESET;
@@ -278,7 +278,7 @@ void bm_aead_run(bm_aead_t *aead, bm_aead_command_t *command)
 struct aead_drv_state_s {
 	bool             exists;
     bool             in_use;
-    
+
 //	struct tc_aes_key_sched_struct session_key;
 
     bm_aead_t        aead;  /* Info obtained from DT */
@@ -291,8 +291,7 @@ struct aead_drv_state_s {
 static struct aead_drv_state_s aead_driver_state[CRYPTO_MAX_SESSION];
 
 static int do_aead_adaptor_encrypt(struct cipher_ctx *ctx, struct cipher_aead_pkt *pkt,
-			 uint8_t *nonce)
-{
+			 uint8_t *nonce) {
 	struct aead_drv_state_s *data = ctx->drv_sessn_state;
     struct cipher_pkt       *op   = pkt->pkt;
 
@@ -306,7 +305,7 @@ static int do_aead_adaptor_encrypt(struct cipher_ctx *ctx, struct cipher_aead_pk
     bm_aead_command.ad_size         = pkt->ad_len;
     bm_aead_command.data_out        = op->out_buf;
     bm_aead_command.tag             = pkt->tag;
-    
+
     bm_aead_run(&data->aead, &bm_aead_command);
 
 	op->out_len = op->in_len;
@@ -315,8 +314,7 @@ static int do_aead_adaptor_encrypt(struct cipher_ctx *ctx, struct cipher_aead_pk
 }
 
 static int do_aead_adaptor_decrypt(struct cipher_ctx *ctx, struct cipher_aead_pkt *pkt,
-			 uint8_t *nonce)
-{
+			 uint8_t *nonce) {
 	struct aead_drv_state_s *data = ctx->drv_sessn_state;
     struct cipher_pkt       *op   = pkt->pkt;
 
@@ -330,7 +328,7 @@ static int do_aead_adaptor_decrypt(struct cipher_ctx *ctx, struct cipher_aead_pk
     bm_aead_command.ad_size         = pkt->ad_len;
     bm_aead_command.data_out        = op->out_buf;
     bm_aead_command.tag             = pkt->tag;
-    
+
     bm_aead_run(&data->aead, &bm_aead_command);
 
 	op->out_len = op->in_len;
@@ -340,8 +338,7 @@ static int do_aead_adaptor_decrypt(struct cipher_ctx *ctx, struct cipher_aead_pk
 
 static int aead_session_setup(const struct device *dev, struct cipher_ctx *ctx,
 			    enum cipher_algo algo, enum cipher_mode mode,
-			    enum cipher_op op_type)
-{
+			    enum cipher_op op_type) {
 	struct aead_drv_state_s *data;
 	int idx;
 
@@ -351,34 +348,28 @@ static int aead_session_setup(const struct device *dev, struct cipher_ctx *ctx,
 	}
 
     /* Find a suitable AEAD PA for the required Algorithm & Mode */
-	for (idx = 0; idx < CRYPTO_MAX_SESSION; idx++)
-    {
+	for (idx = 0; idx < CRYPTO_MAX_SESSION; idx++) {
 		if (   aead_driver_state[idx].exists        == true
             && aead_driver_state[idx].in_use        == false
             && aead_driver_state[idx].algo          == algo
             && aead_driver_state[idx].mode          == mode
-            && aead_driver_state[idx].aead.key_size == ctx->keylen)
-        {
+            && aead_driver_state[idx].aead.key_size == ctx->keylen) {
 			aead_driver_state[idx].in_use = true;
 			break;
 		}
 	}
-    
-    if ( idx == CRYPTO_MAX_SESSION )
-    {
+
+    if ( idx == CRYPTO_MAX_SESSION ) {
 		LOG_ERR("AEAD Adaptor Algorithm/Mode/Key-Size not supported or Max sessions in progress");
 		return -EINVAL;
     }
 
     /* Both CCM and GCM are AEAD Algorithms */
-	if (op_type == CRYPTO_CIPHER_OP_ENCRYPT)
-    {
+	if (op_type == CRYPTO_CIPHER_OP_ENCRYPT) {
         // ctx->ops.cbc_crypt_hndlr = do_aead_adaptor_encrypt;
 		ctx->ops.ccm_crypt_hndlr = (ccm_op_t) do_aead_adaptor_encrypt;
 		ctx->ops.gcm_crypt_hndlr = (gcm_op_t) do_aead_adaptor_encrypt;
-	}
-    else
-    {
+	} else {
 		// ctx->ops.cbc_crypt_hndlr = do_aead_adaptor_decrypt;
 		ctx->ops.ccm_crypt_hndlr = (ccm_op_t) do_aead_adaptor_decrypt;
 		ctx->ops.gcm_crypt_hndlr = (gcm_op_t) do_aead_adaptor_decrypt;
@@ -393,13 +384,11 @@ static int aead_session_setup(const struct device *dev, struct cipher_ctx *ctx,
 	return 0;
 }
 
-static int aead_query_caps(const struct device *dev)
-{
+static int aead_query_caps(const struct device *dev) {
 	return (CAP_RAW_KEY | CAP_SEPARATE_IO_BUFS | CAP_SYNC_OPS);
 }
 
-static int aead_session_free(const struct device *dev, struct cipher_ctx *sessn)
-{
+static int aead_session_free(const struct device *dev, struct cipher_ctx *sessn) {
 	struct aead_drv_state_s *data =  sessn->drv_sessn_state;
 
 	ARG_UNUSED(dev);
@@ -408,23 +397,21 @@ static int aead_session_free(const struct device *dev, struct cipher_ctx *sessn)
 	return 0;
 }
 
-static int aead_init(const struct device *dev)
-{
+static int aead_init(const struct device *dev) {
     static bool initialised = false;
-    
+
 	int i;
 	ARG_UNUSED(dev);
 
-    if ( !initialised )
-    {
+    if ( !initialised ) {
         for (i = 0; i < CRYPTO_MAX_SESSION; i++) {
             aead_driver_state[i].exists = false; /* This indicates the AEAD adaptor is not available */
             aead_driver_state[i].in_use = false;
         }
-        
+
         initialised = true;
     }
-    
+
 	return 0;
 }
 
@@ -446,38 +433,34 @@ DEVICE_DEFINE(crypto_codasip_aead, CONFIG_CRYPTO_CODASIP_AEAD_DRV_NAME,
 
 /* The following is used to pull all the AEAD Adaptor information from the Device Tree
  * and initialise everything */
-#define CODASIP_AEAD_ADAPTOR_INIT( index )                                           \
-                                                                                     \
-    static int codasip_aead_adaptor_init_##index( const struct device *dev );        \
-                                                                                     \
-    DEVICE_DT_INST_DEFINE( index,                                                    \
-                &codasip_aead_adaptor_init_##index, NULL,                            \
-                NULL,                                                                \
-                NULL, POST_KERNEL,                                                   \
-                CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                                 \
-                &crypto_enc_funcs );                                                 \
-                                                                                     \
-    static int codasip_aead_adaptor_init_##index( const struct device *dev )         \
-    {                                                                                \
-        aead_init( NULL ); /* This initialises everything once, but can be called many times */ \
-                                                                                     \
-        if ( index < CRYPTO_MAX_SESSION )                                            \
-        {                                                                            \
-            aead_driver_state[index].exists = true;                                  \
-            aead_driver_state[index].in_use = false;                                 \
-                                                                                     \
-            aead_driver_state[index].aead.regs = (bm_aead_regs_t *) DT_INST_REG_ADDR( index ); \
-            bm_aead_init( &aead_driver_state[index].aead );                          \
-                                                                                     \
-            aead_driver_state[index].algo = (enum cipher_algo) DT_INST_PROP( index, algo );    \
-            aead_driver_state[index].mode = (enum cipher_mode) DT_INST_PROP( index, mode );    \
-        }                                                                            \
-        else                                                                         \
-        {                                                                            \
-            LOG_ERR("CRYPTO_MAX_SESSION too small for AEAD Adaptor index (%d)", index);        \
-        }                                                                            \
-                                                                                     \
-        return 0;                                                                    \
+#define CODASIP_AEAD_ADAPTOR_INIT(index)                                                      \
+                                                                                              \
+    static int codasip_aead_adaptor_init_##index(const struct device *dev);                   \
+                                                                                              \
+    DEVICE_DT_INST_DEFINE(index,                                                              \
+                &codasip_aead_adaptor_init_##index, NULL,                                     \
+                NULL,                                                                         \
+                NULL, POST_KERNEL,                                                            \
+                CONFIG_KERNEL_INIT_PRIORITY_DEFAULT,                                          \
+                &crypto_enc_funcs);                                                           \
+                                                                                              \
+    static int codasip_aead_adaptor_init_##index(const struct device *dev) {                  \
+        aead_init(NULL); /* This initialises everything once, but can be called many times */ \
+                                                                                              \
+        if (index < CRYPTO_MAX_SESSION) {                                                     \
+            aead_driver_state[index].exists = true;                                           \
+            aead_driver_state[index].in_use = false;                                          \
+                                                                                              \
+            aead_driver_state[index].aead.regs = (bm_aead_regs_t *) DT_INST_REG_ADDR(index);  \
+            bm_aead_init(&aead_driver_state[index].aead);                                     \
+                                                                                              \
+            aead_driver_state[index].algo = (enum cipher_algo) DT_INST_PROP(index, algo);     \
+            aead_driver_state[index].mode = (enum cipher_mode) DT_INST_PROP(index, mode);     \
+        } else {                                                                              \
+            LOG_ERR("CRYPTO_MAX_SESSION too small for AEAD Adaptor index (%d)", index);       \
+        }                                                                                     \
+                                                                                              \
+        return 0;                                                                             \
     }
 
-DT_INST_FOREACH_STATUS_OKAY( CODASIP_AEAD_ADAPTOR_INIT )
+DT_INST_FOREACH_STATUS_OKAY(CODASIP_AEAD_ADAPTOR_INIT)

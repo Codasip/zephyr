@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Henrik Brix Andersen <henrik@brixandersen.dk>
- * Changes copyright (c) 2023 Codasip s.r.o.
+ * Copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -58,9 +58,9 @@ LOG_MODULE_REGISTER(codasip_xlnx_quadspi, CONFIG_SPI_LOG_LEVEL);
 #define SPISR_COMMAND_ERROR     BIT(10)
 
 #define SPISR_ERROR_MASK (SPISR_COMMAND_ERROR |		\
-			  SPISR_LOOPBACK_ERROR |	\
-			  SPISR_MSB_ERROR |		\
-			  SPISR_SLAVE_MODE_ERROR |	\
+			  SPISR_LOOPBACK_ERROR |	            \
+			  SPISR_MSB_ERROR |		                \
+			  SPISR_SLAVE_MODE_ERROR |	            \
 			  SPISR_CPOL_CPHA_ERROR)
 
 /* DGIER bit definitions */
@@ -169,7 +169,7 @@ static int xlnx_quadspi_configure(const struct device *dev,
 		return -ENOTSUP;
 	}
 
-#if 0   /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
+#if 0   /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation,
          * see: sdhc_spi_init_card() in drivers/sdhc/sdhc_spi.c */
 	if (spi_cfg->operation & SPI_CS_ACTIVE_HIGH) {
 		LOG_ERR("unsupported CS polarity active high");

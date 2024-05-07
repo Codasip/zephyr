@@ -283,14 +283,12 @@ static const struct gpio_driver_api gpio_l31fpga_driver_api = {
                 POST_KERNEL, CONFIG_GPIO_INIT_PRIORITY,                        \
                 &gpio_l31fpga_driver_api);                                     \
                                                                                \
-    static void port_## n ##_l31fpga_config_func(const struct device *dev)     \
-    {                                                                          \
+    static void port_## n ##_l31fpga_config_func(const struct device *dev) {   \
         /* No L31 FPGA GPIO IRQs */                                            \
     }
 
 #if 0
-    static void port_## n ##_l31fpga_config_func(const struct device *dev)     \
-    {                                                                          \
+    static void port_## n ##_l31fpga_config_func(const struct device *dev) {   \
         IRQ_CONNECT(DT_INST_IRQN(n),                                           \
                 DT_INST_IRQ(n, priority),                                      \
                 gpio_l31fpga_isr,                                              \

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2016 Jean-Paul Etienne <fractalclone@gmail.com>
+ * Copyright (c) 2023 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */

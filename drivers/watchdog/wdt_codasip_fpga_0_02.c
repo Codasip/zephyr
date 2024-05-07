@@ -9,11 +9,11 @@
 
 /* Watchdog process:
  *   wdt_codasip_init() is called on Zephyr start-up (see below)
- * 
+ *
  *   App (samples/drivers/watchdog) calls:
  *     wdt_channel_id = wdt_install_timeout(wdt, &wdt_config);
  *     err = wdt_setup(wdt, WDT_OPT_PAUSE_HALTED_BY_DBG);
- * 
+ *
  *   To reset the watchdog, periodically:
  *     wdt_feed(wdt, wdt_channel_id);
  */
@@ -30,8 +30,7 @@
 LOG_MODULE_REGISTER(wdt_codasip, CONFIG_WDT_LOG_LEVEL);
 
 /* Codasip Policy Manager Revision 0.02 */
-typedef struct
-{
+typedef struct {
     volatile uint32_t WDTIMER;    /* RW - Watchdog Timer - 32 bit value clocked by System Clock, decrements to zero. When it hits 1 then system reset occurs */
     volatile uint32_t FILL[ 3 ];  /* -- - 12 byte gap between WDTIMER and RST_MASK */
     volatile uint32_t RST_MASK;   /* RW - Reset mask */
@@ -42,21 +41,18 @@ typedef struct
 } POLICY_MANAGER_Type;
 
 /* Device constant configuration parameters */
-struct wdt_codasip_cfg
-{
+struct wdt_codasip_cfg {
     POLICY_MANAGER_Type *policy_mgr;  /* .WDTIMER 0 = off. Non-zero counts down at system clock rate, when it reaches 1 the system resets */
     uint32_t             clock;       /* Clock frequency of the WDT in Hz */
 };
 
-struct wdt_codasip_data
-{
+struct wdt_codasip_data {
 /*  wdt_callback_t callback; no interrupt, so no callback */
     uint32_t wdtimer_feed_value;
     bool     timeout_installed;
 };
 
-static int wdt_codasip_setup(const struct device *dev, uint8_t options) /* options are ignored */
-{
+static int wdt_codasip_setup(const struct device *dev, uint8_t options) { /* options are ignored */
     const struct wdt_codasip_cfg *config = dev->config;
     struct wdt_codasip_data      *data   = dev->data;
 
@@ -72,8 +68,7 @@ static int wdt_codasip_setup(const struct device *dev, uint8_t options) /* optio
     return 0;
 }
 
-static int wdt_codasip_disable(const struct device *dev)
-{
+static int wdt_codasip_disable(const struct device *dev) {
     const struct wdt_codasip_cfg *config = dev->config;
     struct wdt_codasip_data      *data   = dev->data;
 
@@ -85,8 +80,7 @@ static int wdt_codasip_disable(const struct device *dev)
 }
 
 static int wdt_codasip_install_timeout(const struct device *dev,
-                                       const struct wdt_timeout_cfg *cfg)
-{
+                                       const struct wdt_timeout_cfg *cfg) {
     const struct wdt_codasip_cfg *config = dev->config;
     struct wdt_codasip_data      *data   = dev->data;
     uint64_t installed_timeout;
@@ -130,15 +124,14 @@ static int wdt_codasip_install_timeout(const struct device *dev,
         LOG_ERR("Unsupported watchdog config flag\n");
         return -EINVAL;
     }
-    
+
     data->wdtimer_feed_value = (uint32_t) installed_timeout;
     data->timeout_installed = true;
 
     return 0;
 }
 
-static int wdt_codasip_feed(const struct device *dev, int channel_id)
-{
+static int wdt_codasip_feed(const struct device *dev, int channel_id) {
     const struct wdt_codasip_cfg *config = dev->config;
     struct wdt_codasip_data      *data   = dev->data;
 
@@ -155,8 +148,7 @@ static int wdt_codasip_feed(const struct device *dev, int channel_id)
 
 #if 0
 /* No ISR */
-static void wdt_codasip_isr(const struct device *dev)
-{
+static void wdt_codasip_isr(const struct device *dev) {
     const struct wdt_codasip_cfg *config = dev->config;
     struct wdt_codasip_data      *data   = dev->data;
     WDOG_TypeDef *wdog = config->base;
@@ -172,8 +164,7 @@ static void wdt_codasip_isr(const struct device *dev)
 }
 #endif
 
-static int wdt_codasip_init(const struct device *dev)
-{
+static int wdt_codasip_init(const struct device *dev) {
 #ifdef CONFIG_WDT_DISABLE_AT_BOOT
     const struct wdt_codasip_cfg *config = dev->config;
 

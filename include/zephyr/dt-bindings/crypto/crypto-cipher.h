@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Codasip s.r.o.
+ * Copyright (c) 2024 Codasip s.r.o.
  *
  * SPDX-License-Identifier: Apache-2.0
  */

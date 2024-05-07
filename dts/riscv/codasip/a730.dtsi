@@ -51,7 +51,7 @@
                 clint: clint@60014000 {
                         compatible = "sifive,clint0";
                         interrupts-extended = <&intc 3>, <&intc 7>;
-/*                      reg = <0x60010000 0x1BFF8>; */
+                        /* reg = <0x60010000 0x1BFF8>; */
                         reg = <0x60014000 0xC000>; /* ACLINT devices have alignment requirements which make us instantiate them at 0x6001_4000 */
                         status = "okay";
                 };

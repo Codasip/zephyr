@@ -1,5 +1,8 @@
 #!/bin/bash -xe
 
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
 ./make-sample.sh codasip_hobgoblin_h730     samples/codasip          blinkers
 ./make-sample.sh codasip_hobgoblin_h730     samples/subsys/console   getchar
 ./make-sample.sh codasip_hobgoblin_h730     samples                  synchronization

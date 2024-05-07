@@ -1,5 +1,8 @@
 #/bin/bash -xe
 
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
 if [ $# -lt 3 ]
 then
     echo "$0 <core_name> <sample/dir> <app-name> [<new-name>]"

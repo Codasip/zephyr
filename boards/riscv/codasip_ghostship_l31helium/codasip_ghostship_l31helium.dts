@@ -85,7 +85,7 @@
         /* GPIO1 - AUX */
         sd_pwr_en_n_in: sd_pwr_en_n_in {
                         gpios = <&gpio01 1 GPIO_ACTIVE_LOW>;
-                        label = "SD_PWR_EN_N_IN";   
+                        label = "SD_PWR_EN_N_IN";
                 };
         };
 

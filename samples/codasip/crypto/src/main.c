@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016 Intel Corporation.
- * Copyright (C) 2024 Codasip s.r.o.  Port to Codasip AEAD Adaptor FAKE Mode
+ * Copyright (c) 2024 Codasip s.r.o.  Port to Codasip AEAD Adaptor FAKE Mode
  *
  * SPDX-License-Identifier: Apache-2.0
  */
