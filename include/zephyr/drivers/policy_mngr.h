@@ -28,7 +28,7 @@ extern "C" {
  * @param dev Policy Manager device instance.
  * @param alarm_id identifier.
  */
-typedef void (*policy_mngr_callback_t)( const struct device *dev, int alarm_id );
+typedef void (*policy_mngr_callback_t)(const struct device *dev, int alarm_id);
 
 /**
  * @brief Policy Manager Alarm Action.
@@ -36,14 +36,11 @@ typedef void (*policy_mngr_callback_t)( const struct device *dev, int alarm_id )
  * @param dev Watchdog device instance.
  * @param channel_id Channel identifier.
  */
-typedef enum
-{
-    POLICY_MNGR_ALARM_ACTION_NONE,          /* Disable all actions on this alarm - default */
-    POLICY_MNGR_ALARM_ACTION_INT_CALLBACK,  /* Enable the Interrupt Callback on this alarm */
-    POLICY_MNGR_ALARM_ACTION_RESET          /* Reset the system on this alarm */
+typedef enum {
+        POLICY_MNGR_ALARM_ACTION_NONE,         /* Disable all actions on this alarm - default */
+        POLICY_MNGR_ALARM_ACTION_INT_CALLBACK, /* Enable the Interrupt Callback on this alarm */
+        POLICY_MNGR_ALARM_ACTION_RESET         /* Reset the system on this alarm */
 } policy_mngr_action_t;
-
-
 
 /** @cond INTERNAL_HIDDEN */
 
@@ -51,18 +48,18 @@ typedef enum
  * @brief API for setting up the policy manager instance.
  * @see policy_mngr_setup().
  */
-typedef int (*policy_mngr_api_setup)( const struct device *dev, policy_mngr_callback_t callback );
+typedef int (*policy_mngr_api_setup)(const struct device *dev, policy_mngr_callback_t callback);
 
 /**
  * @brief API for setting a policy manager alarm.
  * @see policy_mngr_set_alarm().
  */
-typedef int (*policy_mngr_api_set_alarm)( const struct device *dev, int alarm_id, policy_mngr_action_t action );
-
+typedef int (*policy_mngr_api_set_alarm)(const struct device *dev, int alarm_id,
+                                         policy_mngr_action_t action);
 
 __subsystem struct policy_mngr_driver_api {
-    policy_mngr_api_setup     setup;
-    policy_mngr_api_set_alarm set_alarm;
+        policy_mngr_api_setup setup;
+        policy_mngr_api_set_alarm set_alarm;
 };
 /**
  * @endcond
@@ -79,16 +76,15 @@ __subsystem struct policy_mngr_driver_api {
  *
  * @retval 0 If successful.
  */
-__syscall int policy_mngr_setup( const struct device *dev, policy_mngr_callback_t callback );
+__syscall int policy_mngr_setup(const struct device *dev, policy_mngr_callback_t callback);
 
-static inline int z_impl_policy_mngr_setup( const struct device *dev, policy_mngr_callback_t callback )
+static inline int z_impl_policy_mngr_setup(const struct device *dev,
+                                           policy_mngr_callback_t callback)
 {
-    const struct policy_mngr_driver_api *api =
-        (const struct policy_mngr_driver_api *)dev->api;
+        const struct policy_mngr_driver_api *api = (const struct policy_mngr_driver_api *)dev->api;
 
-    return api->setup( dev, callback );
+        return api->setup(dev, callback);
 }
-
 
 /**
  * @brief Set up Policy Manager Alarm Set.
@@ -103,16 +99,16 @@ static inline int z_impl_policy_mngr_setup( const struct device *dev, policy_mng
  * @retval 0       If successful.
  * @retval -EINVAL If there is no alarm for that id.
  */
-__syscall int policy_mngr_set_alarm( const struct device *dev, int alarm_id, policy_mngr_action_t action );
+__syscall int policy_mngr_set_alarm(const struct device *dev, int alarm_id,
+                                    policy_mngr_action_t action);
 
-static inline int z_impl_policy_mngr_set_alarm( const struct device *dev, int alarm_id, policy_mngr_action_t action )
+static inline int z_impl_policy_mngr_set_alarm(const struct device *dev, int alarm_id,
+                                               policy_mngr_action_t action)
 {
-    const struct policy_mngr_driver_api *api =
-        (const struct policy_mngr_driver_api *)dev->api;
+        const struct policy_mngr_driver_api *api = (const struct policy_mngr_driver_api *)dev->api;
 
-    return api->set_alarm( dev, alarm_id, action );
+        return api->set_alarm(dev, alarm_id, action);
 }
-
 
 #ifdef __cplusplus
 }

@@ -18,56 +18,52 @@ Etc.
 #include <zephyr/drivers/entropy.h>
 
 /* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS   1000
+#define SLEEP_TIME_MS 1000
 
-//#define ENTROPY_NODE DT_NODELABEL(trng0)
-
-#define BUFFER_LENGTH           1025
-#define RECHECK_RANDOM_ENTROPY  0x10
+#define BUFFER_LENGTH          1025
+#define RECHECK_RANDOM_ENTROPY 0x10
 
 static uint8_t buffer[BUFFER_LENGTH] = {0};
 
-
 int main(void)
 {
-	printk( "Hello World of Entropy! %s\n", CONFIG_BOARD );
+        printk("Hello World of Entropy! %s\n", CONFIG_BOARD);
 
-	const struct device *const dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_entropy));
+        const struct device *const dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_entropy));
 
-	int ret, i;
-	int count = 0;
-	uint8_t num = 0xa5;
+        int ret, i;
+        int count = 0;
+        uint8_t num = 0xa5;
 
-	(void)memset(buffer, num, BUFFER_LENGTH);
+        (void)memset(buffer, num, BUFFER_LENGTH);
 
-	/* The BUFFER_LENGTH-1 is used so the driver will not
-	 * write the last byte of the buffer. If that last
-	 * byte is not 0 on return it means the driver wrote
-	 * outside the passed buffer, and that should never
-	 * happen.
-	 */
-	ret = entropy_get_entropy(dev, buffer, BUFFER_LENGTH - 1);
-	if (ret) {
-		printk("Error: entropy_get_entropy failed: %d\n", ret);
-		return -1;
-	}
-	if (buffer[BUFFER_LENGTH - 1] != num) {
-		printk("Error: entropy_get_entropy buffer overflow\n");
-		return -1;
-	}
+        /* The BUFFER_LENGTH-1 is used so the driver will not
+         * write the last byte of the buffer. If that last
+         * byte is not 0 on return it means the driver wrote
+         * outside the passed buffer, and that should never
+         * happen.
+         */
+        ret = entropy_get_entropy(dev, buffer, BUFFER_LENGTH - 1);
+        if (ret) {
+                printk("Error: entropy_get_entropy failed: %d\n", ret);
+                return -1;
+        }
+        if (buffer[BUFFER_LENGTH - 1] != num) {
+                printk("Error: entropy_get_entropy buffer overflow\n");
+                return -1;
+        }
 
-    printk( "Here are some random numbers:" );
+        printk("Here are some random numbers:");
 
-	for (i = 0; i < BUFFER_LENGTH - 1; i++) {
-		if ( (i % 16) == 0 )
-		{
-			printk("\n");
-		}
-		printk("0x%02x  ", buffer[i]);
-		if (buffer[i] == num) {
-			count++;
-		}
-	}
+        for (i = 0; i < BUFFER_LENGTH - 1; i++) {
+                if ((i % 16) == 0) {
+                        printk("\n");
+                }
+                printk("0x%02x  ", buffer[i]);
+                if (buffer[i] == num) {
+                        count++;
+                }
+        }
 
-	return 0;
+        return 0;
 }

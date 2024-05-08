@@ -13,7 +13,6 @@
 
 / {
         soc {
-#if 1   /* Unified Interrupt Map */
                 spi0: spi@60200000 {    /* Flash */
                         compatible = "xlnx,xps-spi-2.00.a";
                         reg = <0x60200000 0x100>;
@@ -26,32 +25,6 @@
                         xlnx,num-transfer-bits = <0x8>;
                 };
                 
-#else   /* For upto IIoT RTL Version 2.0.2, see Jira https://codasip.atlassian.net/browse/PLAT-1684 */
-                spi0: spi@60200000 {    /* Flash */
-                        compatible = "xlnx,xps-spi-2.00.a";
-                        reg = <0x60200000 0x100>;
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-                        interrupt-parent = <&pic>;
-                        interrupts = <3>;
-                        clock-frequency = <400000>;
-                        xlnx,num-ss-bits = <0x1>;
-                        xlnx,num-transfer-bits = <0x8>;
-                };
-
-                spi1: spi@60210000 {    /* SD Card */
-                        compatible = "codasip-xlnx,xps-spi-2.00.a";
-                        reg = <0x60210000 0x100>;
-                        #address-cells = <1>;
-                        #size-cells = <0>;
-                        interrupt-parent = <&pic>;
-                        interrupts = <2>;
-                        clock-frequency = <400000>;
-                        xlnx,num-ss-bits = <0x1>;
-                        xlnx,num-transfer-bits = <0x8>;
-                };
-#endif
-
                 trng0: trng@60510000 {
                         compatible = "codasip,fpga-trng-0_1";
                         reg = <0x60510000 0x18>;
@@ -81,6 +54,6 @@
                     reg  = <0x60550000 0x1000>;
                     algo = <DT_BINDINGS_CRYPTO_CIPHER_ALGO_AES>;
                     mode = <DT_BINDINGS_CRYPTO_CIPHER_MODE_FAKE>;
-                };                
+                };
         };
 };
