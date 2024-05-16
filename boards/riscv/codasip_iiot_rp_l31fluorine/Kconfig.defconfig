@@ -1,9 +1,0 @@
-# Copyright (c) 2023 Codasip s.r.o.
-# SPDX-License-Identifier: Apache-2.0
-
-if BOARD_CODASIP_IIOT_RP_L31FLUORINE
-
-config BOARD
-	default "iiot-rp-l31fluorine"
-
-endif # BOARD_CODASIP_IIOT_RP_L31FLUORINE

@@ -1,7 +1,0 @@
-# Copyright (c) 2023 Codasip s.r.o.
-# SPDX-License-Identifier: Apache-2.0
-
-config BOARD_CODASIP_IIOT_RP_L31FLUORINE
-	bool "Board with Codasip RISC-V Security L31 Carbon CPU"
-	depends on SOC_CODASIP_L31FLUORINE
-    select ENTROPY_GENERATOR

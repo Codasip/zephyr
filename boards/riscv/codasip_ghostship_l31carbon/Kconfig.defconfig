@@ -1,9 +1,0 @@
-# Copyright (c) 2023 Codasip s.r.o.
-# SPDX-License-Identifier: Apache-2.0
-
-if BOARD_CODASIP_GHOSTSHIP_L31CARBON
-
-config BOARD
-	default "ghostship-l31carbon"
-
-endif # BOARD_CODASIP_GHOSTSHIP_L31CARBON
