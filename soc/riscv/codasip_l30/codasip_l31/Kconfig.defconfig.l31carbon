@@ -1,0 +1,64 @@
+# Copyright (c) 2023 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_CODASIP_L31CARBON
+
+config SOC
+    default "codasip_l31carbon"
+
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+    default 25000000
+
+config RISCV_SOC_INTERRUPT_INIT
+    default y
+
+config FPU
+    default n
+
+config GPIO
+    default y
+
+config SERIAL
+    default y
+
+#config RISCV_HAS_CLIC
+#   default n
+
+#config RISCV_HAS_PLIC
+#   default n
+
+config CODASIP_HAS_FPGA_PIC
+    default y
+
+config NUM_PIC_IRQS
+    int "Codasip PIC interrupt controller implementation"
+    help
+      Enable support for Codasip PIC interrupt controller
+    default 32
+
+config 2ND_LEVEL_INTERRUPTS
+    default y
+
+config 2ND_LVL_ISR_TBL_OFFSET
+    default 12
+
+config 2ND_LVL_INTR_00_OFFSET
+    default 11
+
+# Total number of interrupts (NUM_PIC_IRQS + 2ND_LVL_ISR_TBL_OFFSET)
+config NUM_IRQS
+    default 44
+
+config RISCV_PMP
+    default y
+
+config PMP_SLOTS
+    default 8
+
+config SPI
+    default y
+
+config SPI_EXTENDED_MODES
+    default y
+
+endif # SOC_CODASIP_L31CARBON

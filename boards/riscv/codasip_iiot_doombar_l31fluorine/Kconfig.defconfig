@@ -4,6 +4,6 @@
 if BOARD_CODASIP_IIOT_DOOMBAR_L31FLUORINE
 
 config BOARD
-	default "iiot-doombar-l31fluorine"
+	default "iiot-doombar_l31fluorine"
 
 endif # BOARD_CODASIP_IIOT_DOOMBAR_L31FLUORINE

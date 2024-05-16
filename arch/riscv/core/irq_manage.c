@@ -13,6 +13,9 @@
 
 #ifdef CONFIG_RISCV_HAS_PLIC
 #include <zephyr/drivers/interrupt_controller/riscv_plic.h>
+
+#elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
+#include <zephyr/drivers/interrupt_controller/codasip_fpga_pic.h>
 #endif
 
 LOG_MODULE_DECLARE(os, CONFIG_KERNEL_LOG_LEVEL);
@@ -37,7 +40,7 @@ FUNC_NORETURN void z_irq_spurious(const void *unused)
 	}
 
 #elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
-	if (mcause == RISCV_MACHINE_EXT_IRQ) {
+	if (mcause == RISCV_IRQ_MEXT) {
 		LOG_ERR("PIC interrupt line causing the IRQ: %d",
 			codasip_fpga_pic_get_irq());
 	}

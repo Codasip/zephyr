@@ -4,6 +4,6 @@
 if BOARD_CODASIP_INFERNO_L31CARBON
 
 config BOARD
-	default "inferno-l31carbon"
+	default "inferno_l31carbon"
 
 endif # BOARD_CODASIP_INFERNO_L31CARBON

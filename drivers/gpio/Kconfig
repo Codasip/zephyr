@@ -221,6 +221,8 @@ source "drivers/gpio/Kconfig.bd8lb600fs"
 
 source "drivers/gpio/Kconfig.sc18im704"
 
+source "drivers/gpio/Kconfig.codasip_fpga_1_1"
+
 source "drivers/gpio/Kconfig.numaker"
 
 source "drivers/gpio/Kconfig.efinix_sapphire"
@@ -239,9 +241,5 @@ source "drivers/gpio/Kconfig.renesas_ra"
 source "drivers/gpio/Kconfig.rzt2m"
 
 source "drivers/gpio/Kconfig.ambiq"
-
-source "drivers/gpio/Kconfig.l31helium"
-
-source "drivers/gpio/Kconfig.codasip_fpga_1_1"
 
 endif # GPIO

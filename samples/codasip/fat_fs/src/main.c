@@ -248,7 +248,7 @@ static int lsdir(const char *path)
         return res;
 }
 
-#define LINE_MAX 1024
+/* #define LINE_MAX 1024 Now defined in picolibc - used by Zephyr */
 
 static char line[LINE_MAX];
 

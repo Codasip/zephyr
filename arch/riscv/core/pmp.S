@@ -106,8 +106,12 @@ pmpcfg_zerotail:
 	.option pop
 
 done:
-#ifdef CONFIG_SOC_SERIES_RISCV_CODASIP_700
-    /* sfence.vma is required after loading PMP for Codasip 700 series core PMPs (this is not RISC-V Spec compliant) */
+#if defined(CONFIG_SOC_FAMILY_CODASIP_700) && !defined(CONFIG_SOC_SERIES_CODASIP_730)
+#error You may need to add the 'sfence.vma' instruction here for PMP not to produce: "mcause: 1, Instruction Access fault" 
+#endif
+
+#ifdef CONFIG_SOC_SERIES_CODASIP_730
+    /* sfence.vma is required after loading PMP for Codasip 730 series core PMPs (this is not RISC-V Spec compliant) */
     /* Without this fence we get:
        mcause: 1, Instruction Access fault
        on the first instruction in z_thread_entry.

@@ -49,7 +49,7 @@ static struct fs_mount_t mp = {
 #define BUFFER_MAX 1024
 static unsigned char buffer[BUFFER_MAX];
 
-#define LINE_MAX 1024
+/* #define LINE_MAX 1024 Now defined in picolibc - used by Zephyr */
 static char line[LINE_MAX];
 
 static void cat(const char *path_filename)

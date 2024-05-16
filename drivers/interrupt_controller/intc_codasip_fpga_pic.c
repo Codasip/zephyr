@@ -333,10 +333,10 @@ static int codasip_fpga_pic_init(void)
 #endif
 
         /* Setup IRQ handler for PIC driver */
-        IRQ_CONNECT(RISCV_MACHINE_EXT_IRQ, 0, codasip_fpga_pic_irq_handler, NULL, 0);
+        IRQ_CONNECT(RISCV_IRQ_MEXT, 0, codasip_fpga_pic_irq_handler, NULL, 0);
 
         /* Enable IRQ for PIC driver */
-        irq_enable(RISCV_MACHINE_EXT_IRQ);
+        irq_enable(RISCV_IRQ_MEXT);
 
         return 0;
 }

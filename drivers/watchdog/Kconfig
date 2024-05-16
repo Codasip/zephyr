@@ -112,6 +112,8 @@ source "drivers/watchdog/Kconfig.ifx_cat1"
 
 source "drivers/watchdog/Kconfig.opentitan"
 
+source "drivers/watchdog/Kconfig.codasip_fpga_0_02"
+
 source "drivers/watchdog/Kconfig.andes_atcwdt200"
 
 source "drivers/watchdog/Kconfig.nxp_fs26"
@@ -121,7 +123,5 @@ source "drivers/watchdog/Kconfig.ambiq"
 source "drivers/watchdog/Kconfig.shell"
 
 source "drivers/watchdog/Kconfig.xmc4xxx"
-
-source "drivers/watchdog/Kconfig.codasip_fpga_0_02"
 
 endif # WATCHDOG

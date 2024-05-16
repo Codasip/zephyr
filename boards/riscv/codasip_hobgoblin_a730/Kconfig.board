@@ -3,4 +3,5 @@
 
 config BOARD_CODASIP_HOBGOBLIN_A730
 	bool "Hobgoblin Board with Codasip RISC-V A730 CPU"
-	depends on SOC_CODASIP_A730HOBGOBLIN
+	depends on SOC_CODASIP_A730
+

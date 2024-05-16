@@ -1,0 +1,12 @@
+# RISCV_CODASIP_L31 SOC implementation
+
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+config SOC_SERIES_CODASIP_L31
+        bool "Codasip L31 SOC implementation"
+        select RISCV
+        select RISCV_PRIVILEGED
+        select SOC_FAMILY_CODASIP_L30
+        help
+          Enable support for Codasip L31 SOC

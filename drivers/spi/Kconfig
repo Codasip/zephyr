@@ -127,6 +127,10 @@ source "drivers/spi/Kconfig.smartbond"
 
 source "drivers/spi/Kconfig.opentitan"
 
+source "drivers/spi/Kconfig.codasip_fpga_1_1"
+
+source "drivers/spi/Kconfig.codasip_xlnx"
+
 source "drivers/spi/Kconfig.numaker"
 
 source "drivers/spi/Kconfig.ambiq"
@@ -142,9 +146,5 @@ source "drivers/spi/Kconfig.npcx"
 source "drivers/spi/Kconfig.mchp_mss"
 
 source "drivers/spi/Kconfig.grlib_spimctrl"
-
-source "drivers/spi/Kconfig.codasip_fpga_1_1"
-
-source "drivers/spi/Kconfig.codasip_xlnx"
 
 endif # SPI
