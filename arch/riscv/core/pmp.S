@@ -111,7 +111,7 @@ done:
 #endif
 
 #ifdef CONFIG_SOC_SERIES_CODASIP_730
-    /* sfence.vma is required after loading PMP for Codasip 730 series core PMPs (this is not RISC-V Spec compliant) */
+    /* sfence.vma is required after loading PMP for Codasip 730 series core PMPs */
     /* Without this fence we get:
        mcause: 1, Instruction Access fault
        on the first instruction in z_thread_entry.

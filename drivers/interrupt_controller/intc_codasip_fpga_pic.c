@@ -10,7 +10,7 @@
 #define DT_DRV_COMPAT codasip_fpga_pic
 
 /**
- * @brief Codasip Peripheral Interrupt Controller (PIC) driver
+ * @brief Codasip Programmable Interrupt Controller (PIC) driver
  *        for RISC-V processors
  */
 
@@ -302,7 +302,7 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
 }
 
 /**
- * @brief Initialize the Codasip Peripheral Interrupt Controller
+ * @brief Initialize the Codasip Programmable Interrupt Controller
  *
  * @retval 0 on success.
  */

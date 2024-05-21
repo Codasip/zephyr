@@ -20,19 +20,11 @@ restarts due to a timeout event in the watchdog driver.
 The watchdog peripheral is configured in the board's ``.dts`` file. Make sure that the watchdog is enabled
 using the configuration file in ``boards`` folder.
 
-Building and Running for ST Nucleo F091RC
-=========================================
+This application can be built and executed on Codasip's IIOT-DoomBar FPGA Platform:
 
-The sample can be built and executed for the
-:ref:`nucleo_f091rc_board` as follows:
+    ./make-sample.sh codasip_iiot_doombar_l31fluorine     samples/codasip          watchdog
 
-.. zephyr-app-commands::
-	:zephyr-app: samples/drivers/watchdog
-	:board: nucleo_f091rc
-	:goals: build flash
-	:compact:
-
-To build for another board, change "nucleo_f091rc" to the name of that board and provide a corresponding devicetree overlay.
+To build for another board, change "codasip_iiot_doombar_l31fluorine" above to that board's name.
 
 Sample output
 =============
@@ -41,15 +33,32 @@ You should get a similar output as below:
 
 .. code-block:: console
 
-	Watchdog sample application
-	Attempting to test pre-reset callback
-	Feeding watchdog 5 times
-	Feeding watchdog...
-	Feeding watchdog...
-	Feeding watchdog...
-	Feeding watchdog...
-	Feeding watchdog...
-	Waiting for reset...
-	Handled things..ready to reset
+    [00:00:00.000,000] <inf> wdt_codasip: Device wdt@60520000 initialized
+    *** Booting Zephyr OS build v3.6.0-108-gfb92002b9a83 ***
+    Watchdog sample application
+    Attempting to test pre-reset callback
+    [00:00:00.018,000] <inf> wdt_codasip: Installed timeout value: 25000000
+    [00:00:00.025,000] <err> wdt_codasip: Reset mode with callback not supported
+
+    Callback support rejected, continuing anyway
+    [00:00:00.037,000] <inf> wdt_codasip: Installed timeout value: 25000000
+    [00:00:00.045,000] <dbg> wdt_codasip: wdt_codasip_install_timeout: Configuring reset CPU/SoC mode
+
+    [00:00:00.054,000] <dbg> wdt_codasip: wdt_codasip_setup: Setup the watchdog
+    Feeding watchdog 5 times
+    Feeding watchdog...
+    [00:00:00.066,000] <dbg> wdt_codasip: wdt_codasip_feed: Fed the watchdog
+    Feeding watchdog...
+    [00:00:01.025,000] <dbg> wdt_codasip: wdt_codasip_feed: Fed the watchdog
+    Feeding watchdog...
+    [00:00:01.985,000] <dbg> wdt_codasip: wdt_codasip_feed: Fed the watchdog
+    Feeding watchdog...
+    [00:00:02.944,000] <dbg> wdt_codasip: wdt_codasip_feed: Fed the watchdog
+    Feeding watchdog...
+    [00:00:03.903,000] <dbg> wdt_codasip: wdt_codasip_feed: Fed the watchdog
+    Feeding watchdog - LAST TIME!
+    [00:00:04.863,000] <dbg> wdt_codasip: wdt_codasip_feed: Fed the watchdog
+    Waiting for reset...
+
 
 .. note:: After the last message, the board will reset and the sequence will start again

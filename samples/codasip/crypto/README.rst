@@ -5,44 +5,36 @@ Crypto
 
 Overview
 ********
-An example to illustrate the usage of crypto APIs.
+An example to illustrate the usage of crypto APIs and Codasip's AEAD Adaptor with Fake Crypto Engine.
 
 Building and Running
 ********************
 
-This project outputs to the console.  It can be built and executed
-on QEMU as follows:
+This application can be built and executed on Codasip's IIOT-DoomBar FPGA Platform:
 
-.. zephyr-app-commands::
-   :zephyr-app: samples/drivers/crypto
-   :host-os: unix
-   :board: qemu_x86
-   :goals: run
-   :compact:
+./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip  crypto
+
+To build for another board, change "codasip_iiot_doombar_l31fluorine" above to that board's name.
 
 Sample Output
 =============
 
 .. code-block:: console
 
-    [general] [INF] main: Encryption Sample
-
-    [general] [INF] cbc_mode: CBC Mode
-
-    [general] [INF] cbc_mode: cbc mode ENCRYPT - Match
-
-    [general] [INF] cbc_mode: cbc mode DECRYPT - Match
-
-    [general] [INF] ctr_mode: CTR Mode
-
-    [general] [INF] ctr_mode: ctr mode ENCRYPT - Match
-
-    [general] [INF] ctr_mode: ctr mode DECRYPT - Match
-
-    [general] [INF] ccm_mode: CCM Mode
-
-    [general] [INF] ccm_mode: CCM mode ENCRYPT - Match
-
-    [general] [INF] ccm_mode: CCM mode DECRYPT - Match
-
-Exit QEMU by pressing :kbd:`CTRL+A` :kbd:`x`.
+    *** Booting Zephyr OS build v3.6.0-108-gfb92002b9a83 ***
+    I: Cipher Sample
+    I: ECB Mode
+    E: AEAD Adaptor Algorithm/Mode/Key-Size not supported or Max sessions in progress
+    I: CBC Mode
+    E: AEAD Adaptor Algorithm/Mode/Key-Size not supported or Max sessions in progress
+    I: CTR Mode
+    E: AEAD Adaptor Algorithm/Mode/Key-Size not supported or Max sessions in progress
+    I: CCM Mode
+    E: AEAD Adaptor Algorithm/Mode/Key-Size not supported or Max sessions in progress
+    I: GCM Mode
+    E: AEAD Adaptor Algorithm/Mode/Key-Size not supported or Max sessions in progress
+    I: FAKE Mode
+    I: Output length (encryption): 64
+    I: FAKE mode ENCRYPT - Match
+    I: Output length (decryption): 64
+    I: FAKE mode DECRYPT - Match

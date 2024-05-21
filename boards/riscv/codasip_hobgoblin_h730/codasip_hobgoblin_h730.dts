@@ -106,35 +106,35 @@
         /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-keys";
                 sw0: sw0 {
-                        gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00  8 GPIO_ACTIVE_LOW>;
                         label = "SW_0";
                 };
                 sw1: sw1 {
-                        gpios = <&gpio00 1 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00  9 GPIO_ACTIVE_LOW>;
                         label = "SW_1";
                 };
                 sw2: sw2 {
-                        gpios = <&gpio00 2 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00 10 GPIO_ACTIVE_LOW>;
                         label = "SW_2";
                 };
                 sw3: sw3 {
-                        gpios = <&gpio00 3 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00 11 GPIO_ACTIVE_LOW>;
                         label = "SW_3";
                 };
                 sw4: sw4 {
-                        gpios = <&gpio00 4 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00 12 GPIO_ACTIVE_LOW>;
                         label = "SW_4";
                 };
                 sw5: sw5 {
-                        gpios = <&gpio00 5 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00 13 GPIO_ACTIVE_LOW>;
                         label = "SW_5";
                 };
                 sw6: sw6 {
-                        gpios = <&gpio00 6 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00 14 GPIO_ACTIVE_LOW>;
                         label = "SW_6";
                 };
                 sw7: sw7 {
-                        gpios = <&gpio00 7 GPIO_ACTIVE_LOW>;
+                        gpios = <&gpio00 15 GPIO_ACTIVE_LOW>;
                         label = "SW_7";
                 };
 

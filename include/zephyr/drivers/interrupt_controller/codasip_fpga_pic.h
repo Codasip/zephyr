@@ -7,7 +7,7 @@
 
 /**
  * @file
- * @brief Driver for Codasip Peripheral Interrupt Controller (PIC)
+ * @brief Driver for Codasip Programmable Interrupt Controller (PIC)
  */
 
 #ifndef ZEPHYR_INCLUDE_DRIVERS_CODASIP_FPGA_PIC_H_

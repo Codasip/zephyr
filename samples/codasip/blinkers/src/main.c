@@ -58,9 +58,9 @@ int main(void)
 {
         if (!gpio_is_ready_dt(&ld0) | !gpio_is_ready_dt(&ld1) | !gpio_is_ready_dt(&ld2) |
             !gpio_is_ready_dt(&ld3) | !gpio_is_ready_dt(&ld4) | !gpio_is_ready_dt(&ld5) |
-            !gpio_is_ready_dt(&ld6) | !gpio_is_ready_dt(&ld7)
+            !gpio_is_ready_dt(&ld6) | !gpio_is_ready_dt(&ld7) |
 
-            | !gpio_is_ready_dt(&sw0) | !gpio_is_ready_dt(&sw1) | !gpio_is_ready_dt(&sw2) |
+            !gpio_is_ready_dt(&sw0) | !gpio_is_ready_dt(&sw1) | !gpio_is_ready_dt(&sw2) |
             !gpio_is_ready_dt(&sw3) | !gpio_is_ready_dt(&sw4) | !gpio_is_ready_dt(&sw5) |
             !gpio_is_ready_dt(&sw6) | !gpio_is_ready_dt(&sw7)) {
                 return 0;
@@ -73,9 +73,9 @@ int main(void)
             (gpio_pin_configure_dt(&ld4, GPIO_OUTPUT_ACTIVE) < 0) |
             (gpio_pin_configure_dt(&ld5, GPIO_OUTPUT_ACTIVE) < 0) |
             (gpio_pin_configure_dt(&ld6, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld7, GPIO_OUTPUT_ACTIVE) < 0)
+            (gpio_pin_configure_dt(&ld7, GPIO_OUTPUT_ACTIVE) < 0) |
 
-            | (gpio_pin_configure_dt(&sw0, GPIO_INPUT) < 0) |
+            (gpio_pin_configure_dt(&sw0, GPIO_INPUT) < 0) |
             (gpio_pin_configure_dt(&sw1, GPIO_INPUT) < 0) |
             (gpio_pin_configure_dt(&sw2, GPIO_INPUT) < 0) |
             (gpio_pin_configure_dt(&sw3, GPIO_INPUT) < 0) |
@@ -105,20 +105,11 @@ int main(void)
                 if (gpio_pin_get_dt(&sw5) && (gpio_pin_toggle_dt(&ld5) < 0)) {
                         return 0;
                 }
-
-                /* Test the other GPIO functions with bits 6 & 7 */
-                uint32_t value;
-
-                /* Test RAW port get and set with bit 6 */
-                gpio_port_get_raw(gpio00_dev, &value);               /* Read sw7-sw0 */
-                gpio_port_set_masked_raw(gpio00_dev, 1 << 6, value); /* Set ld6 with sw6 value */
-
-                /* Test _set_bits_raw and _clear_bit_raw using bit 7 */
-                if (value & (1 << 7)) /* Test sw7 value */
-                {
-                        gpio_port_set_bits_raw(gpio00_dev, 1 << 7); /* Set ld7 */
-                } else {
-                        gpio_port_clear_bits_raw(gpio00_dev, 1 << 7); /* Clear ld7 */
+                if (gpio_pin_get_dt(&sw6) && (gpio_pin_toggle_dt(&ld6) < 0)) {
+                        return 0;
+                }
+                if (gpio_pin_get_dt(&sw7) && (gpio_pin_toggle_dt(&ld7) < 0)) {
+                        return 0;
                 }
 
                 k_msleep(SLEEP_TIME_MS);

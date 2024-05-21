@@ -1,72 +1,108 @@
-.. _fat_fs:
+.. _trng_files:
 
-FAT Filesystem Sample Application
-###################################
+TRNG and FAT Filesystem Sample Application
+##########################################
 
 Overview
 ********
 
-This sample app demonstrates use of the filesystem API and uses the FAT file
-system driver with SDHC card, SoC flash or external flash chip.
+This sample app demonstrates use of the HMAC DRBG using Codasip's TRNG (True Random Number
+Generator) as a seed and also demonstrates the filesystem API 
+which uses the FAT file system driver with SDHC card, SoC flash or external flash chip.
 
 To access device the sample uses :ref:`disk_access_api`.
 
+First the application reads and output the contents of the file ``zephyr-logo.txt``, if it exists.
+Then 1073741824 random bytes of data are written to the file "/SD:/trng.dat". 
+
+Note: This app generates HMAC DRBG random data (using Codasip TRNG Entropy data as a seed) 
+and writes it to the SD Card. 
+                 
 Requirements for SD card support
 ********************************
 
 This project requires SD card support and microSD card formatted with FAT filesystem.
 See the :ref:`disk_access_api` documentation for Zephyr implementation details.
 Boards that by default use SD card for storage:
-``arduino_mkrzero``, ``esp_wrover_kit``, ``mimxrt1050_evk``, ``nrf52840_blip``
-and  ``olimexino_stm32``.
+``arduino_mkrzero``, ``esp_wrover_kit``, ``mimxrt1050_evk``, ``nrf52840_blip``, ``olimexino_stm32``
+and various Codasip FPGA boards, e.g. ``codasip_iiot_doombar_l31fluorine``.
+
 The sample should be able to run with any other board that has "zephyr,sdmmc-disk"
 DT node enabled.
-
-Requirements for setting up FAT FS on SoC flash
-***********************************************
-
-For the FAT FS to work with internal flash, the device needs to support erase
-pages of size <= 4096 bytes and have at least 64kiB of flash available for
-FAT FS partition alone.
-Currently the following boards are supported:
-``nrf52840dk_nrf52840``
-
-Requirements for setting up FAT FS on external flash
-****************************************************
-
-This type of configuration requires external flash device to be available
-on DK board. Currently following boards support the configuration:
-``nrf52840dk_nrf52840`` by ``nrf52840dk_nrf52840_qspi`` configuration.
 
 Building and Running
 ********************
 
-Boards with default configurations, for example ``arduino_mkrzero`` or
-``nrf52840dk_nrf52840`` using internal flash can be build using command:
+This application can be built and executed on Codasip's IIOT-DoomBar FPGA Platform:
 
-.. zephyr-app-commands::
-   :zephyr-app: samples/subsys/fs/fat_fs
-   :board: nrf52840_blip
-   :goals: build
-   :compact:
+./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip  trng_files
 
-Where used example board ``nrf52840_blip`` should be replaced with desired board.
+To build for another board, change "codasip_iiot_doombar_l31fluorine" above to that board's name.
 
-In case when some more specific configuration is to be used for a given board,
-for example ``nrf52840dk_nrf52840`` with MX25 device over QSPI, configuration
-and DTS overlays need to be also selected. The command would look like this:
+Sample output
+=============
 
-.. zephyr-app-commands::
-   :zephyr-app: samples/subsys/fs/fat_fs
-   :board: nrf52840dk_nrf52840
-   :gen-args: -DEXTRA_CONF_FILE=nrf52840dk_nrf52840_qspi.conf -DDTC_OVERLAY_FILE=nrf52840dk_nrf52840_qspi.overlay
-   :goals: build
-   :compact:
+You should get a similar output as below:
 
-In case when board with SD card is used FAT microSD card should be present in the
-microSD slot. If there are any files or directories present in the card, the
-sample lists them out on the debug serial output.
+.. code-block:: console
 
-.. warning::
-   In case when mount fails the device may get re-formatted to FAT FS.
-   To disable this behaviour disable :kconfig:option:`CONFIG_FS_FATFS_MOUNT_MKFS` .
+    *** Booting Zephyr OS build v3.6.0-108-gfb92002b9a83 ***
+    spi_cfg->frequency = 400000 requested
+    Switching SD Clock to slow clock
+    spi_cfg->frequency = 20000000 requested
+    Switching SD Clock to fast clock
+    Sector size 512
+    Memory Size(MB) 30436
+    Disk mounted.
+                                                    ╔¿»»»»»»»µµµµµ≡≡g╦╦╦╦qg∩
+                                                   j╫╫N╥   »»»»»»»hh░░░░░╫╫H
+                                                   ╫╫╫╫╫╫N╦»»»»h░░░░░░╦╫╫╫╫H
+                                                  ╟╫╫╫╫╫╫╫╫╫N╦░░░░░░╫╫╫╫╫╫╫H
+                                                 ╔╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫H
+                                                 ╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╬▓╬╫╫╫╫╫╫╫╫H
+                                                ╬╫╫╫╫╫╫╫╫╫╫╫╫╫╣╫▓▓▓╬╫╫╫╫╫╫╫H
+                                               ]╫╫╫╫╫╫╫╫╫╫╫╬▓╫╫╫▓▓▓▓▓Ñ░╫╫╫╫H
+                                              .╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫▓▓▓▓▓▓▓╬╫╫╫H
+                                              ╬╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫▓▓▓▓▓▓▓▓▓╫╫H
+                                             ]╫╫╫╫╫╫╬╫╫╫╫╫╫╫╫╫╫╫▓▓▓▓▓▓▓▓▓▓╬H
+         .,,╥╥╥r                            j╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫╫▓▓▓▌▀╝╜^`
+         *Ñ░░░░H                            ╫╫╫╫╫╫╫╫╫╫╫╫╫▌╝╝╜^``
+           ╙Ñ░░             ,              ╟╫╫╫▌Å╝╜"``
+             "╩            ]░N╥         ,╓∩`
+               9N╥,      ╥Ñ░░░░Ñ╥  ,╓╗╬╫╫╫
+                ╫╫╫╫╫DN═ⁿ""```     "╙╬╫╫╫M
+                ╚╫Ñ╩^                  `╙                                               ,,
+                                                    ╒▄▄▄▄▄▄▄▄▄⌐                        ▐██⌐
+                                                    '▀▀▀▀▀████     ,;,          ,;,    ▐██⌐  ,,                     ,  J▄
+                                                         ▄██▀   ╓███▀▀██▄  ▐████████▄  ▐█████████  ██▌   ,██▀ ███▄███  ¬~'
+                                                       ▄███     ███,,,,██▌ ▐██┘   ▐██▌ ▐██▀   ║██  ╙██▄  ██▌  ███▀
+                                                     ,███▀      ███▀▀▀▀▀▀▀ ▐██     ██▌ ▐██⌐   ▐██   ╙██▄██▌   ███
+                                                    ▄███▄▄▄▄▄▄∩ ███▄  ,▄,  ▐██▄, ,███⌐ ▐██⌐   ▐██    ▀████    ███
+                                                    ██████████L  ▀▀█████▀  ▐██▀████▀-  ▐██⌐   ▐██     ███     ███
+                                                                           ▐██                    ▄▄▄███
+                                                                           ╘▀▀                    ▀▀▀▀▀
+    Get Codasip TRNG Entropy data and write to SD Card as /SD:/trng.dat
+    Writing 1073741824 random bytes to file "/SD:/trng.dat"
+    [00:00:00.055,000] <inf> sd: Maximum SD clock is under 25MHz, using clock of 20000000Hz
+    [00:00:00.065,000] <inf> main: Block count 62333952
+    Written 0x10000 to file /SD:/trng.dat
+    Written 0x20000 to file /SD:/trng.dat
+    Written 0x30000 to file /SD:/trng.dat
+    Written 0x40000 to file /SD:/trng.dat
+    Written 0x50000 to file /SD:/trng.dat
+    Written 0x60000 to file /SD:/trng.dat
+    Written 0x70000 to file /SD:/trng.dat
+    Written 0x80000 to file /SD:/trng.dat
+    Written 0x90000 to file /SD:/trng.dat
+    Written 0xa0000 to file /SD:/trng.dat
+    Written 0xb0000 to file /SD:/trng.dat
+    Written 0xc0000 to file /SD:/trng.dat
+    Written 0xd0000 to file /SD:/trng.dat
+    Written 0xe0000 to file /SD:/trng.dat
+    Written 0xf0000 to file /SD:/trng.dat
+    Written 0x100000 to file /SD:/trng.dat
+    Written 0x110000 to file /SD:/trng.dat
+    Written 0x120000 to file /SD:/trng.dat
+    Written 0x130000 to file /SD:/trng.dat
+
+    Etc.

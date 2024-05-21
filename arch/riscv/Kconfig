@@ -173,10 +173,10 @@ config RISCV_HAS_CLIC
 	  Does the SOC provide support for a Core-Local Interrupt Controller (CLIC).
 
 config CODASIP_HAS_FPGA_PIC
-        bool "Does the SOC provide support for a Codasip Core-Local FPGA Peripheral Interrupt Controller PIC)"
+        bool "Does the SOC provide support for a Codasip Core-Local FPGA Programmable Interrupt Controller PIC)"
         depends on SOC_FAMILY_RISCV_PRIVILEGE
         help
-          Does the SOC provide support for a Codasip Core-Local FPGA Peripheral Interrupt Controller (PIC).
+          Does the SOC provide support for a Codasip Core-Local FPGA Programmable Interrupt Controller (PIC).
 
 config RISCV_SOC_EXCEPTION_FROM_IRQ
 	bool

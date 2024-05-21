@@ -48,8 +48,9 @@
                         gpio-controller;
                         #gpio-cells = <2>;
                         ngpios = <8>;   /* Number of GPIO pins. 
-                                           gpio_in[7:0]  =  SW[7:0]
-                                           gpio_out[7:0] = LED[7:0] */
+                                           gpio[ 7: 0] =    LED[7:0]
+                                           gpio[15: 8] =     SW[7:0]
+                                           gpio[20:16] = BUTTON[4:0] */
                         interrupt-parent = <&plic>;
                         /* interrupts = <6>;   This is irq=1803 (0x70B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio00), 0, irq), 
                                                which is correct -> 0x700 is the 7th IRQ (i.e. 6 [+ 1]) 2ND_LEVEL_INTERRUPTS,
@@ -65,10 +66,9 @@
                         gpio-controller;
                         #gpio-cells = <2>;
                         ngpios = <5>;   /* Number of GPIO pins.
-                                           gpio_in[0]  = SD_CARD_DETECT_N
-                                           gpio_in[1]  = SD_PWR_EN_N
-                                           gpio_out[1] = SD_PWR_EN_N
-                                           gpio_out[2] = SD_20MHZ_CLK_EN */
+                                           gpio[0] = SD_CARD_DETECT_N (in)
+                                           gpio[1]  SD_PWR_EN_N (out)
+                                           gpio[2] = SD_20MHZ_CLK_EN (out) */
                         interrupt-parent = <&plic>;
                         /* interrupts = <7>;   This is irq=2059 (0x80B) returned by DT_IRQ_BY_IDX(DT_NODELABEL(gpio01), 0, irq), 
                                                which is correct -> 0x800 is the 8th IRQ (i.e. 7 [+ 1]) 2ND_LEVEL_INTERRUPTS,
