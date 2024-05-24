@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT codasip_fpga_policy_mngr_0_02
+#define DT_DRV_COMPAT codasip_policy_mngr_0_02
 
 #include <stdint.h>
 #include <strings.h>
@@ -34,10 +34,10 @@ typedef struct {
 
         volatile uint32_t RST_MASK; /*  W - Reset mask */
         volatile uint32_t INT_MASK; /*  W - Interrupt mask */
-        volatile uint32_t
-                INT_PEND; /* RW - READ:  Set bits indicate pending interrupts
-                                  WRITE: Each high bit clears the associated pending
-                                         interrupt, if all are cleared then int_out will go low.*/
+        volatile uint32_t INT_PEND; /* RW - READ:  Set bits indicate pending interrupts
+                                            WRITE: Each high bit clears the associated pending
+                                                   interrupt, if all are cleared then int_out will 
+                                                   go low.*/
 } POLICY_MANAGER_Type;
 
 /* Device constant configuration parameters */

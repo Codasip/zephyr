@@ -4,9 +4,9 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-config POLICY_MNGR_CODASIP_FPGA_0_02
+config POLICY_MNGR_CODASIP_0_02
 	bool "Codasip Policy Manager Driver"
-	depends on DT_HAS_CODASIP_FPGA_POLICY_MNGR_0_02_ENABLED
+	depends on DT_HAS_CODASIP_POLICY_MNGR_0_02_ENABLED
 	default y
 	help
-	  Enable Policy Mangaer driver for Codasip MCUs
+	  Enable Policy Manager driver for Codasip MCUs

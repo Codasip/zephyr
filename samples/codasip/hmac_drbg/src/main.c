@@ -5,14 +5,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-/* Outputs:
-Hello World! l31helium
-uart0  0 IRQ number 267
-gpio01 0 IRQ number 779
-gpio01 1 IRQ number 1035
-Etc.
-*/
-
 #include <string.h>
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/entropy.h>

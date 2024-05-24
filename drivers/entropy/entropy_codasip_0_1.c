@@ -4,28 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT codasip_fpga_trng_0_1
+#define DT_DRV_COMPAT codasip_trng_0_1
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/entropy.h>
-
-/**
- * Codasip s.r.o.
- *
- * CONFIDENTIAL
- *
- * Copyright 2023 Codasip s.r.o.
- *
- * All Rights Reserved.
- * This file is part of a Codasip product. No part of this file may be use, copied,
- * modified, or distributed except in accordance with the terms contained in the
- * Codasip license agreement under which you obtained this file.
- */
-
-#include <stdbool.h>
-#include <stdint.h>
 
 /** \brief Structure representing address space of a TRNG peripheral */
 typedef struct {
@@ -136,7 +120,7 @@ void bm_trng_configure(bm_trng_t *trng,
 }
 #endif
 
-static void entropy_codasip_fpga_trng_read(bm_trng_t *trng, uint8_t *output, size_t len)
+static void entropy_codasip_trng_read(bm_trng_t *trng, uint8_t *output, size_t len)
 {
         int bytes = 0;
         uint32_t rnd_number;
@@ -155,7 +139,7 @@ static void entropy_codasip_fpga_trng_read(bm_trng_t *trng, uint8_t *output, siz
         }
 }
 
-static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev, uint8_t *buffer,
+static int entropy_codasip_trng_get_entropy(const struct device *dev, uint8_t *buffer,
                                                  uint16_t length)
 {
         bm_trng_t *trng = (bm_trng_t *)dev->config;
@@ -168,7 +152,7 @@ static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev, uint8
                 /* Block and get all required values */
                 count = length;
 
-                entropy_codasip_fpga_trng_read(trng, buffer, count);
+                entropy_codasip_trng_read(trng, buffer, count);
                 buffer += count;
                 length -= count;
         }
@@ -176,7 +160,7 @@ static int entropy_codasip_fpga_trng_get_entropy(const struct device *dev, uint8
         return 0;
 }
 
-static int entropy_codasip_fpga_trng_get_entropy_isr(const struct device *dev, uint8_t *buf,
+static int entropy_codasip_trng_get_entropy_isr(const struct device *dev, uint8_t *buf,
                                                      uint16_t len, uint32_t flags)
 {
         bm_trng_t *trng = (bm_trng_t *)dev->config;
@@ -191,12 +175,12 @@ static int entropy_codasip_fpga_trng_get_entropy_isr(const struct device *dev, u
                         return -ENODATA;
                 }
                 count = Z_MIN(len, available);
-                entropy_codasip_fpga_trng_read(trng, buf, count);
+                entropy_codasip_trng_read(trng, buf, count);
                 return count;
 
         } else {
                 /* Allowed to busy-wait */
-                int ret = entropy_codasip_fpga_trng_get_entropy(dev, buf, len);
+                int ret = entropy_codasip_trng_get_entropy(dev, buf, len);
 
                 if (ret == 0) {
                         /* Data retrieved successfully. */
@@ -208,7 +192,7 @@ static int entropy_codasip_fpga_trng_get_entropy_isr(const struct device *dev, u
         return 0;
 }
 
-static int entropy_codasip_fpga_trng_init(const struct device *dev)
+static int entropy_codasip_trng_init(const struct device *dev)
 {
         const bm_trng_t *bm_trng = (bm_trng_t *)dev->config;
 
@@ -222,16 +206,16 @@ static int entropy_codasip_fpga_trng_init(const struct device *dev)
         return 0;
 }
 
-static struct entropy_driver_api entropy_codasip_fpga_trng_api_funcs = {
-        .get_entropy = entropy_codasip_fpga_trng_get_entropy,
-        .get_entropy_isr = entropy_codasip_fpga_trng_get_entropy_isr};
+static struct entropy_driver_api entropy_codasip_trng_api_funcs = {
+        .get_entropy = entropy_codasip_trng_get_entropy,
+        .get_entropy_isr = entropy_codasip_trng_get_entropy_isr};
 
 #define ENTROPY_INIT(n)                                                                            \
-        static bm_trng_t entropy_codasip_fpga_trng_cfg_##n = {                                     \
+        static bm_trng_t entropy_codasip_trng_cfg_##n = {                                          \
                 .regs = (TRNG_Type *)DT_INST_REG_ADDR(n),                                          \
         };                                                                                         \
-        DEVICE_DT_INST_DEFINE(n, entropy_codasip_fpga_trng_init, NULL, NULL,                       \
-                              &entropy_codasip_fpga_trng_cfg_##n, PRE_KERNEL_1,                    \
-                              CONFIG_ENTROPY_INIT_PRIORITY, &entropy_codasip_fpga_trng_api_funcs);
+        DEVICE_DT_INST_DEFINE(n, entropy_codasip_trng_init, NULL, NULL,                            \
+                              &entropy_codasip_trng_cfg_##n, PRE_KERNEL_1,                         \
+                              CONFIG_ENTROPY_INIT_PRIORITY, &entropy_codasip_trng_api_funcs);
 
 DT_INST_FOREACH_STATUS_OKAY(ENTROPY_INIT)

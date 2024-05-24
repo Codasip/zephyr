@@ -49,8 +49,8 @@
                 /* zephyr,sram = &dram0; */
         };
 
-        leds {
-        /* GPIO00 = SWITCH/LED */
+        outputs {
+            /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-leds";
                 led0: led0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
@@ -102,8 +102,8 @@
                 };
         };
 
-        keys {
-        /* GPIO00 = SWITCH/LED */
+        inputs {
+            /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-keys";
                 sw0: sw0 {
                         gpios = <&gpio00  8 GPIO_ACTIVE_LOW>;
@@ -136,6 +136,27 @@
                 sw7: sw7 {
                         gpios = <&gpio00 15 GPIO_ACTIVE_LOW>;
                         label = "SW_7";
+                };
+
+                but0: but0 {
+                        gpios = <&gpio00 16 GPIO_ACTIVE_LOW>;
+                        label = "BUT_0";
+                };
+                but1: but1 {
+                        gpios = <&gpio00 17 GPIO_ACTIVE_LOW>;
+                        label = "BUT_1";
+                };
+                but2: but2 {
+                        gpios = <&gpio00 18 GPIO_ACTIVE_LOW>;
+                        label = "BUT_2";
+                };
+                but3: but3 {
+                        gpios = <&gpio00 19 GPIO_ACTIVE_LOW>;
+                        label = "BUT_3";
+                };
+                but4: but4 {
+                        gpios = <&gpio00 20 GPIO_ACTIVE_LOW>;
+                        label = "BUT_4";
                 };
 
             /* GPIO01 - AUX */

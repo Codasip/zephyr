@@ -232,7 +232,7 @@ static int xlnx_quadspi_configure(const struct device *dev,
 
 #if 1   // CODASIP Test
 #define SD_FAST_CLK_EN_NODE  DT_ALIAS(sd_fast_clk_en)
-    static const struct gpio_dt_spec sd_fast_clk_en = GPIO_DT_SPEC_GET(SD_FAST_CLK_EN_NODE, gpios);
+    static const struct gpio_dt_spec sd_fast_clk_en = GPIO_DT_SPEC_GET(SD_FAST_CLK_EN_NODE, gpios); // GPIO_DT_SPEC_GET(SD_FAST_CLK_EN_NODE, gpios);
 
     if ( !gpio_is_ready_dt(&sd_fast_clk_en) )
     {

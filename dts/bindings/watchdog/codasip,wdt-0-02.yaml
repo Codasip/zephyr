@@ -3,7 +3,7 @@
 
 description: Codasip Policy Manager Watchdog driver
 
-compatible: "codasip,fpga-wdt-0_02"
+compatible: "codasip,wdt-0_02"
 
 include: base.yaml
 

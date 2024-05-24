@@ -48,7 +48,7 @@
                 zephyr,entropy = &trng0;
         };
 
-        leds {
+        outputs {
             /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-leds";
                 led0: led0 {
@@ -96,7 +96,7 @@
                 };
         };
 
-        keys {
+        inputs {
             /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-keys";
                 sw0: sw0 {

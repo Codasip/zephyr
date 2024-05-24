@@ -8,7 +8,6 @@
 ./make-sample.sh codasip_hobgoblin_h730     samples                  synchronization
 ./make-sample.sh codasip_hobgoblin_h730     samples                  philosophers
 ./make-sample.sh codasip_hobgoblin_h730     samples/drivers/uart     echo_bot               echo_bot-rx_interrupt
-#./make-sample.sh codasip_hobgoblin_h730     samples/codasip          hello_world_interrupt USER TEST INTERRUPTS HAVE BEEN REMOVED FROM THE RTL
 ./make-sample.sh codasip_hobgoblin_h730     samples/codasip          hello_world_user
 ./make-sample.sh codasip_hobgoblin_h730     samples/codasip          fat_fs
 
@@ -17,8 +16,7 @@
 ./make-sample.sh codasip_hobgoblin_a730     samples                  synchronization
 ./make-sample.sh codasip_hobgoblin_a730     samples                  philosophers
 ./make-sample.sh codasip_hobgoblin_a730     samples/drivers/uart     echo_bot               echo_bot-rx_interrupt
-#./make-sample.sh codasip_hobgoblin_a730     samples/codasip          hello_world_interrupt USER TEST INTERRUPTS HAVE BEEN REMOVED FROM THE RTL
-#./make-sample.sh codasip_hobgoblin_a730     samples/codasip          hello_world_user      NO PMP ON A730 SO THIS DOES NOT WORK
+#./make-sample.sh codasip_hobgoblin_a730     samples/codasip          hello_world_user      CURRENTLY NO PMP ON A730 SO THIS DOES NOT WORK
 ./make-sample.sh codasip_hobgoblin_a730     samples/codasip          fat_fs
 
 ./make-sample.sh codasip_inferno_l31carbon     samples/codasip          blinkers
@@ -26,7 +24,6 @@
 ./make-sample.sh codasip_inferno_l31carbon     samples                  synchronization
 ./make-sample.sh codasip_inferno_l31carbon     samples                  philosophers
 ./make-sample.sh codasip_inferno_l31carbon     samples/drivers/uart     echo_bot               echo_bot-rx_interrupt
-#./make-sample.sh codasip_inferno_l31carbon     samples/codasip          hello_world_interrupt USER TEST INTERRUPTS HAVE BEEN REMOVED FROM THE RTL
 ./make-sample.sh codasip_inferno_l31carbon     samples/codasip          hello_world_user
 ./make-sample.sh codasip_inferno_l31carbon     samples/codasip          fat_fs
 
@@ -35,7 +32,6 @@
 ./make-sample.sh codasip_inferno_l31helium     samples                  synchronization
 ./make-sample.sh codasip_inferno_l31helium     samples                  philosophers
 ./make-sample.sh codasip_inferno_l31helium     samples/drivers/uart     echo_bot               echo_bot-rx_interrupt
-#./make-sample.sh codasip_inferno_l31helium     samples/codasip          hello_world_interrupt USER TEST INTERRUPTS HAVE BEEN REMOVED FROM THE RTL
 ./make-sample.sh codasip_inferno_l31helium     samples/codasip          hello_world_user
 ./make-sample.sh codasip_inferno_l31helium     samples/codasip          fat_fs
 
@@ -44,7 +40,6 @@
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples                  synchronization       # Task switch & synchronisation demo
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples                  philosophers          # Task switch & synchronisation demo
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/drivers/uart     echo_bot               echo_bot-rx_interrupt # UART and interrupt demo
-#./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          hello_world_interrupt # UART and interrupt demo # USER TEST INTERRUPTS HAVE BEEN REMOVED FROM THE RTL
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          hello_world_user      # User mode PMP access violation demo
 ./make-sample.sh codasip_iiot_doombar_l31fluorine   samples/codasip          fat_fs                # SD card access demo
 

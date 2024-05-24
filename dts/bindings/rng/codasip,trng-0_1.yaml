@@ -1,9 +1,9 @@
 # Copyright (c) 2019 Brett Witherspoon
 # SPDX-License-Identifier: Apache-2.0
 
-description: Codasip FPGA TRNG (True Random Number Generator)
+description: Codasip TRNG (True Random Number Generator)
 
-compatible: "codasip,fpga-trng-0_1"
+compatible: "codasip,trng-0_1"
 
 include: base.yaml
 

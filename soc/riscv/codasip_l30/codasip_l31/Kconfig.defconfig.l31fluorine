@@ -27,7 +27,7 @@ config SERIAL
 #config RISCV_HAS_PLIC
 #   default n
 
-config CODASIP_HAS_FPGA_PIC
+config CODASIP_HAS_PIC
     default y
 
 config NUM_PIC_IRQS

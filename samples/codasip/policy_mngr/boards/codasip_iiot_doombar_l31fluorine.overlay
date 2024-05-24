@@ -11,7 +11,7 @@
             watchdog0 = &wdt0;
         };
 
-        leds {
+        outputs {
                 /*  GPIO01 - AUX
                     gpio_in[0]  = SD_CARD_DETECT_N
                     gpio_in[1]  = SD_PWR_EN_N

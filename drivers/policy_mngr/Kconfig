@@ -14,6 +14,6 @@ module = POLICY_MNGR
 module-str = policy_manager
 source "subsys/logging/Kconfig.template.log_config"
 
-source "drivers/policy_mngr/Kconfig.codasip_fpga_0_02"
+source "drivers/policy_mngr/Kconfig.codasip_0_02"
 
 endif # POLICY_MNGR

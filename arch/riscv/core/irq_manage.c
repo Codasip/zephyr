@@ -14,8 +14,8 @@
 #ifdef CONFIG_RISCV_HAS_PLIC
 #include <zephyr/drivers/interrupt_controller/riscv_plic.h>
 
-#elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
-#include <zephyr/drivers/interrupt_controller/codasip_fpga_pic.h>
+#elif defined(CONFIG_CODASIP_HAS_PIC)
+#include <zephyr/drivers/interrupt_controller/codasip_pic.h>
 #endif
 
 LOG_MODULE_DECLARE(os, CONFIG_KERNEL_LOG_LEVEL);
@@ -39,10 +39,10 @@ FUNC_NORETURN void z_irq_spurious(const void *unused)
 		LOG_ERR("PLIC interrupt line causing the IRQ: %d (%p)", save_irq, save_dev);
 	}
 
-#elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
+#elif defined(CONFIG_CODASIP_HAS_PIC)
 	if (mcause == RISCV_IRQ_MEXT) {
 		LOG_ERR("PIC interrupt line causing the IRQ: %d",
-			codasip_fpga_pic_get_irq());
+			codasip_pic_get_irq());
 	}
 #endif
 	z_riscv_fatal_error(K_ERR_SPURIOUS_IRQ, NULL);
@@ -58,11 +58,11 @@ int arch_irq_connect_dynamic(unsigned int irq, unsigned int priority,
 #if defined(CONFIG_RISCV_HAS_PLIC) || defined(CONFIG_RISCV_HAS_CLIC)
 	z_riscv_irq_priority_set(irq, priority, flags);
 
-#elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
+#elif defined(CONFIG_CODASIP_HAS_PIC)
 	if (irq_get_level(irq) == 2) {
 		irq = irq_from_level_2(irq);
 
-		codasip_fpga_pic_set_priority(irq, priority);
+		codasip_pic_set_priority(irq, priority);
 	}
 
 #else

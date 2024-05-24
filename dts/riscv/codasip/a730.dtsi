@@ -16,7 +16,7 @@
                 coreclk: core-clk {
                         #clock-cells = <0>;
                         compatible = "fixed-clock";
-                        clock-frequency = <DT_FREQ_M(25)>;
+                        clock-frequency = <DT_FREQ_M(50)>;
                 };
 
                 tlclk: tl-clk {
@@ -30,13 +30,13 @@
         cpus {
                 #address-cells = <1>;
                 #size-cells = <0>;
-                timebase-frequency = <25000000>;
+                timebase-frequency = <50000000>;
                 cpu@0 {
                         compatible = "riscv";
                         device_type = "cpu";
                         reg = <0>;
                         riscv,isa = "rv64imafdc";
-                        clock-frequency = <25000000>;
+                        clock-frequency = <50000000>;
                         status = "okay";
                         intc: interrupt-controller {
                                 compatible = "riscv,cpu-intc";

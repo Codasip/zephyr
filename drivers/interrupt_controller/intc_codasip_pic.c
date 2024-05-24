@@ -7,7 +7,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define DT_DRV_COMPAT codasip_fpga_pic
+#define DT_DRV_COMPAT codasip_pic
 
 /**
  * @brief Codasip Programmable Interrupt Controller (PIC) driver
@@ -24,7 +24,7 @@
 #include <soc.h>
 
 #include <zephyr/sw_isr_table.h>
-#include <zephyr/drivers/interrupt_controller/codasip_fpga_pic.h>
+#include <zephyr/drivers/interrupt_controller/codasip_pic.h>
 #include <zephyr/irq.h>
 #include <zephyr/arch/riscv/csr.h>
 #include <zephyr/arch/common/ffs.h> /* For find_lsb_set() */
@@ -60,13 +60,13 @@ static int save_irq;
  * @brief Enable a Codasip PIC-specific interrupt line
  *
  * This routine enables a Codasip PIC-specific interrupt line.
- * codasip_fpga_pic_irq_enable is called by SOC_FAMILY_RISCV_PRIVILEGE
+ * codasip_pic_irq_enable is called by SOC_FAMILY_RISCV_PRIVILEGE
  * arch_irq_enable function to enable external interrupts for
- * IRQS level == 2, whenever CONFIG_CODASIP_HAS_FPGA_PIC variable is set.
+ * IRQS level == 2, whenever CONFIG_CODASIP_HAS_PIC variable is set.
  *
  * @param irq IRQ number to enable
  */
-void codasip_fpga_pic_irq_enable(uint32_t irq)
+void codasip_pic_irq_enable(uint32_t irq)
 {
         uint32_t key, reg;
 
@@ -106,13 +106,13 @@ void codasip_fpga_pic_irq_enable(uint32_t irq)
  * @brief Disable a Codasip PIC-specific interrupt line
  *
  * This routine disables a Codasip PIC-specific interrupt line.
- * codasip_fpga_pic_irq_disable is called by SOC_FAMILY_RISCV_PRIVILEGE
+ * codasip_pic_irq_disable is called by SOC_FAMILY_RISCV_PRIVILEGE
  * arch_irq_disable function to disable external interrupts, for
- * IRQS level == 2, whenever CONFIG_CODASIP_HAS_FPGA_PIC variable is set.
+ * IRQS level == 2, whenever CONFIG_CODASIP_HAS_PIC variable is set.
  *
  * @param irq IRQ number to disable
  */
-void codasip_fpga_pic_irq_disable(uint32_t irq)
+void codasip_pic_irq_disable(uint32_t irq)
 {
         uint32_t key, reg;
 
@@ -156,7 +156,7 @@ void codasip_fpga_pic_irq_disable(uint32_t irq)
  *
  * @return 1 or 0
  */
-int codasip_fpga_pic_irq_is_enabled(uint32_t irq)
+int codasip_pic_irq_is_enabled(uint32_t irq)
 {
         uint32_t enabled = 0, reg;
 
@@ -198,12 +198,12 @@ int codasip_fpga_pic_irq_is_enabled(uint32_t irq)
  *
  * @return PIC-specific interrupt line causing an interrupt.
  */
-int codasip_fpga_pic_get_irq(void)
+int codasip_pic_get_irq(void)
 {
         return save_irq;
 }
 
-static void codasip_fpga_pic_irq_handler(const void *arg)
+static void codasip_pic_irq_handler(const void *arg)
 {
         uint32_t irq = 0, pending;
         struct _isr_table_entry *ite;
@@ -306,7 +306,7 @@ static void codasip_fpga_pic_irq_handler(const void *arg)
  *
  * @retval 0 on success.
  */
-static int codasip_fpga_pic_init(void)
+static int codasip_pic_init(void)
 {
         /* Ensure that all interrupts are disabled initially */
         csr_write(CCSR_MPICMASK, 0);
@@ -333,7 +333,7 @@ static int codasip_fpga_pic_init(void)
 #endif
 
         /* Setup IRQ handler for PIC driver */
-        IRQ_CONNECT(RISCV_IRQ_MEXT, 0, codasip_fpga_pic_irq_handler, NULL, 0);
+        IRQ_CONNECT(RISCV_IRQ_MEXT, 0, codasip_pic_irq_handler, NULL, 0);
 
         /* Enable IRQ for PIC driver */
         irq_enable(RISCV_IRQ_MEXT);
@@ -341,4 +341,4 @@ static int codasip_fpga_pic_init(void)
         return 0;
 }
 
-SYS_INIT(codasip_fpga_pic_init, PRE_KERNEL_1, CONFIG_INTC_INIT_PRIORITY);
+SYS_INIT(codasip_pic_init, PRE_KERNEL_1, CONFIG_INTC_INIT_PRIORITY);

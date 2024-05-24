@@ -47,8 +47,8 @@
                 zephyr,sram = &sram0;
         };
 
-        leds {
-        /* GPIO00 = SWITCH/LED */
+        outputs {
+            /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-leds";
                 led0: led0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;
@@ -95,8 +95,8 @@
                 };
         };
 
-        keys {
-        /* GPIO00 = SWITCH/LED */
+        inputs {
+            /* GPIO00 = SWITCH/LED */
                 compatible = "gpio-keys";
                 sw0: sw0 {
                         gpios = <&gpio00 0 GPIO_ACTIVE_LOW>;

@@ -17,7 +17,7 @@
  *     wdt_feed(wdt, wdt_channel_id);
  */
 
-#define DT_DRV_COMPAT codasip_fpga_wdt_0_02
+#define DT_DRV_COMPAT codasip_wdt_0_02
 
 #include <stdint.h>
 

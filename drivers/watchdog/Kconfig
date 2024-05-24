@@ -112,7 +112,7 @@ source "drivers/watchdog/Kconfig.ifx_cat1"
 
 source "drivers/watchdog/Kconfig.opentitan"
 
-source "drivers/watchdog/Kconfig.codasip_fpga_0_02"
+source "drivers/watchdog/Kconfig.codasip_0_02"
 
 source "drivers/watchdog/Kconfig.andes_atcwdt200"
 

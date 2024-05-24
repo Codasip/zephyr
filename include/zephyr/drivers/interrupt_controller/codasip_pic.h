@@ -10,22 +10,22 @@
  * @brief Driver for Codasip Programmable Interrupt Controller (PIC)
  */
 
-#ifndef ZEPHYR_INCLUDE_DRIVERS_CODASIP_FPGA_PIC_H_
-#define ZEPHYR_INCLUDE_DRIVERS_CODASIP_FPGA_PIC_H_
+#ifndef ZEPHYR_INCLUDE_DRIVERS_CODASIP_PIC_H_
+#define ZEPHYR_INCLUDE_DRIVERS_CODASIP_PIC_H_
 
 /**
  * @brief Enable interrupt
  *
  * @param irq interrupt ID
  */
-void codasip_fpga_pic_irq_enable(uint32_t irq);
+void codasip_pic_irq_enable(uint32_t irq);
 
 /**
  * @brief Disable interrupt
  *
  * @param irq interrupt ID
  */
-void codasip_fpga_pic_irq_disable(uint32_t irq);
+void codasip_pic_irq_disable(uint32_t irq);
 
 /**
  * @brief Check if an interrupt is enabled
@@ -33,7 +33,7 @@ void codasip_fpga_pic_irq_disable(uint32_t irq);
  * @param irq interrupt ID
  * @return Returns true if interrupt is enabled, false otherwise
  */
-int codasip_fpga_pic_irq_is_enabled(uint32_t irq);
+int codasip_pic_irq_is_enabled(uint32_t irq);
 
 #if 0
 PRIORITY NOT SUPPORTED IN PIC
@@ -43,7 +43,7 @@ PRIORITY NOT SUPPORTED IN PIC
  * @param irq interrupt ID
  * @param prio interrupt priority
  */
-void codasip_fpga_pic_set_priority(uint32_t irq, uint32_t prio);
+void codasip_pic_set_priority(uint32_t irq, uint32_t prio);
 #endif
 
 /**
@@ -51,6 +51,6 @@ void codasip_fpga_pic_set_priority(uint32_t irq, uint32_t prio);
  *
  * @return Returns the ID of an active interrupt
  */
-int codasip_fpga_pic_get_irq(void);
+int codasip_pic_get_irq(void);
 
-#endif /* ZEPHYR_INCLUDE_DRIVERS_CODASIP_FPGA_PIC_H_ */
+#endif /* ZEPHYR_INCLUDE_DRIVERS_CODASIP_PIC_H_ */

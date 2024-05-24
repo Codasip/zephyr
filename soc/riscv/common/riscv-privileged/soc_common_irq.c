@@ -15,7 +15,7 @@
 
 #include <zephyr/drivers/interrupt_controller/riscv_clic.h>
 #include <zephyr/drivers/interrupt_controller/riscv_plic.h>
-#include <zephyr/drivers/interrupt_controller/codasip_fpga_pic.h>
+#include <zephyr/drivers/interrupt_controller/codasip_pic.h>
 
 #if defined(CONFIG_RISCV_HAS_CLIC)
 
@@ -53,12 +53,12 @@ void arch_irq_enable(unsigned int irq)
 		return;
 	}
 
-#elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
+#elif defined(CONFIG_CODASIP_HAS_PIC)
 	unsigned int level = irq_get_level(irq);
 
 	if (level == 2) {
 		irq = irq_from_level_2(irq);
-		codasip_fpga_pic_irq_enable(irq);
+		codasip_pic_irq_enable(irq);
 		return;
 	}
 #endif
@@ -82,12 +82,12 @@ void arch_irq_disable(unsigned int irq)
 		return;
 	}
 
-#elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
+#elif defined(CONFIG_CODASIP_HAS_PIC)
 	unsigned int level = irq_get_level(irq);
 
 	if (level == 2) {
 		irq = irq_from_level_2(irq);
-		codasip_fpga_pic_irq_disable(irq);
+		codasip_pic_irq_disable(irq);
 		return;
 	}
 #endif
@@ -110,12 +110,12 @@ int arch_irq_is_enabled(unsigned int irq)
 		return riscv_plic_irq_is_enabled(irq);
 	}
 
-#elif defined(CONFIG_CODASIP_HAS_FPGA_PIC)
+#elif defined(CONFIG_CODASIP_HAS_PIC)
 	unsigned int level = irq_get_level(irq);
 
 	if (level == 2) {
 		irq = irq_from_level_2(irq);
-		return codasip_fpga_pic_irq_is_enabled(irq);
+		return codasip_pic_irq_is_enabled(irq);
 	}
 #endif
 
