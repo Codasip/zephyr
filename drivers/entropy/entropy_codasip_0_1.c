@@ -144,18 +144,9 @@ static int entropy_codasip_trng_get_entropy(const struct device *dev, uint8_t *b
 {
         bm_trng_t *trng = (bm_trng_t *)dev->config;
 
-        size_t count = 0;
-
         /* printk( " Getting %d bytes of TRNG ", length ); */
 
-        while (length) {
-                /* Block and get all required values */
-                count = length;
-
-                entropy_codasip_trng_read(trng, buffer, count);
-                buffer += count;
-                length -= count;
-        }
+        entropy_codasip_trng_read(trng, buffer, length);
 
         return 0;
 }

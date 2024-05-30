@@ -59,16 +59,24 @@ Codasip Port
 
 This repository is a port of Zephyr v3.6.0 to Codasip's FPGA platforms:
 
-Inferno (Genesys 2 FPGA Board)
- - L31 Carbon
- - L31 Helium
- 
-IIOT-DoomBar (Genesys 2 FPGA Board)
- - L31 Fluorine
+- Inferno (Genesys 2 FPGA Board)
 
-Hobgoblin (Genesys 2 FPGA Board)
- - H730
- - A730
+    * L31 Carbon
+    * L31 Helium
+ 
+- IIOT-DoomBar (Genesys 2 FPGA Board)
+
+    * L31 Fluorine
+
+- Hobgoblin (Genesys 2 FPGA Board)
+
+    * H730
+    * A730
+
+The Codasip L31 core is a low-power embedded core, part of the Codasip RISC-V Processors 3 Series.
+
+The Codasip A730 core is a dual-issue, in-order core compliant with RVA22 profile, and a part of the 
+Codasip RISC-V Processors 700 processor family.
 
 To get going, setup your Zephyr environment as detailed below, then run the script `make-all.sh` to 
 build all the Codasip sample applications for various platforms (the binaries are put in
@@ -79,33 +87,35 @@ for all non-secure platforms, put the sample application `.bin` files in the roo
 SD Card along with the bitstream `.bit` file and create a file called `config.txt` containing 
 the payload information, for example:
 
-```
-# CODASIP FIRST STAGE BOOTLOADER CONFIGURATION FILE
-#
-# Specify each payload loaded from microSD card using format:
-# [<GPIO SWITCH>] <PAYLOAD PATH> <LOAD ADDRESS> ["BOOT"]
-#
-# Where:
-# <GPIO SWITCH> - Allows to specify a switch used to enable (switch ON)
-#     and disable (switch OFF) payloads.
-# <PAYLOAD PATH> - Payload location on the microSD card file system.
-# <LOAD ADDRESS> - Memory address the payload will be stored at.
-# "BOOT" - After FSBL, execution will continue at this payload,
-#     only the first entry with the specification is considered.
-#
-# Specify your payloads below:
+.. code-block::
 
-0 /oob-demo.bin                     0x20000000 BOOT
-1 /zephyr-blinkers.bin              0x20000000 BOOT
-2 /zephyr-echo_bot-rx_interrupt.bin 0x20000000 BOOT
-3 /zephyr-fat_fs.bin                0x20000000 BOOT
-4 /zephyr-getchar.bin               0x20000000 BOOT
-5 /zephyr-hello_world_user.bin      0x20000000 BOOT
-6 /zephyr-philosophers.bin          0x20000000 BOOT
-7 /zephyr-synchronization.bin       0x20000000 BOOT
-```
+    # CODASIP FIRST STAGE BOOTLOADER CONFIGURATION FILE
+    #
+    # Specify each payload loaded from microSD card using format:
+    # [<GPIO SWITCH>] <PAYLOAD PATH> <LOAD ADDRESS> ["BOOT"]
+    #
+    # Where:
+    # <GPIO SWITCH> - Allows to specify a switch used to enable (switch ON)
+    #     and disable (switch OFF) payloads.
+    # <PAYLOAD PATH> - Payload location on the microSD card file system.
+    # <LOAD ADDRESS> - Memory address the payload will be stored at.
+    # "BOOT" - After FSBL, execution will continue at this payload,
+    #     only the first entry with the specification is considered.
+    #
+    # Specify your payloads below:
+
+    0 /oob-demo.bin                     0x20000000 BOOT
+    1 /zephyr-blinkers.bin              0x20000000 BOOT
+    2 /zephyr-echo_bot-rx_interrupt.bin 0x20000000 BOOT
+    3 /zephyr-fat_fs.bin                0x20000000 BOOT
+    4 /zephyr-getchar.bin               0x20000000 BOOT
+    5 /zephyr-hello_world_user.bin      0x20000000 BOOT
+    6 /zephyr-philosophers.bin          0x20000000 BOOT
+    7 /zephyr-synchronization.bin       0x20000000 BOOT
+
 
 Put the SD Card in the Genesys 2 FPGA board.
+
 Connect the board's `UART` port to your PC and run a terminal emulator at 115200 BAUD.
 Then switch one switch (SW0 to SW7) on and the rest off, power the board and the
 respective application should boot after the bitstream has loaded. Try a different switch

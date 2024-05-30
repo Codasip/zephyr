@@ -56,32 +56,32 @@ const struct device *gpio00_dev = DEVICE_DT_GET(DT_NODELABEL(gpio00));
 
 int main(void)
 {
-        if (!gpio_is_ready_dt(&ld0) | !gpio_is_ready_dt(&ld1) | !gpio_is_ready_dt(&ld2) |
-            !gpio_is_ready_dt(&ld3) | !gpio_is_ready_dt(&ld4) | !gpio_is_ready_dt(&ld5) |
-            !gpio_is_ready_dt(&ld6) | !gpio_is_ready_dt(&ld7) |
+        if (!gpio_is_ready_dt(&ld0) || !gpio_is_ready_dt(&ld1) || !gpio_is_ready_dt(&ld2) ||
+            !gpio_is_ready_dt(&ld3) || !gpio_is_ready_dt(&ld4) || !gpio_is_ready_dt(&ld5) ||
+            !gpio_is_ready_dt(&ld6) || !gpio_is_ready_dt(&ld7) ||
 
-            !gpio_is_ready_dt(&sw0) | !gpio_is_ready_dt(&sw1) | !gpio_is_ready_dt(&sw2) |
-            !gpio_is_ready_dt(&sw3) | !gpio_is_ready_dt(&sw4) | !gpio_is_ready_dt(&sw5) |
-            !gpio_is_ready_dt(&sw6) | !gpio_is_ready_dt(&sw7)) {
+            !gpio_is_ready_dt(&sw0) || !gpio_is_ready_dt(&sw1) || !gpio_is_ready_dt(&sw2) ||
+            !gpio_is_ready_dt(&sw3) || !gpio_is_ready_dt(&sw4) || !gpio_is_ready_dt(&sw5) ||
+            !gpio_is_ready_dt(&sw6) || !gpio_is_ready_dt(&sw7)) {
                 return 0;
         }
 
-        if ((gpio_pin_configure_dt(&ld0, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld1, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld2, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld3, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld4, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld5, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld6, GPIO_OUTPUT_ACTIVE) < 0) |
-            (gpio_pin_configure_dt(&ld7, GPIO_OUTPUT_ACTIVE) < 0) |
+        if ((gpio_pin_configure_dt(&ld0, GPIO_OUTPUT_ACTIVE) < 0) ||
+            (gpio_pin_configure_dt(&ld1, GPIO_OUTPUT_ACTIVE) < 0) ||
+            (gpio_pin_configure_dt(&ld2, GPIO_OUTPUT_ACTIVE) < 0) ||
+            (gpio_pin_configure_dt(&ld3, GPIO_OUTPUT_ACTIVE) < 0) ||
+            (gpio_pin_configure_dt(&ld4, GPIO_OUTPUT_ACTIVE) < 0) ||
+            (gpio_pin_configure_dt(&ld5, GPIO_OUTPUT_ACTIVE) < 0) ||
+            (gpio_pin_configure_dt(&ld6, GPIO_OUTPUT_ACTIVE) < 0) ||
+            (gpio_pin_configure_dt(&ld7, GPIO_OUTPUT_ACTIVE) < 0) ||
 
-            (gpio_pin_configure_dt(&sw0, GPIO_INPUT) < 0) |
-            (gpio_pin_configure_dt(&sw1, GPIO_INPUT) < 0) |
-            (gpio_pin_configure_dt(&sw2, GPIO_INPUT) < 0) |
-            (gpio_pin_configure_dt(&sw3, GPIO_INPUT) < 0) |
-            (gpio_pin_configure_dt(&sw4, GPIO_INPUT) < 0) |
-            (gpio_pin_configure_dt(&sw5, GPIO_INPUT) < 0) |
-            (gpio_pin_configure_dt(&sw6, GPIO_INPUT) < 0) |
+            (gpio_pin_configure_dt(&sw0, GPIO_INPUT) < 0) ||
+            (gpio_pin_configure_dt(&sw1, GPIO_INPUT) < 0) ||
+            (gpio_pin_configure_dt(&sw2, GPIO_INPUT) < 0) ||
+            (gpio_pin_configure_dt(&sw3, GPIO_INPUT) < 0) ||
+            (gpio_pin_configure_dt(&sw4, GPIO_INPUT) < 0) ||
+            (gpio_pin_configure_dt(&sw5, GPIO_INPUT) < 0) ||
+            (gpio_pin_configure_dt(&sw6, GPIO_INPUT) < 0) ||
             (gpio_pin_configure_dt(&sw7, GPIO_INPUT) < 0)) {
                 return 0;
         }

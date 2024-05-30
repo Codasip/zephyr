@@ -58,9 +58,9 @@ LOG_MODULE_REGISTER(codasip_xlnx_quadspi, CONFIG_SPI_LOG_LEVEL);
 #define SPISR_COMMAND_ERROR     BIT(10)
 
 #define SPISR_ERROR_MASK (SPISR_COMMAND_ERROR |        \
-              SPISR_LOOPBACK_ERROR |                \
-              SPISR_MSB_ERROR |                        \
-              SPISR_SLAVE_MODE_ERROR |                \
+              SPISR_LOOPBACK_ERROR            |        \
+              SPISR_MSB_ERROR                 |        \
+              SPISR_SLAVE_MODE_ERROR          |        \
               SPISR_CPOL_CPHA_ERROR)
 
 /* DGIER bit definitions */
@@ -122,7 +122,7 @@ static void xlnx_quadspi_cs_control(const struct device *dev, bool on)
         return;
     }
 
-    /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation, 
+    /* Fix for sdhc driver which requires SPI_CS_ACTIVE_HIGH during initialisation,
      * see: sdhc_spi_init_card() in drivers/sdhc/sdhc_spi.c */
     if (ctx->config->operation & SPI_CS_ACTIVE_HIGH) {
         on = !on;
@@ -232,7 +232,7 @@ static int xlnx_quadspi_configure(const struct device *dev,
 
 #if 1   // CODASIP Test
 #define SD_FAST_CLK_EN_NODE  DT_ALIAS(sd_fast_clk_en)
-    static const struct gpio_dt_spec sd_fast_clk_en = GPIO_DT_SPEC_GET(SD_FAST_CLK_EN_NODE, gpios); // GPIO_DT_SPEC_GET(SD_FAST_CLK_EN_NODE, gpios);
+    static const struct gpio_dt_spec sd_fast_clk_en = GPIO_DT_SPEC_GET(SD_FAST_CLK_EN_NODE, gpios);
 
     if ( !gpio_is_ready_dt(&sd_fast_clk_en) )
     {
@@ -376,8 +376,7 @@ static int xlnx_quadspi_transceive(const struct device *dev,
         goto out;
     }
 
-    spi_context_buffers_setup(ctx, tx_bufs, rx_bufs,
-                  config->num_xfer_bytes);
+    spi_context_buffers_setup(ctx, tx_bufs, rx_bufs, config->num_xfer_bytes);
 
     xlnx_quadspi_cs_control(dev, true);
 
@@ -454,20 +453,16 @@ static void xlnx_quadspi_isr(const struct device *dev)
             if (spi_context_rx_buf_on(ctx)) {
                 switch (config->num_xfer_bytes) {
                 case 1:
-                    UNALIGNED_PUT(drr,
-                              (uint8_t *)ctx->rx_buf);
+                    UNALIGNED_PUT(drr, (uint8_t *)ctx->rx_buf);
                     break;
                 case 2:
-                    UNALIGNED_PUT(drr,
-                              (uint16_t *)ctx->rx_buf);
+                    UNALIGNED_PUT(drr, (uint16_t *)ctx->rx_buf);
                     break;
                 case 4:
-                    UNALIGNED_PUT(drr,
-                              (uint32_t *)ctx->rx_buf);
+                    UNALIGNED_PUT(drr, (uint32_t *)ctx->rx_buf);
                     break;
                 default:
-                    __ASSERT(0,
-                         "unsupported num_xfer_bytes");
+                    __ASSERT(0, "unsupported num_xfer_bytes");
                 }
             }
 

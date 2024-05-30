@@ -62,11 +62,11 @@ int main(void)
         printk("gpio01 2 IRQ number %d\n", IRQ2_NUM);
         printk("gpio01 3 IRQ number %d\n", IRQ3_NUM);
 
-        if (!gpio_is_ready_dt(&irq2) | !gpio_is_ready_dt(&irq3)) {
+        if (!gpio_is_ready_dt(&irq2) || !gpio_is_ready_dt(&irq3)) {
                 return 0;
         }
 
-        if ((gpio_pin_configure_dt(&irq2, GPIO_OUTPUT_INACTIVE) < 0) |
+        if ((gpio_pin_configure_dt(&irq2, GPIO_OUTPUT_INACTIVE) < 0) ||
             (gpio_pin_configure_dt(&irq3, GPIO_OUTPUT_INACTIVE) < 0)) {
                 return 0;
         }
