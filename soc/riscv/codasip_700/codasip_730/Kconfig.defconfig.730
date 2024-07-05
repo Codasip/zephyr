@@ -56,12 +56,12 @@ if SOC_CODASIP_A730
 config SOC
     default "codasip_a730"
 
-# Does the A730 have a PMP? (it has an MMU, but an MMU is not supported in Zephyr)
-config RISCV_PMP
-    default y
+# Does the A730 have a PMP? - NO (it has an MMU, but an MMU is not supported in Zephyr)
+#config RISCV_PMP
+#    default y
 
-config PMP_SLOTS
-    default 16
+#config PMP_SLOTS
+#    default 16
 
 endif # SOC_CODASIP_A730
 
