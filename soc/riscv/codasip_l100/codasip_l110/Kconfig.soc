@@ -1,0 +1,60 @@
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+choice
+    prompt "Codasip L100 SOC implementation"
+    depends on SOC_SERIES_CODASIP_L110
+
+
+# https://codasip.atlassian.net/wiki/spaces/Pilsner/pages/1037795329/L100+Series+Architecture+Manual+v0.7
+# https://gitlab.codasip.com/codasip-ip-cores/pilsner/-/blob/main/pilsner/presets/eagle/ip.conf
+
+####################################################################################################
+config SOC_CODASIP_L110EAGLE
+    bool "Codasip RISC-V L110 Eagle system implementation"
+    select RISCV
+    select ATOMIC_OPERATIONS_C
+    select INCLUDE_RESET_VECTOR
+    select RISCV_ISA_RV32I
+    select RISCV_ISA_EXT_M
+#   select RISCV_ISA_EXT_A        NOTE: L110 does not support atomic instructions
+#   select RISCV_ISA_EXT_F
+    select RISCV_ISA_EXT_C
+
+    select RISCV_ISA_EXT_ZICSR
+#   select RISCV_ISA_EXT_ZIFENCEI
+
+# See: arch/riscv/Kconfig.isa
+    select RISCV_ISA_EXT_ZBA
+    select RISCV_ISA_EXT_ZBB
+#   select RISCV_ISA_EXT_ZBC
+    select RISCV_ISA_EXT_ZBS
+
+	select RISCV_VECTORED_MODE
+	select GEN_IRQ_VECTOR_TABLE
+
+####################################################################################################
+config SOC_CODASIP_L110LYRA
+    bool "Codasip RISC-V L110 Lyra system implementation"
+    select RISCV
+    select ATOMIC_OPERATIONS_C
+    select INCLUDE_RESET_VECTOR
+    select RISCV_ISA_RV32I
+    select RISCV_ISA_EXT_M
+#   select RISCV_ISA_EXT_A        NOTE: L110 does not support atomic instructions
+#   select RISCV_ISA_EXT_F
+    select RISCV_ISA_EXT_C
+
+    select RISCV_ISA_EXT_ZICSR
+#   select RISCV_ISA_EXT_ZIFENCEI
+
+# See: arch/riscv/Kconfig.isa
+    select RISCV_ISA_EXT_ZBA
+    select RISCV_ISA_EXT_ZBB
+#   select RISCV_ISA_EXT_ZBC
+    select RISCV_ISA_EXT_ZBS
+
+	select RISCV_VECTORED_MODE
+	select GEN_IRQ_VECTOR_TABLE
+
+endchoice

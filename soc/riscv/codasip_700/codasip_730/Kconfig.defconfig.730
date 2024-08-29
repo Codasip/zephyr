@@ -35,7 +35,7 @@ config 2ND_LVL_ISR_TBL_OFFSET
 config 2ND_LVL_INTR_00_OFFSET
     default 11
 
-# Total number of interrupts (NUM_PIC_IRQS + 2ND_LVL_ISR_TBL_OFFSET)
+# Total number of interrupts (NUM_PLIC_IRQS + 2ND_LVL_ISR_TBL_OFFSET)
 config NUM_IRQS
     default 76
 

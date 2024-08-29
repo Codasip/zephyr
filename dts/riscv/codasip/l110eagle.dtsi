@@ -1,0 +1,64 @@
+/* Copyright (c) 2024 Codasip s.r.o.   */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* Info: dts/bindings/base/base.yaml */
+
+#include "skeleton.dtsi"
+#include <freq.h>
+#include <mem.h>
+
+/* Codasip Eagle L110 Core with CLIC */
+
+/ {
+        compatible = "codasip,l110eagle";
+
+        clocks {
+                coreclk: core-clk {
+                        #clock-cells = <0>;
+                        compatible = "fixed-clock";
+                        clock-frequency = <DT_FREQ_M(50)>;
+                };
+
+                tlclk: tl-clk {
+                        #clock-cells = <0>;
+                        compatible = "fixed-factor-clock";
+                        clocks = <&coreclk>;
+                        clock-div = <1>;
+                };
+        };
+
+        cpus {
+                #address-cells = <1>;
+                #size-cells = <0>;
+                timebase-frequency = <50000000>;
+                cpu@0 {
+                        compatible = "riscv";
+                        device_type = "cpu";
+                        reg = <0>;
+                        riscv,isa = "rv32imcb_zicsr";
+                        clock-frequency = <50000000>;
+                        status = "okay";
+                };
+        };
+
+        soc {
+                clic: interrupt-controller@40000 {
+                        compatible = "codasip,clic";
+                        #address-cells = <0>;
+                        #interrupt-cells = <3>; /* <Int#, IntLvl, Trigger> */
+                        interrupt-controller;
+                        reg =  <0x40000 0x0004
+                                0x41000 0x1000>;
+                        num-interrupt = <64>;   /* CLIC_NUM_INTERRUPT = 64 Interrupts */
+                        intctlbits = <3>;       /* CLICINTCTLBITS = 3 bits */
+                        status = "okay";
+                };
+
+                clint: clint@60014000 {
+                        compatible = "sifive,clint0";
+                        interrupt-parent = <&clic>;
+                        interrupts = <0 1 0>, <1 1 0>;  /* <Int#, IntLvl, Trigger> */
+                        reg = <0x60014000 0x1BFF8>;
+                };
+        };
+};

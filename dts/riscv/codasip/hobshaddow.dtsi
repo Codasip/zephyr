@@ -1,0 +1,79 @@
+/* Copyright (c) 2024 Codasip s.r.o.   */
+/* SPDX-License-Identifier: Apache-2.0 */
+
+/* Info: dts/bindings/base/base.yaml */
+
+#include "skeleton.dtsi"
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <freq.h>
+#include <mem.h>
+
+/* Hobshaddow - Codasip Hobgoblin with CLIC (instead of PLIC) Platform (use with L100 Series Cores, e.g. L110) */
+/* https://gitlab.codasip.com/platforms/hobgoblin/-/blob/918c6c94055f9086d2a0af82cc21ed02d4852548/rtl_package/fpga/scripts/platform/core_pilsner.tcl */
+
+/ {
+        soc {
+                #address-cells = <1>;
+                #size-cells = <1>;
+
+                sram0: memory@20000000 {
+                        compatible = "mmio-sram";
+                        reg = <0x20000000 DT_SIZE_K(512)>;
+                };
+                dram0: memory@80000000 {
+                        compatible = "mmio-sram";
+                        reg = <0x80000000 DT_SIZE_M(1024)>;
+                };
+                
+                /* Note: For CLIC Interrupts, as CLIC IRQs 0 and 1 are used for ACLINT, 
+                         then all the interrupt numbers have been incremented by 2
+                         from the ones defined in the Unified Interrupt Map */
+                        
+                uart0: serial@60101000 {
+                        compatible = "ns16550";
+                        clock-frequency = <100000000>;
+                        reg = <0x60101000 0x1c>;
+                        reg-shift = <2>;
+
+                        interrupt-parent = <&clic>;
+                        interrupts = <2 1 0>; /* CLIC Interrupt 2, priority 1, trigger 0. */
+                };
+                gpio00: gpio@60300000 {
+                        compatible = "xlnx,xps-gpio-1.00.a";
+                        reg = <0x60300000 0x10>;
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        ngpios = <8>;   /* Number of GPIO pins. 
+                                           gpio[ 7: 0] =    LED[7:0]
+                                           gpio[15: 8] =     SW[7:0]
+                                           gpio[20:16] = BUTTON[4:0] */
+                        interrupt-parent = <&clic>;
+                        interrupts = <8 0 0>; /* CLIC Interrupt 8, priority 1, trigger 0. */
+                };
+                gpio01: gpio@60310000 {
+                        compatible = "xlnx,xps-gpio-1.00.a";
+                        reg = <0x60310000 0x10>;
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        ngpios = <5>;   /* Number of GPIO pins.
+                                           gpio[0] = SD_CARD_DETECT_N (in)
+                                           gpio[1]  SD_PWR_EN_N (out)
+                                           gpio[2] = SD_20MHZ_CLK_EN (out) */
+                        interrupt-parent = <&clic>;
+                        interrupts = <9 1 0>; /* CLIC Interrupt 9, priority 1, trigger 0. */
+                };
+
+                spi1: spi@60210000 {    /* SD Card */
+                        compatible = "xlnx,xps-spi-2.00.a";
+                        reg = <0x60210000 0x100>;
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        interrupt-parent = <&clic>;
+                        interrupts = <5 1 0>;     /* CLIC Interrupt 5, priority 1, trigger 0. */
+                        clock-frequency = <40000000>;
+                        xlnx,num-ss-bits = <0x1>;
+                        xlnx,num-transfer-bits = <0x8>;
+                };
+        };
+};

@@ -38,6 +38,8 @@ zephyr_library_sources_ifdef(CONFIG_NXP_S32_WKPU            intc_wkpu_nxp_s32.c)
 zephyr_library_sources_ifdef(CONFIG_XMC4XXX_INTC            intc_xmc4xxx.c)
 zephyr_library_sources_ifdef(CONFIG_NXP_PINT                intc_nxp_pint.c)
 zephyr_library_sources_ifdef(CONFIG_CODASIP_PIC             intc_codasip_pic.c)
+zephyr_library_sources_ifdef(CONFIG_CODASIP_CLIC            intc_codasip_clic.c)
+zephyr_library_sources_ifdef(CONFIG_CODASIP_CLIC            intc_nuclei_eclic.S)
 zephyr_library_sources_ifdef(CONFIG_RENESAS_RA_ICU          intc_renesas_ra_icu.c)
 zephyr_library_sources_ifdef(CONFIG_NXP_IRQSTEER            intc_nxp_irqsteer.c)
 
