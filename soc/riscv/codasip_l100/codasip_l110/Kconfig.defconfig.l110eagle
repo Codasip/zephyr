@@ -27,6 +27,7 @@ config RISCV_HAS_CLIC
 # CLIC changes mcause register by adding more Most Significant bits
 # Now the Exception/interrupt code is only the lower 12 bits: Exccode[11:0]
 # https://github.com/riscv/riscv-fast-interrupt/blob/5ef35cd40f809018a4a90b97fa0a7f5b4e150eba/clic.adoc#476-changes-to-xcause-csrs
+#
 config RISCV_MCAUSE_EXCEPTION_MASK
         default 0xFFF
 

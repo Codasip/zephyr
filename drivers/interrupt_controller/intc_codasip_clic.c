@@ -10,14 +10,10 @@
  *        for RISC-V processors
  */
 
-/* Useful info - External:
+/* Useful info:
  * https://docs.zephyrproject.org/latest/kernel/services/interrupts.html
  * https://github.com/riscv/riscv-fast-interrupt/blob/5ef35cd40f809018a4a90b97fa0a7f5b4e150eba/clic.adoc
  * (https://github.com/riscv/riscv-fast-interrupt/blob/v0.9/src/clic.adoc)
- *
- * Useful info - Codasip Internal:
- * https://gitlab.codasip.com/codasip-ip-cores/pilsner/-/blob/main/pilsner/presets/eagle/ip.conf
- * https://codasip.atlassian.net/wiki/spaces/Pilsner/pages/1120993496/L100+Series+CLIC+Specification+v0.9.7
  */
 #include <zephyr/kernel.h>
 #include <zephyr/arch/cpu.h>

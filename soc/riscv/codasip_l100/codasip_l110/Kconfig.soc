@@ -5,10 +5,6 @@ choice
     prompt "Codasip L100 SOC implementation"
     depends on SOC_SERIES_CODASIP_L110
 
-
-# https://codasip.atlassian.net/wiki/spaces/Pilsner/pages/1037795329/L100+Series+Architecture+Manual+v0.7
-# https://gitlab.codasip.com/codasip-ip-cores/pilsner/-/blob/main/pilsner/presets/eagle/ip.conf
-
 ####################################################################################################
 config SOC_CODASIP_L110EAGLE
     bool "Codasip RISC-V L110 Eagle system implementation"
@@ -22,7 +18,7 @@ config SOC_CODASIP_L110EAGLE
     select RISCV_ISA_EXT_C
 
     select RISCV_ISA_EXT_ZICSR
-#   select RISCV_ISA_EXT_ZIFENCEI
+    select RISCV_ISA_EXT_ZIFENCEI
 
 # See: arch/riscv/Kconfig.isa
     select RISCV_ISA_EXT_ZBA
@@ -46,7 +42,7 @@ config SOC_CODASIP_L110LYRA
     select RISCV_ISA_EXT_C
 
     select RISCV_ISA_EXT_ZICSR
-#   select RISCV_ISA_EXT_ZIFENCEI
+    select RISCV_ISA_EXT_ZIFENCEI
 
 # See: arch/riscv/Kconfig.isa
     select RISCV_ISA_EXT_ZBA

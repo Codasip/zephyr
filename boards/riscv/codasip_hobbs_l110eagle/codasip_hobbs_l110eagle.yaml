@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-identifier: codasip,hobgoblin-l110eagle
-name: Codasip Hobgoblin (FPGA) SoC with L110 Eagle softcore CPU
+identifier: codasip,hobbs-l110eagle
+name: Codasip Hobbs (FPGA) SoC with L110 Eagle softcore CPU
 type: mcu
 arch: riscv32
 toolchain:

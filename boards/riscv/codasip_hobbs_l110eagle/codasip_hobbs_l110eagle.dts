@@ -9,11 +9,11 @@
 /dts-v1/;
 
 #include <codasip/l110eagle.dtsi>
-#include <codasip/hobshaddow.dtsi>
+#include <codasip/hobbs.dtsi>
 #include <zephyr/devicetree/gpio.h>
 
 / {
-        compatible = "codasip,hobgoblin-l110eagle";
+        compatible = "codasip,hobbs-l110eagle";
 
         aliases {
                 led0 = &led0;
