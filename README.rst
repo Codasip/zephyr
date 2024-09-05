@@ -59,11 +59,15 @@ Codasip Port
 
 This repository is a port of Zephyr v3.6.0 to Codasip's FPGA platforms:
 
+- Hobbs (Genesys 2 FPGA Board)
+
+    * L110 Eagle
+
 - Inferno (Genesys 2 FPGA Board)
 
     * L31 Carbon
     * L31 Helium
- 
+
 - IIOT-DoomBar (Genesys 2 FPGA Board)
 
     * L31 Fluorine
@@ -73,7 +77,9 @@ This repository is a port of Zephyr v3.6.0 to Codasip's FPGA platforms:
     * H730
     * A730
 
-The Codasip L31 core is a low-power embedded core, part of the Codasip RISC-V Processors 3 Series.
+The Codasip L110 core is a low-power embedded core, part of the Codasip RISC-V Processors 100 Series.
+
+The Codasip L31 core is a low-power embedded core, part of the Codasip RISC-V Processors 300 Series.
 
 The Codasip A730 core is a dual-issue, in-order core compliant with RVA22 profile, and a part of the 
 Codasip RISC-V Processors 700 processor family.
