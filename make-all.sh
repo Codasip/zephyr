@@ -11,8 +11,6 @@
 #./make-sample.sh codasip_hobbs_l110eagle     samples/codasip          hello_world_user      CURRENTLY NO PMP ON L110 SO THIS DOES NOT WORK
 ./make-sample.sh codasip_hobbs_l110eagle     samples/codasip          fat_fs
 
-# exit 0
-
 ./make-sample.sh codasip_hobgoblin_h730     samples/codasip          blinkers
 ./make-sample.sh codasip_hobgoblin_h730     samples/subsys/console   getchar
 ./make-sample.sh codasip_hobgoblin_h730     samples                  synchronization
