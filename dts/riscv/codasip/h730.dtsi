@@ -7,7 +7,7 @@
 #include <freq.h>
 #include <mem.h>
 
-/* Codasip H730 Core */
+/* Codasip Holston H730 Core */
 
 / {
         compatible = "codasip,h730";
@@ -35,7 +35,7 @@
                         compatible = "riscv";
                         device_type = "cpu";
                         reg = <0>;
-                        riscv,isa = "rv64imafdc";
+                        riscv,isa = "rv64imafdc_zicsr_zifencei";
                         clock-frequency = <50000000>;
                         status = "okay";
                         intc: interrupt-controller {

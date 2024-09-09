@@ -1,0 +1,78 @@
+# Copyright (c) 2024 Codasip s.r.o.
+# SPDX-License-Identifier: Apache-2.0
+
+if SOC_CODASIP_L110EAGLE
+
+config SOC
+    default "codasip-l110eagle"
+
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+    default 50000000
+
+config RISCV_SOC_INTERRUPT_INIT
+    default y
+
+config FPU
+    default n
+        
+config GPIO
+    default y
+
+config SERIAL
+    default y
+
+config RISCV_HAS_CLIC
+    default y
+
+# CLIC changes mcause register by adding more Most Significant bits
+# Now the Exception/interrupt code is only the lower 12 bits: Exccode[11:0]
+# https://github.com/riscv/riscv-fast-interrupt/blob/5ef35cd40f809018a4a90b97fa0a7f5b4e150eba/clic.adoc#476-changes-to-xcause-csrs
+#
+config RISCV_MCAUSE_EXCEPTION_MASK
+        default 0xFFF
+
+#config RISCV_HAS_PLIC
+#   default n
+
+#config CODASIP_HAS_PIC
+#   default n
+
+#config 2ND_LEVEL_INTERRUPTS
+#    default y
+
+#config 2ND_LVL_ISR_TBL_OFFSET
+#    default 12
+
+#config 2ND_LVL_INTR_00_OFFSET
+#    default 11
+
+config RISCV_RESERVED_IRQ_ISR_TABLES_OFFSET
+	default 0
+
+config GEN_IRQ_VECTOR_TABLE
+	default y
+
+choice IRQ_VECTOR_TABLE_TYPE
+	default IRQ_VECTOR_TABLE_JUMP_BY_ADDRESS
+endchoice
+
+config ARCH_SW_ISR_TABLE_ALIGN
+	default 64
+
+# Total number of interrupts NUM_CLIC_IRQS
+config NUM_IRQS
+    default 64
+
+config RISCV_PMP
+#   default n
+
+config PMP_SLOTS
+#   default 8
+
+config SPI
+    default y
+
+config SPI_EXTENDED_MODES
+    default y
+
+endif # SOC_CODASIP_L110EAGLE
